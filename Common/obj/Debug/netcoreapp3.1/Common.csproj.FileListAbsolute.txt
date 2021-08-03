@@ -1,0 +1,14 @@
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\netcoreapp3.1\Common.deps.json
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\netcoreapp3.1\Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\netcoreapp3.1\Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\netcoreapp3.1\Common.csprojAssemblyReference.cache
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\netcoreapp3.1\Common.AssemblyInfoInputs.cache
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\netcoreapp3.1\Common.AssemblyInfo.cs
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\netcoreapp3.1\Common.csproj.CoreCompileInputs.cache
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\netcoreapp3.1\Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\netcoreapp3.1\Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\netcoreapp3.1\AirlineBookingSystem.Models.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\netcoreapp3.1\AirlineBookingSystem.Models.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\netcoreapp3.1\Common.csproj.CopyComplete
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\netcoreapp3.1\AirlineBookingSystem.Data.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\netcoreapp3.1\AirlineBookingSystem.Data.pdb
