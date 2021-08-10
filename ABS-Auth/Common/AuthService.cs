@@ -1,116 +1,83 @@
 ﻿using ABS_Auth.Helpers;
-using AirlineBookingSystem.Data.Interfaces;
+using ABS_Services.Interfaces;
 using AirlineBookingSystem.Models;
-using Common;
-using Common.ResponsesModels;
+using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using ABS_Common;
 
 namespace ABS_Auth.Common
 {
     public class AuthService : IAuthService
     {
-        private IUserDbService _userService;
-        private IRoleDbService _roleService;
-        public AuthService(IUserDbService userService , IRoleDbService roleService)
+        private UserManager<User> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
+        private SignInManager<User> _signInManager;
+
+        public AuthService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
         {
-            this._userService = userService;
-            this._roleService = roleService;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
 
-        public IActionResult CheckAuthorized(string idFromToken)
+        public async Task<IActionResult> Logout(string idFromToken)
         {
-            try
-            {
-                User user = this._userService.GetUser(idFromToken);
-
-                if (user.Status != UserStatus.LoggedIn)
-                    return new UnauthorizedObjectResult(new ResponseObject(false, "User is not authorized"));
-
-
-                return new OkObjectResult(new ResponseObject(true, "User is authorized"));
-            }
-            catch (Exception e)
-            {
-                return new UnauthorizedObjectResult(new ResponseObject(false, "User is not authorized" , e.Message));
-
-            }
-
+            await _signInManager.SignOutAsync();
+            return new OkObjectResult(new ResponseObject(true, "Logged out successfully"));
         }
 
-        public IActionResult Logout(string idFromToken)
+        public async Task<IActionResult> Login(string username, string password, string secret)
         {
-            try
+            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
+            if (result.Succeeded)
             {
-                this._userService.LogoutUser(idFromToken);
-                return new OkObjectResult(new ResponseObject(true, "Logged out successfully"));
-            }
-            catch (Exception e)
-            {
-                return new BadRequestObjectResult(new ResponseObject(false, "Could not login", e.Message));
-            }
-        }
-
-        public IActionResult Login(string username, string password, string secret)
-        {
-            try
-            {
-                User user = this._userService.LoginUser(username, password);
+                var user = this._signInManager.UserManager.Users.FirstOrDefault(u => u.UserName == username);
 
                 string token = TokenService.GenerateJwtToken(user.Id, secret);
-                var userRoles = this._roleService.GetUserRoles(user);
-                bool isAdmin = userRoles.Any(r => r.Name == "Admin");
+                bool isAdmin = await _userManager.IsInRoleAsync(user, Constants.AdminRole);
 
                 LoginResponseModel data = new LoginResponseModel(token, isAdmin);
                 return new OkObjectResult(new ResponseObject(true, "Logged in successfully", data));
             }
-            catch (Exception e)
-            {
-                return new BadRequestObjectResult(new ResponseObject(false, "Could not login", e.Message));
-            }
+
+            return new BadRequestObjectResult(new ResponseObject(false, "Invalid username or password", "Invalid username or password"));
 
         }
 
-        public IActionResult CheckCurrentUserStat(string id)
+        public async Task<IActionResult> CheckCurrentUserStat(string id)
         {
-            try
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
             {
-                var user = this._userService.GetUser(id);
-                user.Status = UserStatus.LoggedIn;
-
-                var userRoles = this._roleService.GetUserRoles(user);
-                bool isAdmin = userRoles.Any(r => r.Name == "Admin");
-
-                var data = new LoginResponseModel(null, isAdmin);
-
-                return new OkObjectResult(new ResponseObject(true, "User is already logged", data));
-
-            }
-            catch (Exception e)
-            {
-                return new BadRequestObjectResult(new ResponseObject(false, e.Message, e.Message));
+                return new BadRequestObjectResult(new ResponseObject(false, "User with this id does not exist"));
             }
 
+            bool isAdmin = await _userManager.IsInRoleAsync(user, Constants.AdminRole);
+            var data = new LoginResponseModel(null, isAdmin);
+
+            return new OkObjectResult(new ResponseObject(true, "User already logged", data));
         }
 
-        public IActionResult Register(string username, string password, string email)
+        public async Task<IActionResult> Register(string username, string password, string email)
         {
+            var role = await _roleManager.FindByNameAsync(Constants.UserRole);
+            User user = new User { UserName = username, Email = email };
 
-            try
-            {
-                var user = new User() { Username = username, HashedPassword = password, Email = email };
-                this._userService.RegisterUser(user);
-                this._roleService.AddRoleToUser(user, "User");
+            var result = await _userManager.CreateAsync(user, password);
 
-                return new OkObjectResult(new ResponseObject(true, "User registered successfully"));
-            }
-            catch (Exception e)
-            {
-                return new BadRequestObjectResult(new ResponseObject(false, e.Message, e.Message));
-            }
+            if (!result.Succeeded)
+                return new BadRequestObjectResult(new ResponseObject(false, "Could not create user", result.Errors));
 
-            throw new NotImplementedException();
+            result = await _userManager.AddToRoleAsync(user, role.Name);
+
+            if (!result.Succeeded)
+                return new BadRequestObjectResult(new ResponseObject(false, "Could not add role to user", result.Errors));
+
+            return new OkObjectResult(new ResponseObject(true, "User registered"));
         }
     }
 }

@@ -74,3 +74,8 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\AirlineBookingSystem.Data.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\Humanizer.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll

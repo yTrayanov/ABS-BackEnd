@@ -1,4 +1,4 @@
-﻿namespace Common.ResponsesModels
+﻿namespace ABS_Common.ResponsesModels
 {
     public class LoginResponseModel
     {

@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>ABS_Services</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AirlineBookingSystem.Data\AirlineBookingSystem.Data.csproj" />
+    <ProjectReference Include="..\AirlineBookingSystem.Models\AirlineBookingSystem.Models.csproj" />
+  </ItemGroup>
+
+</Project>

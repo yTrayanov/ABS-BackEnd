@@ -1,18 +1,15 @@
 using ABS_Auth.Common;
-using ABS_Auth.Helpers;
 using AirlineBookingSystem.Data;
-using AirlineBookingSystem.Data.Interfaces;
-using AirlineBookingSystem.Data.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
+using AirlineBookingSystem.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ABS_Auth
 {
@@ -28,54 +25,33 @@ namespace ABS_Auth
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            // configure strongly typed settings objects
-            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
 
-            // configure jwt authentication
-            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
-            byte[] key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddDbContext<ABSContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            services.AddIdentity<User, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddEntityFrameworkStores<ABSContext>();
+
+            services.ConfigureIdentity();
+
+            services.ConfigureJwt(Configuration);
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ABS-Auth-Api", Version = "v1" });
             });
 
-
-            services.AddDbContext<ABSContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
-
             services.AddTransient<IAuthService, AuthService>();
-            services.AddTransient<IUserDbService, UserDbService>();
-            services.AddTransient<IRoleDbService, RoleDbService>();
 
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
 
             app.UseHttpsRedirection();
 
@@ -86,6 +62,8 @@ namespace ABS_Auth
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ABS-Auth-Api v1"));
+
+            app.SeedAdminAndIdentityRoles();
 
             app.UseEndpoints(endpoints =>
             {

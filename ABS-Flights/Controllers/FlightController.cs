@@ -1,7 +1,7 @@
 ﻿using ABS_Flights.Models;
-using AirlineBookingSystem.Data.Interfaces;
+using ABS_Services.Interfaces;
 using AirlineBookingSystem.Models;
-using Common.ResponsesModels;
+using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

@@ -1,7 +1,6 @@
 ﻿using ABS_Auth.Common;
-using ABS_Auth.Helpers;
 using ABS_Auth.Models;
-using Common;
+using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -24,31 +23,30 @@ namespace ABS_Auth.Controllers
 
         [HttpGet("stat")]
         [Authorize]
-        public IActionResult Stat()
+        public async Task<IActionResult> Stat()
         {
             string userId = GetUserIdFromTocken();
-
-            return this._authService.CheckCurrentUserStat(userId);
+            return await this._authService.CheckCurrentUserStat(userId);
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel userInfo)
+        public async Task<IActionResult> Login([FromBody] LoginModel userInfo)
         {
-            return _authService.Login(userInfo.Username, userInfo.Password, _secret);
+            return await _authService.Login(userInfo.Username, userInfo.Password, _secret);
         }
 
         [HttpGet("logout")]
         [Authorize]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             string userid = GetUserIdFromTocken();
-            return _authService.Logout(userid);
+            return await _authService.Logout(userid);
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterModel userInfo)
+        public async Task<IActionResult> Register([FromBody] RegisterModel userInfo)
         {
-            return this._authService.Register(userInfo.Username , userInfo.Password , userInfo.Email);
+            return await this._authService.Register(userInfo.Username , userInfo.Password , userInfo.Email);
         }
         private string GetUserIdFromTocken() => this.User.FindFirst("id")?.Value;
 

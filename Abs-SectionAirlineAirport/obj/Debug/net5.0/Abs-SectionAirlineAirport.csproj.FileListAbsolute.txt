@@ -20,7 +20,6 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirp
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.OpenApi.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Newtonsoft.Json.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -50,7 +49,6 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirp
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.AssemblyInfoInputs.cache
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.AssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.csproj.CoreCompileInputs.cache
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\staticwebassets\Abs-SectionAirlineAirport.StaticWebAssets.Manifest.cache
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\staticwebassets\Abs-SectionAirlineAirport.StaticWebAssets.xml
@@ -61,5 +59,14 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirp
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\ref\Abs-SectionAirlineAirport.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.genruntimeconfig.cache
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Common.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Services.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Services.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb

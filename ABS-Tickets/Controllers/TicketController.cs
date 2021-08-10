@@ -1,6 +1,6 @@
-﻿using ABS_Tickets.Models;
-using AirlineBookingSystem.Data.Interfaces;
-using Common.ResponsesModels;
+﻿using ABS_Services.Interfaces;
+using ABS_Tickets.Models;
+using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

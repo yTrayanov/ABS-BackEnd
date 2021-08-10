@@ -1,7 +1,7 @@
+using ABS_Services.Interfaces;
+using ABS_Services.Services;
 using ABS_Tickets.Common;
 using AirlineBookingSystem.Data;
-using AirlineBookingSystem.Data.Interfaces;
-using AirlineBookingSystem.Data.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

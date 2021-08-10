@@ -1,10 +1,6 @@
 using ABS_Gateway.Common;
-using AirlineBookingSystem.Data;
-using AirlineBookingSystem.Data.Services;
-using Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,17 +29,10 @@ namespace ABS_Gateway
 
             services.AddHttpClient<IClient, Client>();
 
-
-
             APIUrls apiUrls = apiUrlSection.Get<APIUrls>();
             services.AddHttpClient(APIUrls.AUTH, c => c.BaseAddress = new Uri(apiUrls.AuthApi));
 
             APIUrls apiUrl = apiUrlSection.Get<APIUrls>();
-
-
-            services.AddDbContext<ABSContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("AbsContext"))
-            );
 
             services.AddSwaggerGen(c =>
             {
@@ -84,8 +73,6 @@ namespace ABS_Gateway
                 });
                 await nextMiddleware();
             });
-
-
 
             app.UseHttpsRedirection();
 

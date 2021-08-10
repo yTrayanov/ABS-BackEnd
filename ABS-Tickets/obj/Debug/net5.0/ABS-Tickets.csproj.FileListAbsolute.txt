@@ -16,7 +16,6 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.AssemblyInfoInputs.cache
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.AssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.csproj.CoreCompileInputs.cache
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\staticwebassets\ABS-Tickets.StaticWebAssets.Manifest.cache
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\staticwebassets\ABS-Tickets.StaticWebAssets.xml
@@ -30,9 +29,7 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Models.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Models.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Data.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Common.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Data.pdb
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Common.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.IdentityModel.Logging.dll
@@ -67,3 +64,13 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Newtonsoft.Json.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Services.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Services.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb

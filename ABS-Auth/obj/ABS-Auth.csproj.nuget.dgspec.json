@@ -28,14 +28,17 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
+              "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Services\\AirlineBookingSystem.Services.csproj": {
+                "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Services\\AirlineBookingSystem.Services.csproj"
+              },
               "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj": {
                 "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj"
               },
               "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Models\\AirlineBookingSystem.Models.csproj": {
                 "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Models\\AirlineBookingSystem.Models.csproj"
               },
-              "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Common.csproj": {
-                "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Common.csproj"
+              "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj": {
+                "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj"
               }
             }
           }
@@ -51,6 +54,12 @@
           "targetAlias": "net5.0",
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[5.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
               "version": "[5.0.8, )"
             },
@@ -77,6 +86,73 @@
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
             },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.205\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Services\\AirlineBookingSystem.Services.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Services\\AirlineBookingSystem.Services.csproj",
+        "projectName": "AirlineBookingSystem.Services",
+        "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Services\\AirlineBookingSystem.Services.csproj",
+        "packagesPath": "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Services\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Yavor Trayanov\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj": {
+                "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj"
+              },
+              "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Models\\AirlineBookingSystem.Models.csproj": {
+                "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Models\\AirlineBookingSystem.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
@@ -125,6 +201,10 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.8, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[5.0.8, )"
@@ -190,6 +270,12 @@
       "frameworks": {
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.8, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -209,12 +295,12 @@
         }
       }
     },
-    "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Common.csproj": {
+    "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Common.csproj",
-        "projectName": "Common",
-        "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Common.csproj",
+        "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj",
+        "projectName": "AirlineBookingSystem.Common",
+        "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj",
         "packagesPath": "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\obj\\",
         "projectStyle": "PackageReference",
@@ -223,15 +309,15 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "netcoreapp3.1"
+          "net5.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "netcoreapp3.1": {
-            "targetAlias": "netcoreapp3.1",
+          "net5.0": {
+            "targetAlias": "net5.0",
             "projectReferences": {
               "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj": {
                 "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj"
@@ -249,12 +335,24 @@
         }
       },
       "frameworks": {
-        "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
+        "net5.0": {
+          "targetAlias": "net5.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[5.0.8, )"
+            },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",
               "version": "[2.2.2, )"
+            },
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.8, )"
             }
           },
           "imports": [

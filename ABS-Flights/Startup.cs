@@ -4,12 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using AirlineBookingSystem.Data.Interfaces;
-using AirlineBookingSystem.Data.Services;
 using AirlineBookingSystem.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Newtonsoft.Json;
+using ABS_Services.Interfaces;
+using ABS_Services.Services;
 
 namespace ABS_Flights
 {
