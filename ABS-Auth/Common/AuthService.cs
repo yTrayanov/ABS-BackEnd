@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using ABS_Common;
+using System;
 
 namespace ABS_Auth.Common
 {
@@ -42,7 +43,7 @@ namespace ABS_Auth.Common
                 return new OkObjectResult(new ResponseObject(true, "Logged in successfully", data));
             }
 
-            return new BadRequestObjectResult(new ResponseObject(false, "Invalid username or password", "Invalid username or password"));
+            throw new ArgumentException("Invalid username or password");
 
         }
 
@@ -51,7 +52,7 @@ namespace ABS_Auth.Common
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
             {
-                return new BadRequestObjectResult(new ResponseObject(false, "User with this id does not exist"));
+                throw new ArgumentException("User with this id does not exist");
             }
 
             bool isAdmin = await _userManager.IsInRoleAsync(user, Constants.AdminRole);

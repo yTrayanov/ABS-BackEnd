@@ -60,8 +60,6 @@ namespace ABS_Flights.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateFlight([FromBody] FlightBindingModel flightInfo)
         {
-            try
-            {
                 var searchFlight = await _unitOfWork.Flights.Get(f => f.FlightNumber == flightInfo.FlightNumber);
 
                 if (searchFlight != null)
@@ -91,11 +89,6 @@ namespace ABS_Flights.Controllers
                 await _unitOfWork.Save();
 
                 return new OkObjectResult(new ResponseObject(true, "Flight created"));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new ResponseObject(false, "Could not create flight", e.Message));
-            }
         }
 
 

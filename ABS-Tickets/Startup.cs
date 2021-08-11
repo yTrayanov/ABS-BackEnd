@@ -41,13 +41,14 @@ namespace ABS_Tickets
             services.AddDbContext<ABSContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
             
             services.AddMvc().AddNewtonsoftJson();
             services.AddMvc().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,6 +60,7 @@ namespace ABS_Tickets
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ABS_Tickets v1"));
             }
 
+            app.ConfigureExceptionHandler();
             app.UseHttpsRedirection();
 
             app.UseRouting();

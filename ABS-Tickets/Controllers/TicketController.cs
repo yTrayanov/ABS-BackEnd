@@ -18,7 +18,7 @@ namespace ABS_Tickets.Controllers
     {
         private IUnitOfWork _unitOfWork;
         private UserManager<User> _userManager;
-        public TicketController(IUnitOfWork unitOfWork , UserManager<User> userManager)
+        public TicketController(IUnitOfWork unitOfWork, UserManager<User> userManager)
         {
             this._unitOfWork = unitOfWork;
             _userManager = userManager;
@@ -28,81 +28,64 @@ namespace ABS_Tickets.Controllers
         [Authorize]
         public async Task<IActionResult> CreateTicket([FromBody] TicketCreateModel model)
         {
+            var flightIds = model.FlightIds;
+            var seats = model.Seats;
+            var userId = GetUserIdFromTocken();
 
-            try
+            var tickets = new List<Ticket>();
+
+            for (int flightIndex = 0; flightIndex < seats.Length; flightIndex++)
             {
-                var flightIds = model.FlightIds;
-                var seats = model.Seats;
-                var userId = GetUserIdFromTocken();
-
-                var tickets = new List<Ticket>();
-
-                for (int flightIndex = 0; flightIndex < seats.Length; flightIndex++)
+                for (int seatIndex = 0; seatIndex < seats[flightIndex].Length; seatIndex++)
                 {
-                    for (int seatIndex = 0; seatIndex < seats[flightIndex].Length; seatIndex++)
+                    var flight = await _unitOfWork.Flights.Get(f => f.Id == flightIds[flightIndex]);
+                    if (flight == null)
+                        throw new ArgumentException("Flight does not exist");
+
+                    var seat = await _unitOfWork.Seats.Get(s => s.Id == seats[flightIndex][seatIndex].Id);
+                    if (seat == null)
+                        throw new ArgumentException("Seat could not be found");
+
+                    var user = await _userManager.FindByIdAsync(userId);
+                    if (user == null)
+                        throw new ArgumentException("User could not be found");
+
+                    var ticket = new Ticket()
                     {
-                        var flight = await _unitOfWork.Flights.Get(f => f.Id == flightIds[flightIndex]);
-                        if (flight == null)
-                            throw new ArgumentException("Flight does not exist");
+                        UserId = user.Id,
+                        SeatId = seat.Id,
+                        FlightId = flight.Id,
+                        PassengerName = seats[flightIndex][seatIndex].PassengerName
+                    };
 
-                        var seat = await _unitOfWork.Seats.Get(s => s.Id == seats[flightIndex][seatIndex].Id);
-                        if (seat == null)
-                            throw new ArgumentException("Seat could not be found");
+                    tickets.Add(ticket);
 
-                        var user = await _userManager.FindByIdAsync(userId);
-                        if (user == null)
-                            throw new ArgumentException("User could not be found");
+                    seat.IsBooked = true;
+                    _unitOfWork.Seats.Update(seat);
 
-                        var ticket = new Ticket()
-                        {
-                            UserId = user.Id,
-                            SeatId = seat.Id,
-                            FlightId = flight.Id,
-                            PassengerName = seats[flightIndex][seatIndex].PassengerName
-                        };
-
-                        tickets.Add(ticket);
-
-                        seat.IsBooked = true;
-                        _unitOfWork.Seats.Update(seat);
-
-                    }
                 }
-
-                await _unitOfWork.Tickets.InsertRange(tickets);
-                await _unitOfWork.Save();
-
-                return new OkObjectResult(new ResponseObject(true, "Seats booked successfully"));
-
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new ResponseObject(false, "Something went wrong while creating tickets", e.Message));
             }
 
+            await _unitOfWork.Tickets.InsertRange(tickets);
+            await _unitOfWork.Save();
+
+            return new OkObjectResult(new ResponseObject(true, "Seats booked successfully"));
         }
 
         [HttpGet("user")]
         [Authorize]
         public async Task<IActionResult> GetUserTickets()
         {
-            try
-            {
-                var userId = GetUserIdFromTocken();
+            var userId = GetUserIdFromTocken();
 
-                var tickets = await _unitOfWork.Tickets.GetAll(t => t.UserId == userId,
-                    include:t => t.Include(t => t.Flight).ThenInclude(f => f.OriginAirport)
-                                .Include(t => t.Flight).ThenInclude(f => f.DestinationAirport)
-                                .Include(t => t.Flight).ThenInclude(f => f.Airline)
-                                .Include(t => t.Seat).ThenInclude(s => s.Section)
-                                .Include(t => t.User));
+            var tickets = await _unitOfWork.Tickets.GetAll(t => t.UserId == userId,
+                include: t => t.Include(t => t.Flight).ThenInclude(f => f.OriginAirport)
+                             .Include(t => t.Flight).ThenInclude(f => f.DestinationAirport)
+                             .Include(t => t.Flight).ThenInclude(f => f.Airline)
+                             .Include(t => t.Seat).ThenInclude(s => s.Section)
+                             .Include(t => t.User));
 
-                return new OkObjectResult(new ResponseObject(true, "User tickets here", tickets));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new ResponseObject(false, "Could not get tickets, something went wrong", e.Message));
-            }
+            return new OkObjectResult(new ResponseObject(true, "User tickets here", tickets));
         }
 
 

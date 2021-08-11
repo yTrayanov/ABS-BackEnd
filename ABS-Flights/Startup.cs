@@ -8,6 +8,7 @@ using AirlineBookingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using AirlineBookingSystem.Data.Common;
+using ABS_Common.Extensions;
 
 namespace ABS_Flights
 {
@@ -53,6 +54,7 @@ namespace ABS_Flights
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ABS-Flights-Api v1"));
             }
 
+            app.ConfigureExceptionHandler();
 
             app.UseHttpsRedirection();
 

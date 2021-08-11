@@ -22,8 +22,6 @@ namespace Abs_SectionAirlineAirport.Controllers
         [HttpPost("section")]
         public async  Task<IActionResult> CreateSection([FromBody] SectionBindingModel sectionInfo)
         {
-            try
-            {
                 var flight = await _unitOfWork.Flights.Get(f => f.FlightNumber == sectionInfo.FlightNumber);
 
                 if (flight == null)
@@ -65,10 +63,6 @@ namespace Abs_SectionAirlineAirport.Controllers
                 await _unitOfWork.Save();
 
                 return new OkObjectResult(new ResponseObject(true, "Section created"));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(new ResponseObject(false, "Something went wrong", e.Message));
             }
         }
     }

@@ -1,7 +1,10 @@
-﻿using AirlineBookingSystem.Data;
+﻿using ABS_Common.ResponsesModels;
+using AirlineBookingSystem.Data;
 using AirlineBookingSystem.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +27,10 @@ namespace ABS_Common.Extensions
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
             builder.AddEntityFrameworkStores<ABSContext>()
                 .AddDefaultTokenProviders();
+        }
 
+        public static void ConfigurePasswordSettings(this IServiceCollection services)
+        {
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequiredLength = 6;
@@ -58,6 +64,23 @@ namespace ABS_Common.Extensions
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            });
+        }
+
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app)
+        {
+            app.UseExceptionHandler(error =>
+            {
+                error.Run(async context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    context.Response.ContentType = "application/json";
+                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    if(contextFeature != null)
+                    {
+                        await context.Response.WriteAsync(new ResponseObject(false, "Something went wrong", contextFeature.Error.Message).ToString());
+                    }
+                });
             });
         }
 

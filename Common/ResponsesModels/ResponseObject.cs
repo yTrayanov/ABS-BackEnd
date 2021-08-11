@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace ABS_Common.ResponsesModels
 {
@@ -24,15 +23,19 @@ namespace ABS_Common.ResponsesModels
             this.Error = error;
         }
 
+
+        [JsonProperty(PropertyName = "message")]
         public string Message { get; set; }
 
-        [JsonPropertyName("success")]
+        [JsonProperty(PropertyName = "success")]
         public bool Success { get; set; }
 
-        [JsonPropertyName("data")]
+        [JsonProperty(PropertyName = "data")]
         public object Data { get; set; }
 
-        [JsonPropertyName("error")]
+        [JsonProperty(PropertyName = "error")]
         public string Error { get; set; }
+
+        public override string ToString() => JsonConvert.SerializeObject(this);
     }
 }

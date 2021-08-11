@@ -34,6 +34,7 @@ namespace ABS_Auth
                 .AddEntityFrameworkStores<ABSContext>();
 
             services.ConfigureIdentity();
+            services.ConfigurePasswordSettings();
 
             services.ConfigureJwt(Configuration);
 
@@ -51,6 +52,7 @@ namespace ABS_Auth
                 app.UseDeveloperExceptionPage();
             }
 
+            app.ConfigureExceptionHandler();
 
             app.UseHttpsRedirection();
 
