@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "gMdBwu0Jbo+krPy4uad7KvI/zRUnOhOY/h4PKYGwPVuG5Y7JG3/4invxB3OM53ZSClu/kMGx6fDhUZgwJK+3vw==",
+  "dgSpecHash": "U8Xrdt05UGozfYLLG3jT9lx2xVDT/b0qgbziBwL5MF/z47xO1g84YITv/8CsM65EYgGB9Rdafra6eN+75WHUfw==",
   "success": true,
   "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj",
   "expectedPackageFiles": [
@@ -56,6 +56,7 @@
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.netcore.targets\\1.1.3\\microsoft.netcore.targets.1.1.3.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "CGTxhZnOaOTgJYU3A1Ds5Tu8UrW0Z+gcWrj6KDoke7oZk7Rw4XhbdFziKbC1MuxZcPp9oB+OWRsD14fK8Csu2w==",
+  "dgSpecHash": "8ftPflt/UElSuG7YKiz/Dew6zephiOHpLKdNwHcPbXy/+butcqiSjub3t4CIEdHqBaXvjXs1E/pACY9SWNu4HQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Abs-SectionAirlineAirport\\Abs-SectionAirlineAirport.csproj",
   "expectedPackageFiles": [
@@ -58,6 +58,7 @@
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",

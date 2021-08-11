@@ -1,7 +1,6 @@
-using ABS_Services.Interfaces;
-using ABS_Services.Services;
 using ABS_Tickets.Common;
 using AirlineBookingSystem.Data;
+using AirlineBookingSystem.Data.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using ABS_Common.Extensions;
 using System.Text;
 
 namespace ABS_Tickets
@@ -35,35 +35,13 @@ namespace ABS_Tickets
             });
 
 
-            IConfigurationSection appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
-
-            AppSettings appSettings = appSettingsSection.Get<AppSettings>();
-            byte[] key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.RequireHttpsMetadata = false;
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+            services.ConfigureIdentity();
+            services.ConfigureJwt(Configuration);
 
             services.AddDbContext<ABSContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
 
-            services.AddTransient<ITicketDbService, TicketDbService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             
             services.AddMvc().AddNewtonsoftJson();
             services.AddMvc().AddNewtonsoftJson(options =>

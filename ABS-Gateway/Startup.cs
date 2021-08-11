@@ -1,6 +1,8 @@
 using ABS_Gateway.Common;
+using AirlineBookingSystem.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +31,10 @@ namespace ABS_Gateway
 
             services.AddHttpClient<IClient, Client>();
 
+
+            services.AddDbContext<ABSContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
+
             APIUrls apiUrls = apiUrlSection.Get<APIUrls>();
             services.AddHttpClient(APIUrls.AUTH, c => c.BaseAddress = new Uri(apiUrls.AuthApi));
 
@@ -38,6 +44,9 @@ namespace ABS_Gateway
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TBSGatewayAPI", Version = "v1" });
             });
+
+
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

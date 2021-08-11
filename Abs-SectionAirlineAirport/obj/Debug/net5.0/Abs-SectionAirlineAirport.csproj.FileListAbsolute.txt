@@ -67,6 +67,5 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirp
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Services.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Services.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Abs-SectionAirlineAirport\bin\Debug\net5.0\Newtonsoft.Json.dll

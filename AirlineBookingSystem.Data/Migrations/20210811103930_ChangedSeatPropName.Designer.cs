@@ -4,14 +4,16 @@ using AirlineBookingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AirlineBookingSystem.Data.Migrations
 {
     [DbContext(typeof(ABSContext))]
-    partial class ABSContextModelSnapshot : ModelSnapshot
+    [Migration("20210811103930_ChangedSeatPropName")]
+    partial class ChangedSeatPropName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

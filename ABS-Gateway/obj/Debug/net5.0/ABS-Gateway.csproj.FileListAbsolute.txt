@@ -68,3 +68,4 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\obj\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.genruntimeconfig.cache
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\net5.0\Newtonsoft.Json.dll

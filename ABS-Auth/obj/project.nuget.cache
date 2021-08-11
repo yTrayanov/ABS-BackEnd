@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "xEQb9c6m4Q8ZHipiy/8d6euLMP/d10WLoukZdZsD1hOLB7Qp3CkddFaPT/U15dwOZBy63hGI8TNhtlEgUrjigQ==",
+  "dgSpecHash": "qPhz/BPwQIHtIi+pgFKOA7/R83xtJAG97uMmqWl6BKef7fk8Oi76eKKKc64/p0fDT95H+MuS8es4Tlao5/VM0Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Auth\\ABS-Auth.csproj",
   "expectedPackageFiles": [
@@ -61,6 +61,7 @@
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\swashbuckle.aspnetcore\\6.1.4\\swashbuckle.aspnetcore.6.1.4.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.1.4\\swashbuckle.aspnetcore.swagger.6.1.4.nupkg.sha512",

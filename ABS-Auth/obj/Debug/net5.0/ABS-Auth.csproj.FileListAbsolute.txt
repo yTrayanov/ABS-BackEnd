@@ -69,6 +69,5 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\obj\Debug\net
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\Humanizer.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\AirlineBookingSystem.Services.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\AirlineBookingSystem.Services.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\Newtonsoft.Json.dll

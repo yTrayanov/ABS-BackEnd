@@ -7,8 +7,7 @@ using Microsoft.OpenApi.Models;
 using AirlineBookingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using ABS_Services.Interfaces;
-using ABS_Services.Services;
+using AirlineBookingSystem.Data.Common;
 
 namespace ABS_Flights
 {
@@ -41,8 +40,7 @@ namespace ABS_Flights
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-            services.AddTransient<IFlightDbService, FlightDbService>();
-
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

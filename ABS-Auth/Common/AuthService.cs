@@ -1,9 +1,7 @@
 ﻿using ABS_Auth.Helpers;
-using ABS_Services.Interfaces;
 using AirlineBookingSystem.Models;
 using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;

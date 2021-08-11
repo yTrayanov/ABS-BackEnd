@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AirlineBookingSystem.Data.Common
@@ -12,54 +12,50 @@ namespace AirlineBookingSystem.Data.Common
     {
 
         private readonly ABSContext _context;
-        private readonly DbSet<T> _db;
+        private readonly DbSet<T> _table;
 
 
         public GenericRepository(ABSContext context)
         {
             this._context = context;
-            this._db = _context.Set<T>();
+            this._table = _context.Set<T>();
         }
 
         public async Task Delete(int id)
         {
-            var entity = await _db.FindAsync(id);
-            _db.Remove(entity);
+            var entity = await _table.FindAsync(id);
+            _table.Remove(entity);
         }
 
         public void DeleteRange(IEnumerable<T> entities)
         {
-            _db.RemoveRange(entities);
+            _table.RemoveRange(entities);
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> expression, List<string> includes = null)
+        public async Task<T> Get(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null)
         {
-            IQueryable<T> query = _db;
-            if(includes != null)
+            IQueryable<T> query = _table;
+
+
+            if(include != null)
             {
-                foreach (var includeProperty in includes)
-                {
-                    query = query.Include(includeProperty);
-                }
+                query = include(query);
             }
+
 
             return await query.AsNoTracking().FirstOrDefaultAsync(expression);
         }
-
-        public async Task<IList<T>> GetAll(Expression<Func<T, bool>> expression = null, List<string> includes = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
+        public async Task<IList<T>> GetAll(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
         {
-            IQueryable<T> query = _db;
+            IQueryable<T> query = _table;
             if(expression != null)
             {
                 query = query.Where(expression);
             }
 
-            if (includes != null)
+            if (include != null)
             {
-                foreach (var includeProperty in includes)
-                {
-                    query = query.Include(includeProperty);
-                }
+                query = include(query);   
             }
 
             if (orderBy != null)
@@ -70,19 +66,20 @@ namespace AirlineBookingSystem.Data.Common
             return await query.AsNoTracking().ToListAsync();
         }
 
+
         public async Task Insert(T entity)
         {
-            await _db.AddAsync(entity);
+            await _table.AddAsync(entity);
         }
 
         public async Task InsertRange(IEnumerable<T> entities)
         {
-            await _db.AddRangeAsync(entities);
+            await _table.AddRangeAsync(entities);
         }
 
         public void Update(T entity)
         {
-            _db.Attach(entity);
+            _table.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace AirlineBookingSystem.Models
@@ -18,5 +19,8 @@ namespace AirlineBookingSystem.Models
         public ICollection<Ticket> Tickets { get; set; }
 
         public UserStatus Status { get; set; }
+
+        [JsonProperty(PropertyName ="username")]
+        public new string UserName { get; set; }
     }
 }

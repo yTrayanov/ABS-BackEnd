@@ -71,6 +71,4 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Services.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Services.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb

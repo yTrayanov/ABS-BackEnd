@@ -1,11 +1,13 @@
 ﻿using ABS_Flights.Models;
-using ABS_Services.Interfaces;
 using AirlineBookingSystem.Models;
 using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using AirlineBookingSystem.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace ABS_Flights.Controllers
 {
@@ -13,44 +15,32 @@ namespace ABS_Flights.Controllers
     [Route("flight")]
     public class FlightController : Controller
     {
-        private IFlightDbService _flightService;
+        private IUnitOfWork _unitOfWork;
 
-        public FlightController(IFlightDbService service)
+        public FlightController(IUnitOfWork unitOfWork)
         {
-            this._flightService = service;
+            this._unitOfWork = unitOfWork;
         }
 
         [HttpGet("filter/{OriginAirport}/{DestinationAirport}/{DepartureDate}/{MembersCount}")]
-        public IActionResult FilterOneWayFlights([FromRoute] FlightBindingModel flightInfo)
+        public async Task<IActionResult> FilterOneWayFlights([FromRoute] FlightBindingModel flightInfo)
         {
-            var flights = FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
-
-
-            if (!flights.Any())
-            {
-                return new OkObjectResult(new ResponseObject(true, "No flights found"));
-            }
-
+            var flights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
             return new OkObjectResult(new ResponseObject(true, "Flights found", flights.Select(f => new Flight[] { f })));
         }
 
         [HttpGet("filter/{OriginAirport}/{DestinationAirport}/{DepartureDate}/{MembersCount}/{ReturnDate}")]
-        public IActionResult FilterTwoWayFlights([FromRoute] FlightBindingModel flightInfo)
+        public async Task<IActionResult> FilterTwoWayFlights([FromRoute] FlightBindingModel flightInfo)
         {
-            var toDestinationFlights = FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
+            var toDestinationFlights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
-            if (!toDestinationFlights.Any())
-            {
-                return new OkObjectResult(new ResponseObject(true, "There are no fligths to destination on this date"));
-            }
+            if(!toDestinationFlights.Any())
+                return new OkObjectResult(new ResponseObject(true, "There are no to destination flights"));
 
-            var returnFlights = FilterFlights(flightInfo.DestinationAirport, flightInfo.OriginAirport, flightInfo.ReturnDate, flightInfo.MembersCount);
-
-            if (!returnFlights.Any())
-            {
-                return new OkObjectResult(new ResponseObject(true, "There are no return flights on this date"));
-            }
+            var returnFlights = await FilterFlights(flightInfo.DestinationAirport, flightInfo.OriginAirport, flightInfo.ReturnDate, flightInfo.MembersCount);
+            if(returnFlights.Any())
+                return new OkObjectResult(new ResponseObject(true, "There are no return flights"));
 
             List<Flight[]> result = new List<Flight[]>();
 
@@ -63,18 +53,42 @@ namespace ABS_Flights.Controllers
                 }
             }
 
-
-
             return new OkObjectResult(new ResponseObject(true, "Flights found", result));
         }
 
 
         [HttpPost("create")]
-        public IActionResult CreateFlight([FromBody] FlightBindingModel flightInfo)
+        public async Task<IActionResult> CreateFlight([FromBody] FlightBindingModel flightInfo)
         {
             try
             {
-                this._flightService.CreateFlight(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.Airline, flightInfo.FlightNumber, flightInfo.DepartureDate, flightInfo.LandingDate);
+                var searchFlight = await _unitOfWork.Flights.Get(f => f.FlightNumber == flightInfo.FlightNumber);
+
+                if (searchFlight != null)
+                    throw new ArgumentException("Flight number already exists");
+
+                var originAirport = await _unitOfWork.Airports.Get(a => a.Name == flightInfo.OriginAirport);
+                var destinationAirport = await _unitOfWork.Airports.Get(a => a.Name == flightInfo.DestinationAirport);
+
+                if (originAirport == null || destinationAirport == null)
+                    throw new ArgumentException("Invalid airports information");
+
+                var airline = await _unitOfWork.Airlines.Get(a => a.Name == flightInfo.Airline);
+                if (airline == null)
+                    throw new ArgumentException("Airline does not exist");
+
+                var flight = new Flight()
+                {
+                    OriginAirportId = originAirport.Id,
+                    DestinationAirportId = destinationAirport.Id,
+                    AirlineId = airline.Id,
+                    FlightNumber = flightInfo.FlightNumber,
+                    DepartureDate = flightInfo.DepartureDate,
+                    LandingDate = flightInfo.LandingDate,
+                };
+
+                await this._unitOfWork.Flights.Insert(flight);
+                await _unitOfWork.Save();
 
                 return new OkObjectResult(new ResponseObject(true, "Flight created"));
             }
@@ -86,11 +100,15 @@ namespace ABS_Flights.Controllers
 
 
         [HttpGet("{multipleIdsAsString}")]
-        public IActionResult GetFlightsByIds([FromRoute] string multipleIdsAsString)
+        public async  Task<IActionResult> GetFlightsByIds([FromRoute] string multipleIdsAsString)
         {
+
             string[] ids = multipleIdsAsString.Split(',');
 
-            var flights = this._flightService.GetFlightsByIds(ids);
+            var flights = await _unitOfWork.Flights.GetAll(f => ids.Contains(f.Id.ToString()) , 
+                include: f =>  f.Include(f => f.OriginAirport)
+                .Include(f => f.DestinationAirport)
+                .Include(f => f.Sections).ThenInclude(s => s.Seats));
 
             if (flights.Count < ids.Length)
             {
@@ -101,17 +119,27 @@ namespace ABS_Flights.Controllers
         }
 
         [HttpGet("information/all")]
-        public IActionResult GetAllFlights()
+        public async Task<IActionResult> GetAllFlights()
         {
-            var flights = this._flightService.GetFlights();
+            var flights = await _unitOfWork.Flights
+                      .GetAll(null,
+                      include: f => f.Include(x => x.OriginAirport)
+                                      .Include(x => x.DestinationAirport)
+                                      .Include(x => x.Airline)
+                                      .Include(x => x.Sections));
 
             return new OkObjectResult(new ResponseObject(true, "Flights for all flights", flights));
         }
 
         [HttpGet("information/{Id}")]
-        public IActionResult GetFlightInformation([FromRoute] string id)
+        public async Task<IActionResult> GetFlightInformation([FromRoute] string id)
         {
-            var flight = this._flightService.GetFlightInformation(id);
+            var flight = await _unitOfWork.Flights.Get(f => f.Id.ToString() == id,
+                include: f => f.Include(f => f.OriginAirport)
+                .Include(f => f.DestinationAirport)
+                .Include(f => f.Airline)
+                .Include(f => f.Sections).ThenInclude(s => s.Seats).ThenInclude(s => s.Ticket).ThenInclude(t => t.User));
+
             flight.Sections = flight.Sections.Where(s => s.Seats.Any(s => s.IsBooked)).ToList();
 
             for (int i = 0; i < flight.Sections.Count; i++)
@@ -122,9 +150,14 @@ namespace ABS_Flights.Controllers
             return new OkObjectResult(new ResponseObject(true, "Flight information", flight));
         }
 
-        private List<Flight> FilterFlights(string originAirport, string destinationAirport, DateTime departureDate, int membersCount)
+        private async Task<IList<Flight>> FilterFlights(string originAirport, string destinationAirport, DateTime departureDate, int membersCount)
         {
-            var flights = this._flightService.GetFlights().Where(f => f.OriginAirport.Name == originAirport && f.DestinationAirport.Name == destinationAirport && f.DepartureDate.Date == departureDate.Date).ToList();
+            var flights = await _unitOfWork.Flights
+                   .GetAll( f => f.OriginAirport.Name == originAirport && f.DestinationAirport.Name == destinationAirport  && f.DepartureDate.Date == departureDate.Date,
+                   include: f => f.Include(x => x.OriginAirport)
+                                   .Include(x => x.DestinationAirport)
+                                   .Include(x => x.Airline)
+                                   .Include(x => x.Sections));
 
             for (int i = 0; i < flights.Count; i++)
             {
@@ -136,8 +169,8 @@ namespace ABS_Flights.Controllers
                 i--;
             }
 
+
             return flights;
         }
-
     }
 }

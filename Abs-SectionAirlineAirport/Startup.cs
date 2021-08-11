@@ -1,6 +1,5 @@
-using ABS_Services.Interfaces;
-using ABS_Services.Services;
 using AirlineBookingSystem.Data;
+using AirlineBookingSystem.Data.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +34,7 @@ namespace Abs_SectionAirlineAirport
             services.AddDbContext<ABSContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
 
-            services.AddTransient<ICreateDbService, CreateDbService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

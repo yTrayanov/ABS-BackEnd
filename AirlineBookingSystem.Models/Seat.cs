@@ -28,7 +28,7 @@ namespace AirlineBookingSystem.Models
         public int? TicketId { get; set; }
         public Ticket Ticket { get; set; }
 
-        public string PassangerName { get; set; }
+        public string PassengerName { get; set; }
 
     }
 }

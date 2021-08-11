@@ -71,6 +71,4 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Flights\bin\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Flights\obj\Debug\net5.0\ABS-Flights.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Flights\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Flights\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Flights\bin\Debug\net5.0\AirlineBookingSystem.Services.dll
-C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Flights\bin\Debug\net5.0\AirlineBookingSystem.Services.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Flights\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb

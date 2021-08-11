@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS-Tickets", "ABS-Tickets\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abs-SectionAirlineAirport", "Abs-SectionAirlineAirport\Abs-SectionAirlineAirport.csproj", "{45B89903-5574-4E63-AFD2-6F03DC7A1842}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineBookingSystem.Services", "ABS-Services\AirlineBookingSystem.Services.csproj", "{CC4B5346-2E5C-42E5-BD78-A46B2E4F5D0B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,10 +57,6 @@ Global
 		{45B89903-5574-4E63-AFD2-6F03DC7A1842}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45B89903-5574-4E63-AFD2-6F03DC7A1842}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45B89903-5574-4E63-AFD2-6F03DC7A1842}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC4B5346-2E5C-42E5-BD78-A46B2E4F5D0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC4B5346-2E5C-42E5-BD78-A46B2E4F5D0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC4B5346-2E5C-42E5-BD78-A46B2E4F5D0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC4B5346-2E5C-42E5-BD78-A46B2E4F5D0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
