@@ -36,6 +36,7 @@ namespace ABS_Gateway.Controllers
         }
 
         [HttpPost("create")]
+        [AuthorizeAdminEndPoint]
         public async Task<IActionResult> CreateFlight([FromBody] object body)
         {
             return await Client.Post(HttpContext, body);

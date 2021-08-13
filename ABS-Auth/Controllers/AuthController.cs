@@ -1,5 +1,6 @@
 ﻿using ABS_Auth.Common;
 using ABS_Auth.Models;
+using ABS_Common;
 using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,8 +47,29 @@ namespace ABS_Auth.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel userInfo)
         {
-            return await this._authService.Register(userInfo.Username , userInfo.Password , userInfo.Email);
+            return await this._authService.Register(userInfo.Username, userInfo.Password, userInfo.Email);
         }
+
+        [HttpGet("authorize")]
+        public IActionResult Authorize()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return new OkResult();
+            }
+
+            return new UnauthorizedResult();
+        }
+
+        [HttpGet("authorize/admin")]
+        [Authorize]
+        public async Task<IActionResult> AuthorizeAdmin()
+        {
+            string id = GetUserIdFromTocken();
+            return await _authService.AuthorizeAdmin(id);
+        }
+
+
         private string GetUserIdFromTocken() => this.User.FindFirst("id")?.Value;
 
     }

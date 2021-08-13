@@ -14,9 +14,15 @@ namespace ABS_Gateway.Common
         {
         }
 
+        public async Task<ObjectResult> CheckAdminAuthorized(HttpContext context)
+        {
+            return await Get(context, APIUrls.ADMIN_ENDPOINT);
+        }
+
         public async Task<ObjectResult> CheckAuthorized(HttpContext context)
         {
             return await Get(context, APIUrls.AUTH_ENDPOINT);
         }
+
     }
 }

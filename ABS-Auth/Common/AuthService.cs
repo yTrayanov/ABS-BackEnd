@@ -78,5 +78,16 @@ namespace ABS_Auth.Common
 
             return new OkObjectResult(new ResponseObject(true, "User registered"));
         }
+
+        public async Task<IActionResult> AuthorizeAdmin(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            if (userRoles.Contains(Constants.AdminRole))
+                return new OkResult();
+
+            return new UnauthorizedResult();
+        }
     }
 }

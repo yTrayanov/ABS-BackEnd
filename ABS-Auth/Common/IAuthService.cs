@@ -12,5 +12,7 @@ namespace ABS_Auth.Common
         Task<IActionResult> Logout(string idFromToken);
 
         Task<IActionResult> CheckCurrentUserStat(string id);
+
+        Task<IActionResult> AuthorizeAdmin(string id);
     }
 }

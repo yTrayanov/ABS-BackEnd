@@ -5,6 +5,7 @@
 
         public const string AUTH = "auth";
         public const string AUTH_ENDPOINT = "auth/authorize";
+        public const string ADMIN_ENDPOINT = "auth/authorize/admin";
 
         public string AuthApi { get; set; }
         public string FlightApi { get; set; }

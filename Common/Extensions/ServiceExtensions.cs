@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace ABS_Common.Extensions
@@ -73,13 +74,23 @@ namespace ABS_Common.Extensions
             {
                 error.Run(async context =>
                 {
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    context.Response.ContentType = "application/json";
                     var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-                    if(contextFeature != null)
+                    context.Response.ContentType = "application/json";
+                    if (contextFeature != null)
                     {
-                        await context.Response.WriteAsync(new ResponseObject(false, "Something went wrong", contextFeature.Error.Message).ToString());
+                        var errorType = contextFeature.Error.GetType().Name;
+                        if (errorType == nameof(ArgumentException))
+                        {
+                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                            await context.Response.WriteAsync(new ResponseObject(false, "Something went wrong", contextFeature.Error.Message).ToString());
+                        }
+                        else
+                        {
+                            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                            await context.Response.WriteAsync(new ResponseObject(false, "Something went wrong", contextFeature.Error.Message).ToString());
+                        }
                     }
+
                 });
             });
         }
