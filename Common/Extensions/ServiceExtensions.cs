@@ -82,12 +82,12 @@ namespace ABS_Common.Extensions
                         if (errorType == nameof(ArgumentException))
                         {
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                            await context.Response.WriteAsync(new ResponseObject(false, "Something went wrong", contextFeature.Error.Message).ToString());
+                            await context.Response.WriteAsync(new ResponseObject("Something went wrong", contextFeature.Error.Message).ToString());
                         }
                         else
                         {
                             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                            await context.Response.WriteAsync(new ResponseObject(false, "Something went wrong", contextFeature.Error.Message).ToString());
+                            await context.Response.WriteAsync(new ResponseObject( "Something went wrong", contextFeature.Error.Message).ToString());
                         }
                     }
 

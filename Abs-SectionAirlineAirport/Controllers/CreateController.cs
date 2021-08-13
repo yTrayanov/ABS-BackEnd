@@ -62,7 +62,7 @@ namespace Abs_SectionAirlineAirport.Controllers
             await _unitOfWork.Seats.InsertRange(seats);
             await _unitOfWork.Save();
 
-            return new OkObjectResult(new ResponseObject(true, "Section created"));
+            return new OkObjectResult(new ResponseObject( "Section created"));
         }
     }
 }

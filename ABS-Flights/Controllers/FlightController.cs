@@ -27,7 +27,7 @@ namespace ABS_Flights.Controllers
         {
             var flights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
-            return new OkObjectResult(new ResponseObject(true, "Flights found", flights.Select(f => new Flight[] { f })));
+            return new OkObjectResult(new ResponseObject( "Flights found", flights.Select(f => new Flight[] { f })));
         }
 
         [HttpGet("filter/{OriginAirport}/{DestinationAirport}/{DepartureDate}/{MembersCount}/{ReturnDate}")]
@@ -36,11 +36,11 @@ namespace ABS_Flights.Controllers
             var toDestinationFlights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
             if(!toDestinationFlights.Any())
-                return new OkObjectResult(new ResponseObject(true, "There are no to destination flights"));
+                return new OkObjectResult(new ResponseObject( "There are no to destination flights"));
 
             var returnFlights = await FilterFlights(flightInfo.DestinationAirport, flightInfo.OriginAirport, flightInfo.ReturnDate, flightInfo.MembersCount);
             if(returnFlights.Any())
-                return new OkObjectResult(new ResponseObject(true, "There are no return flights"));
+                return new OkObjectResult(new ResponseObject( "There are no return flights"));
 
             List<Flight[]> result = new List<Flight[]>();
 
@@ -53,7 +53,7 @@ namespace ABS_Flights.Controllers
                 }
             }
 
-            return new OkObjectResult(new ResponseObject(true, "Flights found", result));
+            return new OkObjectResult(new ResponseObject( "Flights found", result));
         }
 
 
@@ -88,7 +88,7 @@ namespace ABS_Flights.Controllers
                 await this._unitOfWork.Flights.Insert(flight);
                 await _unitOfWork.Save();
 
-                return new OkObjectResult(new ResponseObject(true, "Flight created"));
+                return new OkObjectResult(new ResponseObject( "Flight created"));
         }
 
 
@@ -105,10 +105,10 @@ namespace ABS_Flights.Controllers
 
             if (flights.Count < ids.Length)
             {
-                return new BadRequestObjectResult(new ResponseObject(false, "Could not find all selected flights"));
+                return new BadRequestObjectResult(new ResponseObject( "Could not find all selected flights"));
             }
 
-            return new OkObjectResult(new ResponseObject(true, "Flights found", flights));
+            return new OkObjectResult(new ResponseObject( "Flights found", flights));
         }
 
         [HttpGet("information/all")]
@@ -121,7 +121,7 @@ namespace ABS_Flights.Controllers
                                       .Include(x => x.Airline)
                                       .Include(x => x.Sections));
 
-            return new OkObjectResult(new ResponseObject(true, "Flights for all flights", flights));
+            return new OkObjectResult(new ResponseObject( "Flights for all flights", flights));
         }
 
         [HttpGet("information/{Id}")]
@@ -140,7 +140,7 @@ namespace ABS_Flights.Controllers
                 flight.Sections.ToList()[i].Seats = flight.Sections.ToList()[i].Seats.Where(s => s.IsBooked).ToList();
             }
 
-            return new OkObjectResult(new ResponseObject(true, "Flight information", flight));
+            return new OkObjectResult(new ResponseObject( "Flight information", flight));
         }
 
         private async Task<IList<Flight>> FilterFlights(string originAirport, string destinationAirport, DateTime departureDate, int membersCount)

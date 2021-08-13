@@ -71,3 +71,4 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Auth\bin\Debug\net5.0\AutoMapper.dll

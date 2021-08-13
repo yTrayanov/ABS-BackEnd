@@ -31,6 +31,7 @@ namespace ABS_Gateway.Controllers
         }
 
         [HttpGet("logout")]
+        [AuthorizeEndPoint]
         public async Task<IActionResult> Logout()
         {
             return await Client.Get(HttpContext);

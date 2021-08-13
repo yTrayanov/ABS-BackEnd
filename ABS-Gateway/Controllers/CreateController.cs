@@ -7,6 +7,7 @@ namespace ABS_Gateway.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [AuthorizeAdminEndPoint]
     public class CreateController : BaseController
     {
         public CreateController(IOptions<APIUrls> urls, IClient client) : base(urls, client)

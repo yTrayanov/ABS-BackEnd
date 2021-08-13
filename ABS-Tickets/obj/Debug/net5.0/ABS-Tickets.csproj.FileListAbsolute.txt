@@ -72,3 +72,4 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Common.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Tickets\bin\Debug\net5.0\AutoMapper.dll

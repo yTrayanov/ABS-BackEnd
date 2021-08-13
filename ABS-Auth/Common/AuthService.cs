@@ -26,7 +26,7 @@ namespace ABS_Auth.Common
         public async Task<IActionResult> Logout(string idFromToken)
         {
             await _signInManager.SignOutAsync();
-            return new OkObjectResult(new ResponseObject(true, "Logged out successfully"));
+            return new OkObjectResult(new ResponseObject( "Logged out successfully"));
         }
 
         public async Task<IActionResult> Login(string username, string password, string secret)
@@ -40,7 +40,7 @@ namespace ABS_Auth.Common
                 bool isAdmin = await _userManager.IsInRoleAsync(user, Constants.AdminRole);
 
                 LoginResponseModel data = new LoginResponseModel(token, isAdmin);
-                return new OkObjectResult(new ResponseObject(true, "Logged in successfully", data));
+                return new OkObjectResult(new ResponseObject( "Logged in successfully", data));
             }
 
             throw new ArgumentException("Invalid username or password");
@@ -58,7 +58,7 @@ namespace ABS_Auth.Common
             bool isAdmin = await _userManager.IsInRoleAsync(user, Constants.AdminRole);
             var data = new LoginResponseModel(null, isAdmin);
 
-            return new OkObjectResult(new ResponseObject(true, "User already logged", data));
+            return new OkObjectResult(new ResponseObject("User already logged", data));
         }
 
         public async Task<IActionResult> Register(string username, string password, string email)
@@ -69,14 +69,14 @@ namespace ABS_Auth.Common
             var result = await _userManager.CreateAsync(user, password);
 
             if (!result.Succeeded)
-                return new BadRequestObjectResult(new ResponseObject(false, "Could not create user", result.Errors));
+                return new BadRequestObjectResult(new ResponseObject( "Could not create user", result.Errors));
 
             result = await _userManager.AddToRoleAsync(user, role.Name);
 
             if (!result.Succeeded)
-                return new BadRequestObjectResult(new ResponseObject(false, "Could not add role to user", result.Errors));
+                return new BadRequestObjectResult(new ResponseObject( "Could not add role to user", result.Errors));
 
-            return new OkObjectResult(new ResponseObject(true, "User registered"));
+            return new OkObjectResult(new ResponseObject( "User registered"));
         }
 
         public async Task<IActionResult> AuthorizeAdmin(string id)

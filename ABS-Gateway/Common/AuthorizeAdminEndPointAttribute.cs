@@ -20,7 +20,7 @@ namespace ABS_Gateway.Common
             else
             {
                 var response =
-                context.Result = new UnauthorizedObjectResult(new ResponseObject(false, "User is not logged"));
+                context.Result = new UnauthorizedObjectResult(new ResponseObject( "User is not logged"));
             }
         }
 

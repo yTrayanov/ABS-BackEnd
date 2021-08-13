@@ -44,12 +44,14 @@ namespace ABS_Gateway.Controllers
 
 
         [HttpGet("information/all")]
+        [AuthorizeAdminEndPoint]
         public async Task<IActionResult> GetAllFlights()
         {
             return await Client.Get(HttpContext);
         }
 
         [HttpGet("information/{Id}")]
+        [AuthorizeAdminEndPoint]
         public async Task<IActionResult> GetFlightInformation()
         {
             return await Client.Get(HttpContext);

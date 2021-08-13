@@ -69,7 +69,7 @@ namespace ABS_Tickets.Controllers
             await _unitOfWork.Tickets.InsertRange(tickets);
             await _unitOfWork.Save();
 
-            return new OkObjectResult(new ResponseObject(true, "Seats booked successfully"));
+            return new OkObjectResult(new ResponseObject( "Seats booked successfully"));
         }
 
         [HttpGet("user")]
@@ -85,7 +85,7 @@ namespace ABS_Tickets.Controllers
                              .Include(t => t.Seat).ThenInclude(s => s.Section)
                              .Include(t => t.User));
 
-            return new OkObjectResult(new ResponseObject(true, "User tickets here", tickets));
+            return new OkObjectResult(new ResponseObject( "User tickets here", tickets));
         }
 
 
