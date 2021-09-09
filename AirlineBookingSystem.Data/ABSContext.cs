@@ -1,34 +1,24 @@
-﻿using AirlineBookingSystem.Data.Configurations;
-using AirlineBookingSystem.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using AirlineBookingSystem.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace AirlineBookingSystem.Data
 {
-    public class ABSContext : IdentityDbContext <User>
+    public class ABSContext
     {
-        public ABSContext(DbContextOptions options) : base(options)
-        {
+        private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
 
+        public ABSContext(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _connectionString = _configuration.GetConnectionString("AbsContext");
         }
 
-        public DbSet<Ticket> Tickets { get; set; }
-        public DbSet<Section> Sections { get; set; }
-        public DbSet<Seat> Seats { get; set; }
-        public DbSet<Airline> Airlines { get; set; }
-        public DbSet<Airport> Airports { get; set; }
+        public IDbConnection CreateConnection()
+        => new SqlConnection(_connectionString);
 
-        public DbSet<Flight> Flights { get; set;}
-
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.ApplyConfiguration(new FlightConfiguration());
-            builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new SeatConfiguration());
-            builder.ApplyConfiguration(new TicketConfiguration());
-
-            base.OnModelCreating(builder);
-        }
     }
 }

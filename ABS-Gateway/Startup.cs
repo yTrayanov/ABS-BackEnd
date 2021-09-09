@@ -32,9 +32,6 @@ namespace ABS_Gateway
             services.AddHttpClient<IClient, Client>();
 
 
-            services.AddDbContext<ABSContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
-
             APIUrls apiUrls = apiUrlSection.Get<APIUrls>();
             services.AddHttpClient(APIUrls.AUTH, c => c.BaseAddress = new Uri(apiUrls.AuthApi));
 

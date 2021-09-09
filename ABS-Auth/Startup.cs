@@ -3,13 +3,11 @@ using AirlineBookingSystem.Data;
 using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using AirlineBookingSystem.Models;
-using Microsoft.AspNetCore.Identity;
+using AirlineBookingSystem.Common;
 
 namespace ABS_Auth
 {
@@ -26,16 +24,6 @@ namespace ABS_Auth
         {
             services.AddControllers();
 
-            services.AddDbContext<ABSContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
-
-            services.AddIdentity<User, IdentityRole>()
-                .AddDefaultTokenProviders()
-                .AddEntityFrameworkStores<ABSContext>();
-
-            services.ConfigureIdentity();
-            services.ConfigurePasswordSettings();
-
             services.ConfigureJwt(Configuration);
 
             services.AddSwaggerGen(c =>
@@ -43,6 +31,8 @@ namespace ABS_Auth
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ABS-Auth-Api", Version = "v1" });
             });
 
+            services.AddSingleton<ABSContext>();
+            services.AddScoped<ContextService>();
             services.AddTransient<IAuthService, AuthService>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,8 +53,6 @@ namespace ABS_Auth
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ABS-Auth-Api v1"));
-
-            app.SeedAdminAndIdentityRoles();
 
             app.UseEndpoints(endpoints =>
             {

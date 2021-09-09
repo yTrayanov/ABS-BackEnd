@@ -2,12 +2,13 @@
 using AirlineBookingSystem.Models;
 using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirlineBookingSystem.Data.Common;
-using Microsoft.EntityFrameworkCore;
+using AirlineBookingSystem.Common;
+using System.Data;
+using AirlineBookingSystem.Common.Extensions;
+using Dapper;
 
 namespace ABS_Flights.Controllers
 {
@@ -15,32 +16,32 @@ namespace ABS_Flights.Controllers
     [Route("flight")]
     public class FlightController : Controller
     {
-        private IUnitOfWork _unitOfWork;
+        private IDbConnection _connection;
 
-        public FlightController(IUnitOfWork unitOfWork)
+        public FlightController(ContextService contextService)
         {
-            this._unitOfWork = unitOfWork;
+            _connection = contextService.Connection;
         }
 
         [HttpGet("filter/{OriginAirport}/{DestinationAirport}/{DepartureDate}/{MembersCount}")]
-        public async Task<IActionResult> FilterOneWayFlights([FromRoute] FlightBindingModel flightInfo)
+        public async Task<IActionResult> FilterOneWayFlights([FromRoute] OneWayFlightModel flightInfo)
         {
             var flights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
-            return new OkObjectResult(new ResponseObject( "Flights found", flights.Select(f => new Flight[] { f })));
+            return new OkObjectResult(new ResponseObject("Flights found", flights.Select(f => new Flight[] { f })));
         }
 
         [HttpGet("filter/{OriginAirport}/{DestinationAirport}/{DepartureDate}/{MembersCount}/{ReturnDate}")]
-        public async Task<IActionResult> FilterTwoWayFlights([FromRoute] FlightBindingModel flightInfo)
+        public async Task<IActionResult> FilterTwoWayFlights([FromRoute] TwoWaySearchModel flightInfo)
         {
             var toDestinationFlights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
-            if(!toDestinationFlights.Any())
-                return new OkObjectResult(new ResponseObject( "There are no to destination flights"));
+            if (!toDestinationFlights.Any())
+                return new OkObjectResult(new ResponseObject("There are no to destination flights"));
 
             var returnFlights = await FilterFlights(flightInfo.DestinationAirport, flightInfo.OriginAirport, flightInfo.ReturnDate, flightInfo.MembersCount);
-            if(returnFlights.Any())
-                return new OkObjectResult(new ResponseObject( "There are no return flights"));
+            if (!returnFlights.Any())
+                return new OkObjectResult(new ResponseObject("There are no return flights"));
 
             List<Flight[]> result = new List<Flight[]>();
 
@@ -53,115 +54,101 @@ namespace ABS_Flights.Controllers
                 }
             }
 
-            return new OkObjectResult(new ResponseObject( "Flights found", result));
+            return new OkObjectResult(new ResponseObject("Flights found", result));
         }
 
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateFlight([FromBody] FlightBindingModel flightInfo)
         {
-                var searchFlight = await _unitOfWork.Flights.Get(f => f.FlightNumber == flightInfo.FlightNumber);
+            await _connection.QueryAsync<string>
+                ($"EXEC usp_Flights_Insert '{flightInfo.OriginAirport}','{flightInfo.DestinationAirport}','{flightInfo.Airline}', '{flightInfo.FlightNumber}', '{flightInfo.DepartureDate}', '{flightInfo.LandingDate}'");
 
-                if (searchFlight != null)
-                    throw new ArgumentException("Flight number already exists");
-
-                var originAirport = await _unitOfWork.Airports.Get(a => a.Name == flightInfo.OriginAirport);
-                var destinationAirport = await _unitOfWork.Airports.Get(a => a.Name == flightInfo.DestinationAirport);
-
-                if (originAirport == null || destinationAirport == null)
-                    throw new ArgumentException("Invalid airports information");
-
-                var airline = await _unitOfWork.Airlines.Get(a => a.Name == flightInfo.Airline);
-                if (airline == null)
-                    throw new ArgumentException("Airline does not exist");
-
-                var flight = new Flight()
-                {
-                    OriginAirportId = originAirport.Id,
-                    DestinationAirportId = destinationAirport.Id,
-                    AirlineId = airline.Id,
-                    FlightNumber = flightInfo.FlightNumber,
-                    DepartureDate = flightInfo.DepartureDate,
-                    LandingDate = flightInfo.LandingDate,
-                };
-
-                await this._unitOfWork.Flights.Insert(flight);
-                await _unitOfWork.Save();
-
-                return new OkObjectResult(new ResponseObject( "Flight created"));
+            return new OkObjectResult(new ResponseObject("Flight created"));
         }
 
 
         [HttpGet("{multipleIdsAsString}")]
-        public async  Task<IActionResult> GetFlightsByIds([FromRoute] string multipleIdsAsString)
+        public async Task<IActionResult> GetFlightsByIds([FromRoute] string multipleIdsAsString)
         {
 
-            string[] ids = multipleIdsAsString.Split(',');
+            List<int> ids = multipleIdsAsString.Split(',').Select(int.Parse).ToList();
 
-            var flights = await _unitOfWork.Flights.GetAll(f => ids.Contains(f.Id.ToString()) , 
-                include: f =>  f.Include(f => f.OriginAirport)
-                .Include(f => f.DestinationAirport)
-                .Include(f => f.Sections).ThenInclude(s => s.Seats));
-
-            if (flights.Count < ids.Length)
+            var data = new List<FlightIdModel>();
+            foreach (var id in ids)
             {
-                return new BadRequestObjectResult(new ResponseObject( "Could not find all selected flights"));
+                data.Add(new FlightIdModel { FlightId = id });
             }
 
-            return new OkObjectResult(new ResponseObject( "Flights found", flights));
+            string query = $"EXEC usp_FlightsByMultipleIds_Select @FlightIds";
+
+            using (var multi = await _connection.QueryMultipleAsync(query, new { FlightIds = data.ToDataTable().AsTableValuedParameter("FlightIdList") }))
+            {
+
+                var flights = (await multi.ReadAsync<Flight>()).ToList();
+
+                if (flights.Count < ids.Count)
+                {
+                    return new BadRequestObjectResult(new ResponseObject("Could not find all selected flights"));
+                }
+                var sections = (await multi.ReadAsync<Section>()).ToList();
+                var seats = (await multi.ReadAsync<Seat>()).ToList();
+
+                foreach (var flight in flights)
+                {
+                    flight.Sections = sections.Where(section => section.FlightId == flight.Id).ToList();
+
+                    foreach (var section in flight.Sections)
+                    {
+                        section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
+                    }
+                }
+
+
+                return new OkObjectResult(new ResponseObject( "Flights found", flights));
+            }
+
         }
 
         [HttpGet("information/all")]
         public async Task<IActionResult> GetAllFlights()
         {
-            var flights = await _unitOfWork.Flights
-                      .GetAll(null,
-                      include: f => f.Include(x => x.OriginAirport)
-                                      .Include(x => x.DestinationAirport)
-                                      .Include(x => x.Airline)
-                                      .Include(x => x.Sections));
+            var flights = await _connection.QueryAsync<Flight>($"EXEC usp_AllFlights_Select");
 
-            return new OkObjectResult(new ResponseObject( "Flights for all flights", flights));
+            return new OkObjectResult(new ResponseObject("Flights for all flights", flights));
+
         }
 
         [HttpGet("information/{Id}")]
         public async Task<IActionResult> GetFlightInformation([FromRoute] string id)
         {
-            var flight = await _unitOfWork.Flights.Get(f => f.Id.ToString() == id,
-                include: f => f.Include(f => f.OriginAirport)
-                .Include(f => f.DestinationAirport)
-                .Include(f => f.Airline)
-                .Include(f => f.Sections).ThenInclude(s => s.Seats).ThenInclude(s => s.Ticket).ThenInclude(t => t.User));
 
-            flight.Sections = flight.Sections.Where(s => s.Seats.Any(s => s.IsBooked)).ToList();
-
-            for (int i = 0; i < flight.Sections.Count; i++)
+            using (var multi = await _connection.QueryMultipleAsync($"EXEC usp_FlightById_Select {id}"))
             {
-                flight.Sections.ToList()[i].Seats = flight.Sections.ToList()[i].Seats.Where(s => s.IsBooked).ToList();
-            }
+                var flight = await multi.ReadSingleAsync<Flight>();
+                flight.Sections = (await multi.ReadAsync<Section>()).ToList();
 
-            return new OkObjectResult(new ResponseObject( "Flight information", flight));
+                var seats = (await multi.ReadAsync<Seat>()).ToList();
+                var tickets = (await multi.ReadAsync<Ticket>()).ToList();
+
+                foreach (var seat in seats)
+                {
+                    seat.Ticket = tickets.FirstOrDefault(ticket => ticket.SeatId == seat.Id);
+                }
+
+                foreach (var section in flight.Sections)
+                {
+                    section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
+                }
+
+                return new OkObjectResult(new ResponseObject("Flight information", flight));
+            }
         }
 
-        private async Task<IList<Flight>> FilterFlights(string originAirport, string destinationAirport, DateTime departureDate, int membersCount)
+        private async Task<IList<Flight>> FilterFlights(string originAirport, string destinationAirport, string departureDate, int membersCount)
         {
-            var flights = await _unitOfWork.Flights
-                   .GetAll( f => f.OriginAirport.Name == originAirport && f.DestinationAirport.Name == destinationAirport  && f.DepartureDate.Date == departureDate.Date,
-                   include: f => f.Include(x => x.OriginAirport)
-                                   .Include(x => x.DestinationAirport)
-                                   .Include(x => x.Airline)
-                                   .Include(x => x.Sections));
-
-            for (int i = 0; i < flights.Count; i++)
-            {
-                if (flights[i].Sections.Any(s => s.AvailableSeatsCount >= membersCount))
-                {
-                    continue;
-                }
-                flights.RemoveAt(i);
-                i--;
-            }
-
+            var flights = (await _connection.QueryAsync<Flight>
+                ($"EXEC dbo.usp_FilterFlights_Select '{originAirport}', '{destinationAirport}', '{departureDate}', {membersCount}")).ToList();
 
             return flights;
         }

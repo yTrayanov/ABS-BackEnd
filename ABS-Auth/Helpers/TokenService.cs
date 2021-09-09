@@ -11,13 +11,13 @@ namespace ABS_Auth.Helpers
 {
     public static class TokenService
     {
-        public static string GenerateJwtToken(string userId , string secret)
+        public static string GenerateJwtToken(string username , string secret)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", userId) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("username", username) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

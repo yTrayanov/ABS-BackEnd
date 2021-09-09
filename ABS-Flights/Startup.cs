@@ -5,10 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using AirlineBookingSystem.Data;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using AirlineBookingSystem.Data.Common;
 using ABS_Common.Extensions;
+using AirlineBookingSystem.Common;
 
 namespace ABS_Flights
 {
@@ -30,18 +29,14 @@ namespace ABS_Flights
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ABS-Flights-Api", Version = "v1" });
             });
 
-
-            services.AddDbContext<ABSContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
-
-
             services.AddMvc().AddNewtonsoftJson();
             services.AddMvc().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<ABSContext>();
+            services.AddScoped<ContextService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

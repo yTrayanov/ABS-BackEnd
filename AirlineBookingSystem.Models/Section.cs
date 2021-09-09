@@ -11,24 +11,16 @@
     public class Section:BaseModel
     {
 
-        public Section()
-        {
-            this.Seats = new List<Seat>();
-        }
-
-        public ICollection<Seat> Seats { get; set; }
 
 
         public int AvailableSeatsCount { get; set; }
 
         public int Rows { get; set; }
-
         public int Columns { get; set; }
-
         public SeatClass SeatClass { get; set; }
-
-        public int FlightId { get; set; }
         public Flight Flight { get; set; }
+
+        public ICollection<Seat> Seats { get; set; }
 
         [NotMapped]
         public bool hasAvailableSeats
@@ -39,6 +31,6 @@
             }
         }
 
-
+        public int FlightId { get; set; }
     }
 }

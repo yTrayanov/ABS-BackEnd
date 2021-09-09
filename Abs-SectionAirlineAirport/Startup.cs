@@ -1,5 +1,4 @@
 using AirlineBookingSystem.Data;
-using AirlineBookingSystem.Data.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ABS_Common.Extensions;
+using AirlineBookingSystem.Common;
 
 namespace Abs_SectionAirlineAirport
 {
@@ -31,11 +31,9 @@ namespace Abs_SectionAirlineAirport
             });
 
 
+            services.AddSingleton<ABSContext>();
+            services.AddScoped<ContextService>();
 
-            services.AddDbContext<ABSContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
-
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

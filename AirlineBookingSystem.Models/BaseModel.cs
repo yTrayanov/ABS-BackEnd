@@ -7,7 +7,6 @@ namespace AirlineBookingSystem.Models
 {
     public class BaseModel
     {
-        [Key]
         public int Id { get; set; }
     }
 }

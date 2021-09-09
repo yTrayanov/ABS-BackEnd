@@ -51,6 +51,10 @@
               "target": "Package",
               "version": "[10.1.1, )"
             },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.90, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[5.6.3, )"
@@ -262,6 +266,10 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[10.1.1, )"
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.90, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",

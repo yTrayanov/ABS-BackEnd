@@ -9,10 +9,10 @@ namespace ABS_Auth.Common
 
         Task<IActionResult> Register(string username , string password , string email);
 
-        Task<IActionResult> Logout(string idFromToken);
+        Task<IActionResult> Logout(string username);
 
-        Task<IActionResult> CheckCurrentUserStat(string id);
+        Task<IActionResult> CheckCurrentUserStat(string username);
 
-        Task<IActionResult> AuthorizeAdmin(string id);
+        Task<IActionResult> AuthorizeAdmin(string username);
     }
 }

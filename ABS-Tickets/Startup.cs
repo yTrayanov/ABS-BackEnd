@@ -1,18 +1,13 @@
-using ABS_Tickets.Common;
 using AirlineBookingSystem.Data;
-using AirlineBookingSystem.Data.Common;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ABS_Common.Extensions;
-using System.Text;
+using AirlineBookingSystem.Common;
 
 namespace ABS_Tickets
 {
@@ -34,12 +29,7 @@ namespace ABS_Tickets
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ABS_Tickets", Version = "v1" });
             });
 
-
-            services.ConfigureIdentity();
             services.ConfigureJwt(Configuration);
-
-            services.AddDbContext<ABSContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("AbsContext")));
 
             
             services.AddMvc().AddNewtonsoftJson();
@@ -48,7 +38,10 @@ namespace ABS_Tickets
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+
+            services.AddSingleton<ABSContext>();
+            services.AddScoped<ContextService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -22,14 +22,6 @@ namespace ABS_Common.Extensions
             new IdentityRole(Constants.UserRole)
      };
 
-        public static void ConfigureIdentity(this IServiceCollection services)
-        {
-            var builder = services.AddIdentityCore<User>(q => { q.User.RequireUniqueEmail = true; });
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
-            builder.AddEntityFrameworkStores<ABSContext>()
-                .AddDefaultTokenProviders();
-        }
-
         public static void ConfigurePasswordSettings(this IServiceCollection services)
         {
             services.Configure<IdentityOptions>(options =>
@@ -93,39 +85,6 @@ namespace ABS_Common.Extensions
 
                 });
             });
-        }
-
-        public static async void SeedAdminAndIdentityRoles(this IApplicationBuilder app)
-        {
-            var serviceFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-            var scope = serviceFactory.CreateScope();
-
-            using (scope)
-            {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-
-                foreach (var role in roles)
-                {
-                    if (!await roleManager.RoleExistsAsync(role.Name))
-                    {
-                        await roleManager.CreateAsync(role);
-                    }
-                }
-
-                var user = await userManager.FindByNameAsync(Constants.AdminUserName);
-                if (user == null)
-                {
-                    user = new User()
-                    {
-                        UserName = Constants.AdminUserName,
-                        Email = Constants.AdminEmail,
-                    };
-
-                    await userManager.CreateAsync(user, Constants.AdminPassword);
-                    await userManager.AddToRoleAsync(user, roles[0].Name);
-                }
-            }
         }
     }
 }

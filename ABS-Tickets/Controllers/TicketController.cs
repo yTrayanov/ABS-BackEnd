@@ -3,12 +3,12 @@ using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using AirlineBookingSystem.Data.Common;
-using Microsoft.AspNetCore.Identity;
 using AirlineBookingSystem.Models;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using AirlineBookingSystem.Common;
+using System.Data;
+using Dapper;
+using System.Linq;
 
 namespace ABS_Tickets.Controllers
 {
@@ -16,12 +16,11 @@ namespace ABS_Tickets.Controllers
     [Route("ticket")]
     public class TicketController : ControllerBase
     {
-        private IUnitOfWork _unitOfWork;
-        private UserManager<User> _userManager;
-        public TicketController(IUnitOfWork unitOfWork, UserManager<User> userManager)
+        private IDbConnection _connection;
+
+        public TicketController(ContextService contextService)
         {
-            this._unitOfWork = unitOfWork;
-            _userManager = userManager;
+            _connection = contextService.Connection;
         }
 
         [HttpPost("create")]
@@ -32,63 +31,44 @@ namespace ABS_Tickets.Controllers
             var seats = model.Seats;
             var userId = GetUserIdFromTocken();
 
-            var tickets = new List<Ticket>();
-
             for (int flightIndex = 0; flightIndex < seats.Length; flightIndex++)
             {
                 for (int seatIndex = 0; seatIndex < seats[flightIndex].Length; seatIndex++)
                 {
-                    var flight = await _unitOfWork.Flights.Get(f => f.Id == flightIds[flightIndex]);
-                    if (flight == null)
-                        throw new ArgumentException("Flight does not exist");
 
-                    var seat = await _unitOfWork.Seats.Get(s => s.Id == seats[flightIndex][seatIndex].Id);
-                    if (seat == null)
-                        throw new ArgumentException("Seat could not be found");
-
-                    var user = await _userManager.FindByIdAsync(userId);
-                    if (user == null)
-                        throw new ArgumentException("User could not be found");
-
-                    var ticket = new Ticket()
-                    {
-                        UserId = user.Id,
-                        SeatId = seat.Id,
-                        FlightId = flight.Id,
-                        PassengerName = seats[flightIndex][seatIndex].PassengerName
-                    };
-
-                    tickets.Add(ticket);
-
-                    seat.IsBooked = true;
-                    _unitOfWork.Seats.Update(seat);
-
+                    await _connection.QueryAsync($"EXEC usp_Tickets_Insert " +
+                        $"'{userId}'," +
+                        $" {seats[flightIndex][seatIndex].Id}, " +
+                        $"{flightIds[flightIndex]} ," +
+                        $"{seats[flightIndex][seatIndex].PassengerName}");
                 }
             }
 
-            await _unitOfWork.Tickets.InsertRange(tickets);
-            await _unitOfWork.Save();
 
-            return new OkObjectResult(new ResponseObject( "Seats booked successfully"));
+            return new OkObjectResult(new ResponseObject("Seats booked successfully"));
         }
 
         [HttpGet("user")]
         [Authorize]
         public async Task<IActionResult> GetUserTickets()
         {
-            var userId = GetUserIdFromTocken();
+            var username = GetUserIdFromTocken();
 
-            var tickets = await _unitOfWork.Tickets.GetAll(t => t.UserId == userId,
-                include: t => t.Include(t => t.Flight).ThenInclude(f => f.OriginAirport)
-                             .Include(t => t.Flight).ThenInclude(f => f.DestinationAirport)
-                             .Include(t => t.Flight).ThenInclude(f => f.Airline)
-                             .Include(t => t.Seat).ThenInclude(s => s.Section)
-                             .Include(t => t.User));
+            using (var multi = await _connection.QueryMultipleAsync($"EXEC dbo.usp_UserTickets_Select {username}"))
+            {
+                var tickets = (await multi.ReadAsync<Ticket>()).ToList();
+                var flights = (await multi.ReadAsync<Flight>()).ToList();
+                var seats = (await multi.ReadAsync<Seat>()).ToList();
 
-            return new OkObjectResult(new ResponseObject( "User tickets here", tickets));
+                foreach (var ticket in tickets)
+                {
+                    ticket.Flight = flights.FirstOrDefault(f => f.Id == ticket.FlightId);
+                    ticket.Seat = seats.FirstOrDefault(s => s.Id == ticket.SeatId);
+                }
+
+                return new OkObjectResult(new ResponseObject("User tickets here", tickets));
+            }
         }
-
-
-        private string GetUserIdFromTocken() => this.User.FindFirst("id")?.Value;
+        private string GetUserIdFromTocken() => this.User.FindFirst("username")?.Value;
     }
 }

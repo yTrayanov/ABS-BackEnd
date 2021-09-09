@@ -1,93 +1,66 @@
-﻿using ABS_Auth.Helpers;
-using AirlineBookingSystem.Models;
-using ABS_Common.ResponsesModels;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using ABS_Common;
 using System;
+using AirlineBookingSystem.Common;
+using System.Data;
+using Dapper;
+using AirlineBookingSystem.Models;
+using ABS_Auth.Helpers;
+using ABS_Common;
+using System.Linq;
+using ABS_Common.ResponsesModels;
 
 namespace ABS_Auth.Common
 {
     public class AuthService : IAuthService
     {
-        private UserManager<User> _userManager;
-        private RoleManager<IdentityRole> _roleManager;
-        private SignInManager<User> _signInManager;
-
-        public AuthService(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, SignInManager<User> signInManager)
+        private readonly IDbConnection _connection;
+        public AuthService(ContextService contextService)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
+            _connection = contextService.Connection;
         }
 
-        public async Task<IActionResult> Logout(string idFromToken)
+        public async Task<IActionResult> Logout(string username)
         {
-            await _signInManager.SignOutAsync();
-            return new OkObjectResult(new ResponseObject( "Logged out successfully"));
+            await _connection.QueryAsync($"EXEC usp_LogoutUser_Update '{username}',{(int)UserStatus.Registered} ");
+            return new OkObjectResult(new ResponseObject("Logged out successfully"));
         }
 
         public async Task<IActionResult> Login(string username, string password, string secret)
         {
-            var result = await _signInManager.PasswordSignInAsync(username, password, false, false);
-            if (result.Succeeded)
-            {
-                var user = this._signInManager.UserManager.Users.FirstOrDefault(u => u.UserName == username);
+            var userRoles = await _connection.QueryAsync<string>($"EXEC ups_LoginUser_Update '{username}','{password}',{(int)UserStatus.LoggedIn} ");
+            string token = TokenService.GenerateJwtToken(username, secret);
+            bool isAdmin = userRoles.Contains(Constants.AdminRole);
 
-                string token = TokenService.GenerateJwtToken(user.Id, secret);
-                bool isAdmin = await _userManager.IsInRoleAsync(user, Constants.AdminRole);
-
-                LoginResponseModel data = new LoginResponseModel(token, isAdmin);
-                return new OkObjectResult(new ResponseObject( "Logged in successfully", data));
-            }
-
-            throw new ArgumentException("Invalid username or password");
+            LoginResponseModel data = new LoginResponseModel(token, isAdmin);
+            return new OkObjectResult(new ResponseObject("Logged in successfully", data));
 
         }
 
-        public async Task<IActionResult> CheckCurrentUserStat(string id)
+        public async Task<IActionResult> CheckCurrentUserStat(string username)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-            {
-                throw new ArgumentException("User with this id does not exist");
-            }
-
-            bool isAdmin = await _userManager.IsInRoleAsync(user, Constants.AdminRole);
+            var userRoles = await _connection.QueryAsync<string>($"EXEC ups_GetUserRoles_Select '{username}', {(int)UserStatus.LoggedIn}");
+            bool isAdmin = userRoles.Contains(Constants.AdminRole);
             var data = new LoginResponseModel(null, isAdmin);
-
             return new OkObjectResult(new ResponseObject("User already logged", data));
         }
 
         public async Task<IActionResult> Register(string username, string password, string email)
         {
-            var role = await _roleManager.FindByNameAsync(Constants.UserRole);
-            User user = new User { UserName = username, Email = email };
+            await _connection.QueryAsync($"EXEC usp_RegisterUsers_Insert '{username}', '{password}', '{email}'");
 
-            var result = await _userManager.CreateAsync(user, password);
-
-            if (!result.Succeeded)
-                return new BadRequestObjectResult(new ResponseObject( "Could not create user", result.Errors));
-
-            result = await _userManager.AddToRoleAsync(user, role.Name);
-
-            if (!result.Succeeded)
-                return new BadRequestObjectResult(new ResponseObject( "Could not add role to user", result.Errors));
-
-            return new OkObjectResult(new ResponseObject( "User registered"));
+            return new OkObjectResult(new ResponseObject("User registered"));
         }
 
-        public async Task<IActionResult> AuthorizeAdmin(string id)
+        public async Task<IActionResult> AuthorizeAdmin(string username)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            var userRoles = await _userManager.GetRolesAsync(user);
+            var userRoles = await _connection.QueryAsync<string>($"EXEC ups_GetUserRoles_Select '{username}', {(int)UserStatus.LoggedIn}");
 
             if (userRoles.Contains(Constants.AdminRole))
                 return new OkResult();
 
             return new UnauthorizedResult();
         }
+
     }
 }

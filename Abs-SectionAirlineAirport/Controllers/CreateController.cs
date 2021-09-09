@@ -2,11 +2,10 @@
 using AirlineBookingSystem.Models;
 using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using AirlineBookingSystem.Data.Common;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using AirlineBookingSystem.Common;
+using System.Data;
+using Dapper;
 
 namespace Abs_SectionAirlineAirport.Controllers
 {
@@ -14,53 +13,19 @@ namespace Abs_SectionAirlineAirport.Controllers
     [Route("[controller]")]
     public class CreateController : ControllerBase
     {
-        private IUnitOfWork _unitOfWork;
-        public CreateController(IUnitOfWork unitOfWork)
+        private IDbConnection _connection;
+
+        public CreateController(ContextService contextService)
         {
-            this._unitOfWork = unitOfWork;
+            _connection = contextService.Connection;
         }
         [HttpPost("section")]
         public async Task<IActionResult> CreateSection([FromBody] SectionBindingModel sectionInfo)
         {
-            var flight = await _unitOfWork.Flights.Get(f => f.FlightNumber == sectionInfo.FlightNumber);
-
-            if (flight == null)
-                throw new ArgumentException("Flight does not exist");
-
             var seatClass = sectionInfo.SeatClass.ToLower() == "first" ? SeatClass.First : sectionInfo.SeatClass.ToLower() == "bussiness" ? SeatClass.Bussiness : SeatClass.Economy;
 
-            if (flight.Sections.Any(s => s.SeatClass == seatClass))
-                throw new ArgumentException("Flight already contains seat class");
-
-
-            var section = new Section
-            {
-                Rows = sectionInfo.Rows,
-                Columns = sectionInfo.Columns,
-                SeatClass = sectionInfo.SeatClass.ToLower() == "first" ? SeatClass.First : sectionInfo.SeatClass.ToLower() == "bussiness" ? SeatClass.Bussiness : SeatClass.Economy,
-                FlightId = flight.Id,
-                AvailableSeatsCount = sectionInfo.Rows * sectionInfo.Columns
-            };
-
-            var seats = new List<Seat>();
-
-            for (int row = 0; row < section.Rows; row++)
-            {
-                for (int col = 0; col < section.Columns; col++)
-                {
-                    var seat = new Seat()
-                    {
-                        Row = row + 1,
-                        Col = col + 1,
-                        Section = section
-                    };
-                    seats.Add(seat);
-                }
-            }
-
-            await _unitOfWork.Sections.Insert(section);
-            await _unitOfWork.Seats.InsertRange(seats);
-            await _unitOfWork.Save();
+            await _connection.QueryAsync<string>
+                ($"EXEC usp_Sections_Insert {sectionInfo.Rows}, {sectionInfo.Columns}, {(int)seatClass}, '{sectionInfo.FlightNumber}' ");
 
             return new OkObjectResult(new ResponseObject( "Section created"));
         }

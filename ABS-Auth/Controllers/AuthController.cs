@@ -1,6 +1,5 @@
 ﻿using ABS_Auth.Common;
 using ABS_Auth.Models;
-using ABS_Common;
 using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,8 +25,8 @@ namespace ABS_Auth.Controllers
         [Authorize]
         public async Task<IActionResult> Stat()
         {
-            string userId = GetUserIdFromTocken();
-            return await this._authService.CheckCurrentUserStat(userId);
+            string username = GetUserIdFromTocken();
+            return await this._authService.CheckCurrentUserStat(username);
         }
 
         [HttpPost("login")]
@@ -40,8 +39,8 @@ namespace ABS_Auth.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            string userid = GetUserIdFromTocken();
-            return await _authService.Logout(userid);
+            string username = GetUserIdFromTocken();
+            return await _authService.Logout(username);
         }
 
         [HttpPost("register")]
@@ -65,12 +64,12 @@ namespace ABS_Auth.Controllers
         [Authorize]
         public async Task<IActionResult> AuthorizeAdmin()
         {
-            string id = GetUserIdFromTocken();
-            return await _authService.AuthorizeAdmin(id);
+            string username = GetUserIdFromTocken();
+            return await _authService.AuthorizeAdmin(username);
         }
 
 
-        private string GetUserIdFromTocken() => this.User.FindFirst("id")?.Value;
+        private string GetUserIdFromTocken() => this.User.FindFirst("username")?.Value;
 
     }
 }

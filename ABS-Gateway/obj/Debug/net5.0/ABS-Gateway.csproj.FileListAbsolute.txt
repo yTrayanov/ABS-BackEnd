@@ -70,3 +70,4 @@ C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\net5.0\AirlineBookingSystem.Common.pdb
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\net5.0\Newtonsoft.Json.dll
 C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\net5.0\AutoMapper.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\ABS-Gateway\bin\Debug\net5.0\Dapper.dll

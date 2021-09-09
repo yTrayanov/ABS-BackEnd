@@ -5,10 +5,6 @@ namespace AirlineBookingSystem.Models
 {
     public class Seat:BaseModel
     {
-        public Seat()
-        {
-            this.IsBooked = false;
-        }
 
         [Required]
         public int Row { get; set; }
@@ -21,13 +17,14 @@ namespace AirlineBookingSystem.Models
                 return this.Row.ToString() + Convert.ToChar(Col - 1 + 'A');
             }
         }
-
-        public int SectionId { get; set; }
-        public Section Section { get; set; }
-
-        public int? TicketId { get; set; }
+        public int TicketId { get; set; }
         public Ticket Ticket { get; set; }
 
+        public int SectionId { get; set; }
+
+        public string Username { get; set; }
+
+        public SeatClass SeatClass { get; set; }
         public string PassengerName { get; set; }
 
     }
