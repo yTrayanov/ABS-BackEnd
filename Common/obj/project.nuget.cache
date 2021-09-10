@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bdF74xu58QgC19DDBH2N/WzDj9br4m7Iq3d5QDf4xlVS0AkpgeQR918a9DbwjEPDSO/efq0DfjfqjkBEybMN0g==",
+  "dgSpecHash": "vFYgFYvUEjaq7NNQ+3S4ThXbuzYg+zbDv/v8Z5KaU/3tbOA2iMEfAhsX/IihBWq9Rp+eZWR1bPG9PlWq8Kwl7w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj",
+  "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\dapper\\2.0.90\\dapper.2.0.90.nupkg.sha512",

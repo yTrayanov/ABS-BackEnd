@@ -1878,53 +1878,38 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
-      "AirlineBookingSystem.Common/1.0.0": {
+      "Abs.Common/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v5.0",
         "dependencies": {
-          "AirlineBookingSystem.Data": "1.0.0",
-          "AirlineBookingSystem.Models": "1.0.0",
+          "ABS.Data": "1.0.0",
           "AutoMapper": "10.1.1",
           "Dapper": "2.0.90",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "5.0.8",
           "Microsoft.AspNetCore.Http": "2.2.2",
           "Microsoft.AspNetCore.Identity": "2.2.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8"
-        },
-        "compile": {
-          "bin/placeholder/AirlineBookingSystem.Common.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/AirlineBookingSystem.Common.dll": {}
-        }
-      },
-      "AirlineBookingSystem.Data/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
-        "dependencies": {
-          "AirlineBookingSystem.Models": "1.0.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
-          "Microsoft.EntityFrameworkCore.SqlServer": "5.0.8"
-        },
-        "compile": {
-          "bin/placeholder/AirlineBookingSystem.Data.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/AirlineBookingSystem.Data.dll": {}
-        }
-      },
-      "AirlineBookingSystem.Models/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
-        "dependencies": {
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
           "Newtonsoft.Json": "13.0.1"
         },
         "compile": {
-          "bin/placeholder/AirlineBookingSystem.Models.dll": {}
+          "bin/placeholder/Abs.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/AirlineBookingSystem.Models.dll": {}
+          "bin/placeholder/Abs.Common.dll": {}
+        }
+      },
+      "ABS.Data/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
+          "Microsoft.EntityFrameworkCore.SqlServer": "5.0.8"
+        },
+        "compile": {
+          "bin/placeholder/ABS.Data.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ABS.Data.dll": {}
         }
       }
     }
@@ -6522,27 +6507,21 @@
         "system.xml.xmlserializer.nuspec"
       ]
     },
-    "AirlineBookingSystem.Common/1.0.0": {
+    "Abs.Common/1.0.0": {
       "type": "project",
-      "path": "../Common/AirlineBookingSystem.Common.csproj",
-      "msbuildProject": "../Common/AirlineBookingSystem.Common.csproj"
+      "path": "../Common/Abs.Common.csproj",
+      "msbuildProject": "../Common/Abs.Common.csproj"
     },
-    "AirlineBookingSystem.Data/1.0.0": {
+    "ABS.Data/1.0.0": {
       "type": "project",
-      "path": "../AirlineBookingSystem.Data/AirlineBookingSystem.Data.csproj",
-      "msbuildProject": "../AirlineBookingSystem.Data/AirlineBookingSystem.Data.csproj"
-    },
-    "AirlineBookingSystem.Models/1.0.0": {
-      "type": "project",
-      "path": "../AirlineBookingSystem.Models/AirlineBookingSystem.Models.csproj",
-      "msbuildProject": "../AirlineBookingSystem.Models/AirlineBookingSystem.Models.csproj"
+      "path": "../AirlineBookingSystem.Data/ABS.Data.csproj",
+      "msbuildProject": "../AirlineBookingSystem.Data/ABS.Data.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
-      "AirlineBookingSystem.Common >= 1.0.0",
-      "AirlineBookingSystem.Data >= 1.0.0",
-      "AirlineBookingSystem.Models >= 1.0.0",
+      "ABS.Data >= 1.0.0",
+      "Abs.Common >= 1.0.0",
       "AutoMapper >= 10.1.1",
       "Dapper >= 2.0.90",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 5.0.8",
@@ -6578,14 +6557,11 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj": {
-              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\AirlineBookingSystem.Data.csproj"
+            "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj": {
+              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj"
             },
-            "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Models\\AirlineBookingSystem.Models.csproj": {
-              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Models\\AirlineBookingSystem.Models.csproj"
-            },
-            "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj": {
-              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\AirlineBookingSystem.Common.csproj"
+            "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj": {
+              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj"
             }
           }
         }

@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineBookingSystem.Models", "AirlineBookingSystem.Models\AirlineBookingSystem.Models.csproj", "{B00EB4CB-F097-4F00-9376-EAD17D00C32C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineBookingSystem.Data", "AirlineBookingSystem.Data\AirlineBookingSystem.Data.csproj", "{796D0297-6CD0-49C3-AB23-4A436CB60793}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS.Data", "AirlineBookingSystem.Data\ABS.Data.csproj", "{796D0297-6CD0-49C3-AB23-4A436CB60793}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS-Gateway", "ABS-Gateway\ABS-Gateway.csproj", "{BFE53F06-1751-4AF1-8674-C4B7378FD624}"
 EndProject
@@ -13,13 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS-Auth", "ABS-Auth\ABS-Au
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS-Flights", "ABS-Flights\ABS-Flights.csproj", "{922E5FF1-4DC9-48C2-9DBC-DA7C1763C544}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineBookingSystem.Common", "Common\AirlineBookingSystem.Common.csproj", "{6423076F-002B-475F-BAD5-0F85086221B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abs.Common", "Common\Abs.Common.csproj", "{6423076F-002B-475F-BAD5-0F85086221B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS-Tickets", "ABS-Tickets\ABS-Tickets.csproj", "{5B492222-EBEA-4818-8FEB-A2919E6CB07C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Abs-SectionAirlineAirport", "Abs-SectionAirlineAirport\Abs-SectionAirlineAirport.csproj", "{45B89903-5574-4E63-AFD2-6F03DC7A1842}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABS.DtoModels", "ABS.DtoModels\ABS.DtoModels.csproj", "{B7534491-9710-4C30-9AA5-3702B827B8C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +23,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B00EB4CB-F097-4F00-9376-EAD17D00C32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B00EB4CB-F097-4F00-9376-EAD17D00C32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B00EB4CB-F097-4F00-9376-EAD17D00C32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B00EB4CB-F097-4F00-9376-EAD17D00C32C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{796D0297-6CD0-49C3-AB23-4A436CB60793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{796D0297-6CD0-49C3-AB23-4A436CB60793}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{796D0297-6CD0-49C3-AB23-4A436CB60793}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,10 +51,6 @@ Global
 		{45B89903-5574-4E63-AFD2-6F03DC7A1842}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45B89903-5574-4E63-AFD2-6F03DC7A1842}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45B89903-5574-4E63-AFD2-6F03DC7A1842}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7534491-9710-4C30-9AA5-3702B827B8C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7534491-9710-4C30-9AA5-3702B827B8C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7534491-9710-4C30-9AA5-3702B827B8C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7534491-9710-4C30-9AA5-3702B827B8C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

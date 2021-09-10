@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
-using AirlineBookingSystem.Data;
 using System.Data;
 using Dapper;
-using AirlineBookingSystem.Models;
 using ABS_Auth.Helpers;
 using ABS_Common;
 using System.Linq;
 using ABS_Common.ResponsesModels;
+using ABS_Data.Data;
 
 namespace ABS_Auth.Common
 {

@@ -1,6 +1,4 @@
 ﻿using ABS_Common.ResponsesModels;
-using AirlineBookingSystem.Data;
-using AirlineBookingSystem.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;

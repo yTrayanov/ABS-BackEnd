@@ -1,5 +1,4 @@
 ﻿using ABS_Flights.Models;
-using AirlineBookingSystem.Models;
 using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 using System.Data;
 using AirlineBookingSystem.Common.Extensions;
 using Dapper;
-using AirlineBookingSystem.Data;
+using ABS_Data.Data;
 
 namespace ABS_Flights.Controllers
 {
@@ -28,7 +27,7 @@ namespace ABS_Flights.Controllers
         {
             var flights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
-            return new OkObjectResult(new ResponseObject("Flights found", flights.Select(f => new Flight[] { f })));
+            return new OkObjectResult(new ResponseObject("Flights found", flights.Select(f => new FilteredFlightModel[] { f })));
         }
 
         [HttpGet("filter/{OriginAirport}/{DestinationAirport}/{DepartureDate}/{MembersCount}/{ReturnDate}")]
@@ -43,13 +42,13 @@ namespace ABS_Flights.Controllers
             if (!returnFlights.Any())
                 return new OkObjectResult(new ResponseObject("There are no return flights"));
 
-            List<Flight[]> result = new List<Flight[]>();
+            var result = new List<FilteredFlightModel[]>();
 
             for (int i = 0; i < toDestinationFlights.Count; i++)
             {
                 for (int j = 0; j < returnFlights.Count; j++)
                 {
-                    var flights = new Flight[] { toDestinationFlights[i], returnFlights[j] };
+                    var flights = new FilteredFlightModel[] { toDestinationFlights[i], returnFlights[j] };
                     result.Add(flights);
                 }
             }
@@ -86,7 +85,7 @@ namespace ABS_Flights.Controllers
             using (var multi = await _connection.QueryMultipleAsync(query, new { FlightIds = data.ToDataTable().AsTableValuedParameter("FlightIdList") }))
             {
 
-                var flights = (await multi.ReadAsync<Flight>()).ToList();
+                var flights = (await multi.ReadAsync<FlightWithSectionsModel>()).ToList();
 
                 if (flights.Count < ids.Count)
                 {
@@ -114,7 +113,7 @@ namespace ABS_Flights.Controllers
         [HttpGet("information/all")]
         public async Task<IActionResult> GetAllFlights()
         {
-            var flights = await _connection.QueryAsync<Flight>($"EXEC usp_AllFlights_Select");
+            var flights = await _connection.QueryAsync<AllFlightModel>($"EXEC usp_AllFlights_Select");
 
             return new OkObjectResult(new ResponseObject("Flights for all flights", flights));
 
@@ -125,16 +124,10 @@ namespace ABS_Flights.Controllers
         {
             using (var multi = await _connection.QueryMultipleAsync($"EXEC usp_FlightById_Select {id}"))
             {
-                var flight = await multi.ReadSingleAsync<Flight>();
+                var flight = await multi.ReadSingleAsync<FlightWithSectionsModel>();
                 flight.Sections = (await multi.ReadAsync<Section>()).ToList();
 
                 var seats = (await multi.ReadAsync<Seat>()).ToList();
-                var tickets = (await multi.ReadAsync<Ticket>()).ToList();
-
-                foreach (var seat in seats)
-                {
-                    seat.Ticket = tickets.FirstOrDefault(ticket => ticket.SeatId == seat.Id);
-                }
 
                 foreach (var section in flight.Sections)
                 {
@@ -145,9 +138,9 @@ namespace ABS_Flights.Controllers
             }
         }
 
-        private async Task<IList<Flight>> FilterFlights(string originAirport, string destinationAirport, string departureDate, int membersCount)
+        private async Task<IList<FilteredFlightModel>> FilterFlights(string originAirport, string destinationAirport, string departureDate, int membersCount)
         {
-            var flights = (await _connection.QueryAsync<Flight>
+            var flights = (await _connection.QueryAsync<FilteredFlightModel>
                 ($"EXEC dbo.usp_FilterFlights_Select '{originAirport}', '{destinationAirport}', '{departureDate}', {membersCount}")).ToList();
 
             return flights;

@@ -1,8 +1,7 @@
-﻿using AirlineBookingSystem.Data;
-using System;
+﻿using System;
 using System.Data;
 
-namespace AirlineBookingSystem.Data
+namespace ABS_Data.Data
 {
     public class ContextService : IDisposable
     {

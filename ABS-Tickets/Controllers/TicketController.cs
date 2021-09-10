@@ -2,13 +2,11 @@
 using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using AirlineBookingSystem.Models;
 using System.Threading.Tasks;
-using AirlineBookingSystem.Data;
 using System.Data;
 using Dapper;
 using System.Linq;
+using ABS_Data.Data;
 
 namespace ABS_Tickets.Controllers
 {
@@ -56,9 +54,9 @@ namespace ABS_Tickets.Controllers
 
             using (var multi = await _connection.QueryMultipleAsync($"EXEC dbo.usp_UserTickets_Select {username}"))
             {
-                var tickets = (await multi.ReadAsync<Ticket>()).ToList();
+                var tickets = (await multi.ReadAsync<TicketViewModel>()).ToList();
                 var flights = (await multi.ReadAsync<Flight>()).ToList();
-                var seats = (await multi.ReadAsync<Seat>()).ToList();
+                var seats = (await multi.ReadAsync<SeatModel>()).ToList();
 
                 foreach (var ticket in tickets)
                 {

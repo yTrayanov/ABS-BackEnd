@@ -1,5 +1,5 @@
 using ABS_Auth.Common;
-using AirlineBookingSystem.Data;
+using ABS_Data.Data;
 using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using AirlineBookingSystem.Common;
 
 namespace ABS_Auth
 {

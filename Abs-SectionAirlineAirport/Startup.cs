@@ -1,4 +1,4 @@
-using AirlineBookingSystem.Data;
+using ABS_Data.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

@@ -1,10 +1,9 @@
-﻿using AirlineBookingSystem.Models;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace AirlineBookingSystem.Data
+namespace ABS_Data.Data
 {
     public class ABSContext
     {

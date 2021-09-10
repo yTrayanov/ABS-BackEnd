@@ -1,11 +1,11 @@
 ﻿using Abs_SectionAirlineAirport.Models;
-using AirlineBookingSystem.Models;
 using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using AirlineBookingSystem.Data;
 using System.Data;
 using Dapper;
+using ABS_Data.Data;
+using ABS_Common.Enumerations;
 
 namespace Abs_SectionAirlineAirport.Controllers
 {

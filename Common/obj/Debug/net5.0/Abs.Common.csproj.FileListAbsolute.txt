@@ -1,0 +1,15 @@
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.csprojAssemblyReference.cache
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.AssemblyInfoInputs.cache
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.AssemblyInfo.cs
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.csproj.CoreCompileInputs.cache
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\net5.0\Abs.Common.deps.json
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\net5.0\Abs.Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\net5.0\ref\Abs.Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\net5.0\Abs.Common.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\net5.0\ABS.Data.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\bin\Debug\net5.0\ABS.Data.pdb
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.csproj.CopyComplete
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\ref\Abs.Common.dll
+C:\Users\Yavor Trayanov\source\repos\AirlineBookingSystem\Common\obj\Debug\net5.0\Abs.Common.pdb

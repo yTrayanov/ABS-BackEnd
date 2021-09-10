@@ -33,8 +33,8 @@
     ".NETCoreApp,Version=v5.0": {
       "ABS-Gateway/1.0.0": {
         "dependencies": {
-          "AirlineBookingSystem.Common": "1.0.0",
-          "AirlineBookingSystem.Data": "1.0.0",
+          "ABS.Data": "1.0.0",
+          "Abs.Common": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "5.0.8",
           "Swashbuckle.AspNetCore": "6.1.4",
           "System.Net.Http.Json": "5.0.0",
@@ -1513,47 +1513,34 @@
           "System.Xml.XmlDocument": "4.3.0"
         }
       },
-      "AirlineBookingSystem.Common/1.0.0": {
+      "Abs.Common/1.0.0": {
         "dependencies": {
-          "AirlineBookingSystem.Data": "1.0.0",
-          "AirlineBookingSystem.Models": "1.0.0",
+          "ABS.Data": "1.0.0",
           "AutoMapper": "10.1.1",
           "Dapper": "2.0.90",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "5.0.8",
           "Microsoft.AspNetCore.Http": "2.2.2",
           "Microsoft.AspNetCore.Identity": "2.2.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8"
-        },
-        "runtime": {
-          "AirlineBookingSystem.Common.dll": {}
-        },
-        "compile": {
-          "AirlineBookingSystem.Common.dll": {}
-        }
-      },
-      "AirlineBookingSystem.Data/1.0.0": {
-        "dependencies": {
-          "AirlineBookingSystem.Models": "1.0.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
-          "Microsoft.EntityFrameworkCore.SqlServer": "5.0.8"
-        },
-        "runtime": {
-          "AirlineBookingSystem.Data.dll": {}
-        },
-        "compile": {
-          "AirlineBookingSystem.Data.dll": {}
-        }
-      },
-      "AirlineBookingSystem.Models/1.0.0": {
-        "dependencies": {
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
           "Newtonsoft.Json": "13.0.1"
         },
         "runtime": {
-          "AirlineBookingSystem.Models.dll": {}
+          "Abs.Common.dll": {}
         },
         "compile": {
-          "AirlineBookingSystem.Models.dll": {}
+          "Abs.Common.dll": {}
+        }
+      },
+      "ABS.Data/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
+          "Microsoft.EntityFrameworkCore.SqlServer": "5.0.8"
+        },
+        "runtime": {
+          "ABS.Data.dll": {}
+        },
+        "compile": {
+          "ABS.Data.dll": {}
         }
       },
       "Microsoft.AspNetCore.Antiforgery/5.0.0.0": {
@@ -4122,17 +4109,12 @@
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
     },
-    "AirlineBookingSystem.Common/1.0.0": {
+    "Abs.Common/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "AirlineBookingSystem.Data/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "AirlineBookingSystem.Models/1.0.0": {
+    "ABS.Data/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
