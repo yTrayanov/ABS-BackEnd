@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AirlineBookingSystem.Common;
 using System.Data;
 using AirlineBookingSystem.Common.Extensions;
 using Dapper;
+using AirlineBookingSystem.Data;
 
 namespace ABS_Flights.Controllers
 {
@@ -57,16 +57,17 @@ namespace ABS_Flights.Controllers
             return new OkObjectResult(new ResponseObject("Flights found", result));
         }
 
-
         [HttpPost("create")]
         public async Task<IActionResult> CreateFlight([FromBody] FlightBindingModel flightInfo)
         {
-            await _connection.QueryAsync<string>
-                ($"EXEC usp_Flights_Insert '{flightInfo.OriginAirport}','{flightInfo.DestinationAirport}','{flightInfo.Airline}', '{flightInfo.FlightNumber}', '{flightInfo.DepartureDate}', '{flightInfo.LandingDate}'");
+            string query = $"EXEC usp_Flights_Insert @OriginAirport, @DestinationAirport, @Airline, @FlightNumber , @DepartureDate, @LandingDate";
+
+            var parameters = new { OriginAirport = flightInfo.OriginAirport, DestinationAirport = flightInfo.DestinationAirport, Airline = flightInfo.Airline, FlightNumber = flightInfo.FlightNumber, DepartureDate = flightInfo.DepartureDate, LandingDate = flightInfo.LandingDate };
+
+            await _connection.QueryAsync<string>(query, parameters );
 
             return new OkObjectResult(new ResponseObject("Flight created"));
         }
-
 
         [HttpGet("{multipleIdsAsString}")]
         public async Task<IActionResult> GetFlightsByIds([FromRoute] string multipleIdsAsString)
@@ -119,10 +120,9 @@ namespace ABS_Flights.Controllers
 
         }
 
-        [HttpGet("information/{Id}")]
+        [HttpGet("information/{id}")]
         public async Task<IActionResult> GetFlightInformation([FromRoute] string id)
         {
-
             using (var multi = await _connection.QueryMultipleAsync($"EXEC usp_FlightById_Select {id}"))
             {
                 var flight = await multi.ReadSingleAsync<Flight>();

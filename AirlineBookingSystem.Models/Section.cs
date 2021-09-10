@@ -1,12 +1,7 @@
 ﻿namespace AirlineBookingSystem.Models
 {
-    using AirlineBookingSystem.Models.Constants;
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Linq;
-    using System.Text.Json.Serialization;
 
     public class Section:BaseModel
     {

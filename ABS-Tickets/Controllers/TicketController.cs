@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using AirlineBookingSystem.Models;
 using System.Threading.Tasks;
-using AirlineBookingSystem.Common;
+using AirlineBookingSystem.Data;
 using System.Data;
 using Dapper;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace ABS_Tickets.Controllers
         {
             var flightIds = model.FlightIds;
             var seats = model.Seats;
-            var userId = GetUserIdFromTocken();
+            var username = GetUsernameFromTocken();
 
             for (int flightIndex = 0; flightIndex < seats.Length; flightIndex++)
             {
@@ -37,7 +37,7 @@ namespace ABS_Tickets.Controllers
                 {
 
                     await _connection.QueryAsync($"EXEC usp_Tickets_Insert " +
-                        $"'{userId}'," +
+                        $"'{username}'," +
                         $" {seats[flightIndex][seatIndex].Id}, " +
                         $"{flightIds[flightIndex]} ," +
                         $"{seats[flightIndex][seatIndex].PassengerName}");
@@ -52,7 +52,7 @@ namespace ABS_Tickets.Controllers
         [Authorize]
         public async Task<IActionResult> GetUserTickets()
         {
-            var username = GetUserIdFromTocken();
+            var username = GetUsernameFromTocken();
 
             using (var multi = await _connection.QueryMultipleAsync($"EXEC dbo.usp_UserTickets_Select {username}"))
             {
@@ -69,6 +69,6 @@ namespace ABS_Tickets.Controllers
                 return new OkObjectResult(new ResponseObject("User tickets here", tickets));
             }
         }
-        private string GetUserIdFromTocken() => this.User.FindFirst("username")?.Value;
+        private string GetUsernameFromTocken() => this.User.FindFirst("username")?.Value;
     }
 }

@@ -8,13 +8,13 @@ namespace AirlineBookingSystem.Models
 
         [Required]
         public int Row { get; set; }
-        public int Col { get; set; }
+        public int Column { get; set; }
         public bool IsBooked { get; set; } 
         public string SeatNumber
         {
             get
             {
-                return this.Row.ToString() + Convert.ToChar(Col - 1 + 'A');
+                return this.Row.ToString() + Convert.ToChar(Column - 1 + 'A');
             }
         }
         public int TicketId { get; set; }

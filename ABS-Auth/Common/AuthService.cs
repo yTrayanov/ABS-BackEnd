@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
-using AirlineBookingSystem.Common;
+using AirlineBookingSystem.Data;
 using System.Data;
 using Dapper;
 using AirlineBookingSystem.Models;

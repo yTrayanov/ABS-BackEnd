@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using AirlineBookingSystem.Data;
 using Newtonsoft.Json;
 using ABS_Common.Extensions;
-using AirlineBookingSystem.Common;
 
 namespace ABS_Flights
 {
