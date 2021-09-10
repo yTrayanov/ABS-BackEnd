@@ -1,1 +1,0 @@
-[{"Username":"admin","Email":"admin@admin.bg","Salt":null,"HashedPassword":"admin","Roles":["Admin"],"Tickets":[],"Status":0,"Id":"181cd864-379d-4db9-b31a-67257a6f47d0"},{"Username":"user1","Email":"user1@user.bg","Salt":null,"HashedPassword":"user123","Roles":["User"],"Tickets":[],"Status":1,"Id":"6f76350b-21b9-4b13-a104-45b63c1a687f"}]
