@@ -6523,11 +6523,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Tickets\\ABS-Tickets.csproj",
+      "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\ABS-Tickets\\ABS-Tickets.csproj",
       "projectName": "ABS-Tickets",
-      "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Tickets\\ABS-Tickets.csproj",
+      "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\ABS-Tickets\\ABS-Tickets.csproj",
       "packagesPath": "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Tickets\\obj\\",
+      "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\ABS-Tickets\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Yavor Trayanov\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -6544,11 +6544,11 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj": {
-              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj"
+            "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj": {
+              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj"
             },
-            "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj": {
-              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj"
+            "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\Common\\Abs.Common.csproj": {
+              "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\Common\\Abs.Common.csproj"
             }
           }
         }

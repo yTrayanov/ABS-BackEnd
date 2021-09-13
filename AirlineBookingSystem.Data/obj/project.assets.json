@@ -5959,11 +5959,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj",
+      "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj",
       "projectName": "ABS.Data",
-      "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj",
+      "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj",
       "packagesPath": "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\obj\\",
+      "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Yavor Trayanov\\AppData\\Roaming\\NuGet\\NuGet.Config",

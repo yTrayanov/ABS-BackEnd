@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "96ItwShTyAHucDPPlbwoq7gTfOKwrR8A1os4RzRMEshgVtYL8FPLuHh4Xjs8/wFiJGsYHwp5kxiLaXtEfx5Uxw==",
+  "dgSpecHash": "sh9qC8HXASdQksV+zWX/qCon5NyaU5+4WokffK2gTsSpOY3uYX24tCX+X9k2xOJ7DRdV2yQKHTRIy1YSVcDLnQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\ABS-Auth\\ABS-Auth.csproj",
+  "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\ABS-Auth\\ABS-Auth.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\dapper\\2.0.90\\dapper.2.0.90.nupkg.sha512",

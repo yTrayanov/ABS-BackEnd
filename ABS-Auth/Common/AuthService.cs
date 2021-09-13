@@ -36,7 +36,7 @@ namespace ABS_Auth.Common
 
         }
 
-        public async Task<IActionResult> CheckCurrentUserStat(string username)
+        public async Task<IActionResult> CheckCurrentUserStatAndRole(string username)
         {
             var userRoles = await _connection.QueryAsync<string>($"EXEC ups_GetUserRoles_Select '{username}', {(int)UserStatus.LoggedIn}");
             bool isAdmin = userRoles.Contains(Constants.AdminRole);
@@ -61,5 +61,19 @@ namespace ABS_Auth.Common
             return new UnauthorizedResult();
         }
 
+        public async Task<IActionResult> Authorize(string username)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("Username", username);
+
+            bool isLogged = await _connection.QuerySingleAsync<bool>($"EXEC ups_CheckUserStat_Select @Username" , parameters);
+
+            if (isLogged)
+            {
+                return new OkResult();
+            }
+
+            return new UnauthorizedResult();
+        }
     }
 }

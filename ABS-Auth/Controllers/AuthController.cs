@@ -25,8 +25,8 @@ namespace ABS_Auth.Controllers
         [Authorize]
         public async Task<IActionResult> Stat()
         {
-            string username = GetUserIdFromTocken();
-            return await this._authService.CheckCurrentUserStat(username);
+            string username = GetUsernameFromToken();
+            return await this._authService.CheckCurrentUserStatAndRole(username);
         }
 
         [HttpPost("login")]
@@ -39,7 +39,7 @@ namespace ABS_Auth.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            string username = GetUserIdFromTocken();
+            string username = GetUsernameFromToken();
             return await _authService.Logout(username);
         }
 
@@ -50,26 +50,23 @@ namespace ABS_Auth.Controllers
         }
 
         [HttpGet("authorize")]
-        public IActionResult Authorize()
+        public async Task<IActionResult> Authorize()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return new OkResult();
-            }
+            var username = GetUsernameFromToken();
 
-            return new UnauthorizedResult();
+            return await this._authService.Authorize(username);
         }
 
         [HttpGet("authorize/admin")]
         [Authorize]
         public async Task<IActionResult> AuthorizeAdmin()
         {
-            string username = GetUserIdFromTocken();
+            string username = GetUsernameFromToken();
             return await _authService.AuthorizeAdmin(username);
         }
 
 
-        private string GetUserIdFromTocken() => this.User.FindFirst("username")?.Value;
+        private string GetUsernameFromToken() => this.User.FindFirst("username")?.Value;
 
     }
 }

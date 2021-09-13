@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj": {}
+    "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\Common\\Abs.Common.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj": {
+    "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj",
+        "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj",
         "projectName": "ABS.Data",
-        "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj",
+        "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj",
         "packagesPath": "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\obj\\",
+        "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Yavor Trayanov\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -74,14 +74,14 @@
         }
       }
     },
-    "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj": {
+    "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\Common\\Abs.Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj",
+        "projectUniqueName": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\Common\\Abs.Common.csproj",
         "projectName": "Abs.Common",
-        "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\Abs.Common.csproj",
+        "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\Common\\Abs.Common.csproj",
         "packagesPath": "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\Common\\obj\\",
+        "outputPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Yavor Trayanov\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -98,8 +98,8 @@
           "net5.0": {
             "targetAlias": "net5.0",
             "projectReferences": {
-              "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj": {
-                "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\AirlineBookingSystem\\AirlineBookingSystem.Data\\ABS.Data.csproj"
+              "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj": {
+                "projectPath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj"
               }
             }
           }

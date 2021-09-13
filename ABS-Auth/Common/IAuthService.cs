@@ -11,8 +11,10 @@ namespace ABS_Auth.Common
 
         Task<IActionResult> Logout(string username);
 
-        Task<IActionResult> CheckCurrentUserStat(string username);
+        Task<IActionResult> CheckCurrentUserStatAndRole(string username);
 
         Task<IActionResult> AuthorizeAdmin(string username);
+
+        Task<IActionResult> Authorize(string username);
     }
 }
