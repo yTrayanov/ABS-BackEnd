@@ -31,5 +31,25 @@ namespace Abs_SectionAirlineAirport.Controllers
 
             return new OkObjectResult(new ResponseObject( "Section created"));
         }
+
+        [HttpPost("airline")]
+        public async Task<IActionResult> CreateAirline([FromBody] GeneralModel data)
+        {
+            string query = $"EXEC usp_AirportAirline_Insert @Name, @TableName";
+
+            await _connection.QueryAsync(query, new { Name = data.Name, TableName = "Airlines" });
+
+            return new OkObjectResult(new ResponseObject("Airline created successfully"));
+        }
+
+        [HttpPost("airport")]
+        public async Task<IActionResult> CreateAirport([FromBody] GeneralModel data)
+        {
+            string query = $"EXEC usp_AirportAirline_Insert @Name, @TableName";
+
+            await _connection.QueryAsync(query, new { Name = data.Name, TableName = "Airports" });
+
+            return new OkObjectResult(new ResponseObject("Airport created successfully"));
+        }
     }
 }

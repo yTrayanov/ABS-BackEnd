@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ABS_Common.Extensions
@@ -69,7 +70,7 @@ namespace ABS_Common.Extensions
                     if (contextFeature != null)
                     {
                         var errorType = contextFeature.Error.GetType().Name;
-                        if (errorType == nameof(ArgumentException))
+                        if (errorType == nameof(ArgumentException) || errorType == nameof(ValidationException))
                         {
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
                             await context.Response.WriteAsync(new ResponseObject("Something went wrong", contextFeature.Error.Message).ToString());

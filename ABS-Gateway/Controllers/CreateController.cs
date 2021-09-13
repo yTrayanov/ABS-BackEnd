@@ -17,7 +17,22 @@ namespace ABS_Gateway.Controllers
 
 
         [HttpPost("section")]
+        [AuthorizeAdminEndPoint]
         public async Task<IActionResult> CreateSection([FromBody] object body)
+        {
+            return await Client.Post(HttpContext, body);
+        }
+
+        [HttpPost("Airline")]
+        [AuthorizeAdminEndPoint]
+        public async Task<IActionResult> CreateAirline([FromBody] object body)
+        {
+            return await Client.Post(HttpContext, body);
+        }
+
+        [HttpPost("Airport")]
+        [AuthorizeAdminEndPoint]
+        public async Task<IActionResult> CreateAirport([FromBody] object body)
         {
             return await Client.Post(HttpContext, body);
         }
