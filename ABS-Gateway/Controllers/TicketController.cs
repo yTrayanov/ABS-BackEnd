@@ -17,7 +17,7 @@ namespace ABS_Gateway.Controllers
         }
 
         [HttpPost("create")]
-        [AuthorizeAdminEndPoint]
+        [AuthorizeEndPoint]
         public async Task<IActionResult> CreateTicket([FromBody] object body)
         {
             return await Client.Post(HttpContext, body);

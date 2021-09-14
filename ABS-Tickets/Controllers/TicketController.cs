@@ -7,6 +7,7 @@ using System.Data;
 using Dapper;
 using System.Linq;
 using ABS_Data.Data;
+using System.Text;
 
 namespace ABS_Tickets.Controllers
 {
@@ -29,12 +30,13 @@ namespace ABS_Tickets.Controllers
             var seats = model.Seats;
             var username = GetUsernameFromTocken();
 
+            var sb = new StringBuilder();
+
             for (int flightIndex = 0; flightIndex < seats.Length; flightIndex++)
             {
                 for (int seatIndex = 0; seatIndex < seats[flightIndex].Length; seatIndex++)
                 {
-
-                    await _connection.QueryAsync($"EXEC usp_Tickets_Insert " +
+                    sb.AppendLine($"EXEC usp_Tickets_Insert " +
                         $"'{username}'," +
                         $" {seats[flightIndex][seatIndex].Id}, " +
                         $"{flightIds[flightIndex]} ," +
@@ -42,6 +44,7 @@ namespace ABS_Tickets.Controllers
                 }
             }
 
+            await _connection.QueryAsync(sb.ToString());
 
             return new OkObjectResult(new ResponseObject("Seats booked successfully"));
         }

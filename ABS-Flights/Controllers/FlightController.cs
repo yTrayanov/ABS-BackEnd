@@ -124,8 +124,11 @@ namespace ABS_Flights.Controllers
         {
             using (var multi = await _connection.QueryMultipleAsync($"EXEC usp_FlightById_Select {id}"))
             {
-                var flight = await multi.ReadSingleAsync<FlightWithSectionsModel>();
-                flight.Sections = (await multi.ReadAsync<Section>()).ToList();
+                var flight = await multi.ReadSingleAsync<FlightInformation>();
+                flight.Sections = 
+                    (await multi.ReadAsync<Section>())
+                    .OrderBy(s => s.SeatClass)
+                    .ToList();
 
                 var seats = (await multi.ReadAsync<Seat>()).ToList();
 
