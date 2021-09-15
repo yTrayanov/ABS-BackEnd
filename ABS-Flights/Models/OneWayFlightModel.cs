@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ABS_Common.Common.CustomAttributes;
+using System;
 
 namespace ABS_Flights.Models
 {
     public class OneWayFlightModel : FlightBase
     {
-        public string DepartureDate { get; set; }
+        [NotPastDate]
+        public DateTime DepartureDate { get; set; }
         public int MembersCount { get; set; }
     }
 }

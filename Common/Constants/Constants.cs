@@ -1,4 +1,4 @@
-﻿namespace ABS_Common
+﻿namespace ABS_Common.Constants
 {
     public static class Constants
     {

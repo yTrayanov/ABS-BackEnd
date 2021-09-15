@@ -8,6 +8,7 @@ using System.Data;
 using AirlineBookingSystem.Common.Extensions;
 using Dapper;
 using ABS_Data.Data;
+using System;
 
 namespace ABS_Flights.Controllers
 {
@@ -141,10 +142,12 @@ namespace ABS_Flights.Controllers
             }
         }
 
-        private async Task<IList<FilteredFlightModel>> FilterFlights(string originAirport, string destinationAirport, string departureDate, int membersCount)
+        private async Task<IList<FilteredFlightModel>> FilterFlights(string originAirport, string destinationAirport, DateTime departureDate, int membersCount)
         {
+            string query = "EXEC dbo.usp_FilterFlights_Select @OriginAirport, @DestinationAirport, @DepartureDate, @MembersCount";
+
             var flights = (await _connection.QueryAsync<FilteredFlightModel>
-                ($"EXEC dbo.usp_FilterFlights_Select '{originAirport}', '{destinationAirport}', '{departureDate}', {membersCount}")).ToList();
+                (query , new {OriginAirport=originAirport , DestinationAirport = destinationAirport , DepartureDate = departureDate , MembersCount=membersCount })).ToList();
 
             return flights;
         }

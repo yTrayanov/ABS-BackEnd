@@ -11,15 +11,18 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
+
 namespace ABS_Common.Extensions
 {
     public static class ServiceExtensions
     {
         private static readonly IdentityRole[] roles =
      {
-            new IdentityRole(Constants.AdminRole),
-            new IdentityRole(Constants.UserRole)
+            new IdentityRole(Constants.Constants.AdminRole),
+            new IdentityRole(Constants.Constants.UserRole)
      };
+
+        public static IdentityRole[] Roles => roles;
 
         public static void ConfigurePasswordSettings(this IServiceCollection services)
         {

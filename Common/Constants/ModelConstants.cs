@@ -1,4 +1,4 @@
-﻿namespace ABS_Common.Common.Constants
+﻿namespace ABS_Common.Constants
 {
     public static class ModelConstants
     {

@@ -40,7 +40,7 @@ namespace ABS_Tickets.Controllers
                         $"'{username}'," +
                         $" {seats[flightIndex][seatIndex].Id}, " +
                         $"{flightIds[flightIndex]} ," +
-                        $"{seats[flightIndex][seatIndex].PassengerName}");
+                        $"{seats[flightIndex][seatIndex].PassengerName};");
                 }
             }
 

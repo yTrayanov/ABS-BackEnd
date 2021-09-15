@@ -1,7 +1,11 @@
-﻿namespace ABS_Flights.Models
+﻿using ABS_Common.Common.CustomAttributes;
+using System;
+
+namespace ABS_Flights.Models
 {
     public class TwoWaySearchModel : OneWayFlightModel
     {
-        public string ReturnDate { get; set; }
+        [NotPastDate]
+        public DateTime ReturnDate { get; set; }
     }
 }

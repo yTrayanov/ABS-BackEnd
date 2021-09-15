@@ -1,3 +1,4 @@
+using ABS_Common.Extensions;
 using ABS_Gateway.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -79,7 +80,6 @@ namespace ABS_Gateway
             });
 
             app.UseHttpsRedirection();
-
 
             app.UseRouting();
 
