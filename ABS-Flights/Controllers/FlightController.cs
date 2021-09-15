@@ -86,7 +86,7 @@ namespace ABS_Flights.Controllers
             using (var multi = await _connection.QueryMultipleAsync(query, new { FlightIds = data.ToDataTable().AsTableValuedParameter("FlightIdList") }))
             {
 
-                var flights = (await multi.ReadAsync<FlightWithSectionsModel>()).ToList();
+                var flights = (await multi.ReadAsync<FlightWithSectionsModel>()).OrderBy(f => ids.IndexOf(f.Id)).ToList();
 
                 if (flights.Count < ids.Count)
                 {
@@ -97,7 +97,7 @@ namespace ABS_Flights.Controllers
 
                 foreach (var flight in flights)
                 {
-                    flight.Sections = sections.Where(section => section.FlightId == flight.Id).ToList();
+                    flight.Sections = sections.Where(section => section.FlightId == flight.Id).OrderBy(s => s.SeatClass).ToList();
 
                     foreach (var section in flight.Sections)
                     {
