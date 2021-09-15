@@ -4,7 +4,7 @@ using System;
 using System.Data;
 using Dapper;
 using ABS_Auth.Helpers;
-using ABS_Common;
+using ABS_Common.Constants;
 using System.Linq;
 using ABS_Common.ResponsesModels;
 using ABS_Data.Data;
