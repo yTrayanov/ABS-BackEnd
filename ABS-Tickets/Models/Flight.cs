@@ -20,10 +20,8 @@ namespace ABS_Tickets.Models
         [AirportName]
         public string DestinationAirport { get; set; }
 
-        [NotPastDate]
         public DateTime DepartureDate { get; set; }
 
-        [NotPastDate]
         public DateTime LandingDate {get;set; }
     }
 }

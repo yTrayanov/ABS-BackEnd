@@ -35,7 +35,7 @@ namespace Abs_SectionAirlineAirport.Controllers
         [HttpPost("airline")]
         public async Task<IActionResult> CreateAirline([FromBody] GeneralModel data)
         {
-            string query = $"EXEC usp_Airport_Insert @Name";
+            string query = $"EXEC usp_Airline_Insert @Name";
 
             await _connection.QueryAsync(query, new { Name = data.Name});
 
@@ -45,7 +45,7 @@ namespace Abs_SectionAirlineAirport.Controllers
         [HttpPost("airport")]
         public async Task<IActionResult> CreateAirport([FromBody] GeneralModel data)
         {
-            string query = $"EXEC usp_Airline_Insert @Name";
+            string query = $"EXEC usp_Airport_Insert @Name";
 
             await _connection.QueryAsync(query, new { Name = data.Name });
 

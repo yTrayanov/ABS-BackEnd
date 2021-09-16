@@ -5,7 +5,7 @@ namespace ABS_Flights.Models
 {
     public class TwoWaySearchModel : OneWayFlightModel
     {
-        [NotPastDate]
+        [NotPastDate("Cannot search for flight with past date")]
         public DateTime ReturnDate { get; set; }
     }
 }

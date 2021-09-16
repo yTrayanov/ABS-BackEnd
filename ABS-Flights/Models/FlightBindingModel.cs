@@ -7,11 +7,11 @@ namespace ABS_Flights.Models
     public class FlightBindingModel : FlightBase
     {
         [CustomRequired]
-        [NotPastDate]
+        [NotPastDate("Cannot create flights with past date")]
         public DateTime DepartureDate { get; set; }
 
         [CustomRequired]
-        [NotPastDate]
+        [NotPastDate("Can't create flights with past date")]
         public DateTime LandingDate { get; set; }
 
         [CustomRequired]
