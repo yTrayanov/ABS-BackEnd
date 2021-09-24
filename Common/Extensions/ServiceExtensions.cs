@@ -1,4 +1,6 @@
-﻿using ABS_Common.ResponsesModels;
+﻿using Abs.Common.Constants;
+using Abs.Common.Enumerations;
+using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -66,10 +68,63 @@ namespace ABS_Common.Extensions
                     if (contextFeature != null)
                     {
                         var errorType = contextFeature.Error.GetType().Name;
-                        if (errorType == nameof(ArgumentException) || errorType == nameof(ValidationException) || (errorType == nameof(SqlException)))
-                        {
+                        if (errorType == nameof(ArgumentException) || errorType == nameof(ValidationException))
+                        {   
+
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
                             await context.Response.WriteAsync(new ResponseObject("Something went wrong", contextFeature.Error.Message).ToString());
+                        }
+                        else if(errorType == nameof(SqlException))
+                        {
+                            var sqlErrorNumber = (ErrorCodes)((SqlException)contextFeature.Error).Number;
+                            string errorMessage;
+                            switch (sqlErrorNumber)
+                            {
+                                case ErrorCodes.UsernameExists:
+                                    errorMessage = ErrorMessages.UsernameExists;
+                                    break;
+                                case ErrorCodes.EmailExists:
+                                    errorMessage = ErrorMessages.EmailExists;
+                                    break;
+                                case ErrorCodes.AirportExists:
+                                    errorMessage = ErrorMessages.AirportExists;
+                                    break;
+                                case ErrorCodes.AirlineExists:
+                                    errorMessage = ErrorMessages.AirlineExists;
+                                    break;
+                                case ErrorCodes.SeatClassExists:
+                                    errorMessage = ErrorMessages.SeatClassExists;
+                                    break;
+                                case ErrorCodes.FlightNumberExists:
+                                    errorMessage = ErrorMessages.FlightNumberExists;
+                                    break;
+                                case ErrorCodes.UserNotFound:
+                                    errorMessage = ErrorMessages.UserNotFound;
+                                    break;
+                                case ErrorCodes.FlightNotFound:
+                                    errorMessage = ErrorMessages.FlightNotFound;
+                                    break;
+                                case ErrorCodes.SeatNotFound:
+                                    errorMessage = ErrorMessages.SeatNotFound;
+                                    break;
+                                case ErrorCodes.AirportNotFound:
+                                    errorMessage = ErrorMessages.AirportNotFound;
+                                    break;
+                                case ErrorCodes.AirlineNotFound:
+                                    errorMessage = ErrorMessages.AirlineNotFound;
+                                    break;
+                                case ErrorCodes.InvalidCredentials:
+                                    errorMessage = ErrorMessages.InvalidCredentials;
+                                    errorMessage = ErrorMessages.InvalidCredentials;
+                                    break;
+                                default:
+                                    errorMessage = contextFeature.Error.Message;
+                                    break;
+                            }
+
+                            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                            await context.Response.WriteAsync(new ResponseObject("Something went wrong", errorMessage).ToString());
+
                         }
                         else
                         {
