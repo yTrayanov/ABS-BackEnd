@@ -1,11 +1,7 @@
 ﻿using Abs_SectionAirlineAirport.Models;
-using ABS_Common.ResponsesModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using System.Data;
-using Dapper;
-using ABS_Data.Data;
-using ABS_Common.Enumerations;
+using Abs_SectionAirlineAirport.Service;
 
 namespace Abs_SectionAirlineAirport.Controllers
 {
@@ -13,43 +9,28 @@ namespace Abs_SectionAirlineAirport.Controllers
     [Route("[controller]")]
     public class CreateController : ControllerBase
     {
-        private IDbConnection _connection;
+        private ICreateService _createService;
 
-        public CreateController(ContextService contextService)
+        public CreateController(ICreateService createService)
         {
-            _connection = contextService.Connection;
+            _createService = createService;
         }
         [HttpPost("section")]
         public async Task<IActionResult> CreateSection([FromBody] SectionBindingModel sectionInfo)
         {
-            var seatClass = sectionInfo.SeatClass.ToLower() == "first" ? SeatClass.First : sectionInfo.SeatClass.ToLower() == "bussiness" ? SeatClass.Bussiness : SeatClass.Economy;
-
-            string query = $"EXEC usp_Sections_Insert @Rows, @Columns, @SeatClass, @FlightNumber";
-            var parameters = new { Rows = sectionInfo.Rows, Columns = sectionInfo.Columns, SeatClass = (int)seatClass, FlightNumber = sectionInfo.FlightNumber };
-
-            await _connection.QueryAsync<string>(query, parameters);
-
-            return new OkObjectResult(new ResponseObject( "Section created"));
+            return await _createService.CreateSection(sectionInfo);
         }
 
         [HttpPost("airline")]
-        public async Task<IActionResult> CreateAirline([FromBody] GeneralModel data)
+        public async Task<IActionResult> CreateAirline([FromBody] AirlineModel airlineInfo)
         {
-            string query = $"EXEC usp_Airline_Insert @Name";
-
-            await _connection.QueryAsync(query, new { Name = data.Name});
-
-            return new OkObjectResult(new ResponseObject("Airline created successfully"));
+            return await _createService.CreateAirline(airlineInfo);
         }
 
         [HttpPost("airport")]
-        public async Task<IActionResult> CreateAirport([FromBody] GeneralModel data)
+        public async Task<IActionResult> CreateAirport([FromBody] AirportModel airportInfo)
         {
-            string query = $"EXEC usp_Airport_Insert @Name";
-
-            await _connection.QueryAsync(query, new { Name = data.Name });
-
-            return new OkObjectResult(new ResponseObject("Airport created successfully"));
+            return await _createService.CreateAirport(airportInfo);
         }
     }
 }

@@ -9,5 +9,6 @@ namespace ABS_Tickets.Models
 
         [CustomRequired]
         public SeatBindingModel[][] Seats { get; set; }
+
     }
 }

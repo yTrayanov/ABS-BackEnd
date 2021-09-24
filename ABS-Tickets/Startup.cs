@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ABS_Common.Extensions;
+using ABS_Tickets.Service;
 
 namespace ABS_Tickets
 {
@@ -41,6 +42,7 @@ namespace ABS_Tickets
 
             services.AddSingleton<ABSContext>();
             services.AddScoped<ContextService>();
+            services.AddTransient<ITicketService, TicketeService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

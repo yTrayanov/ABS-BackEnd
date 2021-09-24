@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -16,14 +17,6 @@ namespace ABS_Common.Extensions
 {
     public static class ServiceExtensions
     {
-        private static readonly IdentityRole[] roles =
-     {
-            new IdentityRole(Constants.Constants.AdminRole),
-            new IdentityRole(Constants.Constants.UserRole)
-     };
-
-        public static IdentityRole[] Roles => roles;
-
         public static void ConfigurePasswordSettings(this IServiceCollection services)
         {
             services.Configure<IdentityOptions>(options =>
@@ -73,7 +66,7 @@ namespace ABS_Common.Extensions
                     if (contextFeature != null)
                     {
                         var errorType = contextFeature.Error.GetType().Name;
-                        if (errorType == nameof(ArgumentException) || errorType == nameof(ValidationException))
+                        if (errorType == nameof(ArgumentException) || errorType == nameof(ValidationException) || (errorType == nameof(SqlException)))
                         {
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
                             await context.Response.WriteAsync(new ResponseObject("Something went wrong", contextFeature.Error.Message).ToString());

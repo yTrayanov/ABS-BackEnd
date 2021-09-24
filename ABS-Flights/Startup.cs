@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using ABS_Data.Data;
 using Newtonsoft.Json;
 using ABS_Common.Extensions;
+using ABS_Flights.Service;
 
 namespace ABS_Flights
 {
@@ -36,6 +37,7 @@ namespace ABS_Flights
 
             services.AddSingleton<ABSContext>();
             services.AddScoped<ContextService>();
+            services.AddTransient<IFlightService, FlightService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
