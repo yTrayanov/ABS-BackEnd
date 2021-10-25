@@ -31,7 +31,6 @@ namespace Abs_SectionAirlineAirport
 
 
             services.AddSingleton<ABSContext>();
-            services.AddScoped<ContextService>();
             services.AddTransient<ICreateService, CreateService>();
 
         }

@@ -158,7 +158,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\bin\Debug\net5.0\Ab
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\bin\Debug\net5.0\ABS.Data.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\bin\Debug\net5.0\ABS.Data.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\bin\Debug\net5.0\Abs.Common.pdb
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.csprojAssemblyReference.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.AssemblyInfoInputs.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.AssemblyInfo.cs
@@ -174,3 +173,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\AB
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ref\ABS-Flights.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.genruntimeconfig.cache
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\bin\Debug\net5.0\AWSSDK.Core.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\bin\Debug\net5.0\AWSSDK.DynamoDBv2.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.csproj.AssemblyReference.cache

@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "HIEg9PNR4Yv5VbpWoltoBj/hV0mUI13NbvbaAw1pYx1YCSmozDv8sBk8lWk9kvhMrBRaZWNNkXFNrk1Drc/VLg==",
+  "dgSpecHash": "FhLmtumPHzpBPsy/TbXrdkhfLPw6LPhyjRvUyGCbnVNkn3otUp8DrEKa6ixlUSMGQK0FQm3uvixETayH4gjzaA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\ABS-Auth\\ABS-Auth.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\awssdk.core\\3.7.3.22\\awssdk.core.3.7.3.22.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\awssdk.dynamodbv2\\3.7.0.83\\awssdk.dynamodbv2.3.7.0.83.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\dapper\\2.0.90\\dapper.2.0.90.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",

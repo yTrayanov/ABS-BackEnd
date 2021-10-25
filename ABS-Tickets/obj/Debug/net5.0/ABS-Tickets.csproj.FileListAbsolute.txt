@@ -130,7 +130,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\Ab
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\ABS.Data.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\ABS.Data.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\Abs.Common.pdb
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.csprojAssemblyReference.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.AssemblyInfoInputs.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.AssemblyInfo.cs
@@ -146,3 +145,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\AB
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ref\ABS-Tickets.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.genruntimeconfig.cache
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\AWSSDK.Core.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\AWSSDK.DynamoDBv2.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.csproj.AssemblyReference.cache

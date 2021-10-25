@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "ZknQ6UX5QsCNuImbaPOVR/dQqSwhl676Cr9N51QF2976MaVIaFq+3Ao9VWM5J1zEg0HECXSaTv/J65KQMY+LNQ==",
+  "dgSpecHash": "F5FE2NZIvOum3ESnHN+CrFaepGPka1bS4ygcxGKRBkd2n0ALXarooPiaXFu0535mltbdGaiOlI73io6Q7um0YQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\ABS-Flights\\ABS-Flights.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\awssdk.core\\3.7.3.22\\awssdk.core.3.7.3.22.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\awssdk.dynamodbv2\\3.7.0.83\\awssdk.dynamodbv2.3.7.0.83.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\dapper\\2.0.90\\dapper.2.0.90.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\dapper.simplecrud\\2.3.0\\dapper.simplecrud.2.3.0.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\dapper.simplecrud.netcore\\1.0.0\\dapper.simplecrud.netcore.1.0.0.nupkg.sha512",

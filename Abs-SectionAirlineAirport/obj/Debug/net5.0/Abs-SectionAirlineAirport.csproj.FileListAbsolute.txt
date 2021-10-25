@@ -124,7 +124,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\D
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\Debug\net5.0\ABS.Data.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\Debug\net5.0\ABS.Data.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\Debug\net5.0\Abs.Common.pdb
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.csprojAssemblyReference.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.AssemblyInfoInputs.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.AssemblyInfo.cs
@@ -140,3 +139,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\D
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\ref\Abs-SectionAirlineAirport.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.genruntimeconfig.cache
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\Debug\net5.0\AWSSDK.Core.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\Debug\net5.0\AWSSDK.DynamoDBv2.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.csproj.AssemblyReference.cache

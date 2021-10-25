@@ -1,7 +1,10 @@
-﻿using ABS_Common.ResponsesModels;
+﻿using Abs.Common.Constants;
+using ABS_Common.ResponsesModels;
 using ABS_Data.Data;
 using ABS_Flights.Models;
 using AirlineBookingSystem.Common.Extensions;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,20 +18,52 @@ namespace ABS_Flights.Service
     public class FlightService : IFlightService
     {
 
-        private IDbConnection _connection;
+        private IAmazonDynamoDB _connection;
 
-        public FlightService(ContextService contextService)
+        public FlightService(ABSContext contextService)
         {
-            _connection = contextService.Connection;
+            _connection = contextService.CreateConnection();
         }
 
         public async Task<IActionResult> CreateFlight(FlightBindingModel flightInfo)
         {
-            string query = $"EXEC usp_Flights_Insert @OriginAirport, @DestinationAirport, @Airline, @FlightNumber , @DepartureDate, @LandingDate";
+            var airlineId = await GetAirlineId(flightInfo.Airline);
+            var originAirportId = await GetAirportId(flightInfo.OriginAirport);
+            var destinationAirportId = await GetAirportId(flightInfo.DestinationAirport);
 
-            var parameters = new { OriginAirport = flightInfo.OriginAirport, DestinationAirport = flightInfo.DestinationAirport, Airline = flightInfo.Airline, FlightNumber = flightInfo.FlightNumber, DepartureDate = flightInfo.DepartureDate, LandingDate = flightInfo.LandingDate };
+            var request = new PutItemRequest
+            {
+                TableName = DbConstants.TableName,
+                Item = new Dictionary<string, AttributeValue>()
+                {
+                    {DbConstants.PK, new AttributeValue
+                        {
+                            S = DbConstants.FlightPrefix + flightInfo.FlightNumber
+                        }
+                    },
+                    {DbConstants.SK, new AttributeValue()
+                        {
+                            S = airlineId
+                        }
+                    },
+                    {DbConstants.Data , new AttributeValue()
+                    {
+                        M = new Dictionary<string, AttributeValue>()
+                        {
+                            {"DepartureDate", new AttributeValue() {S = flightInfo.DepartureDate.ToString() } },
+                            {"LandingDate", new AttributeValue() {S = flightInfo.LandingDate.ToString() }  }
+                        }
+                    }},
+                    {DbConstants.GSI1 , new AttributeValue {S = originAirportId } },
+                    {DbConstants.GSI2 , new AttributeValue {S = destinationAirportId } }
+                },
+                Expected = new Dictionary<string, ExpectedAttributeValue>()
+                {
+                    {DbConstants.PK, new ExpectedAttributeValue(false)}
+                },
+            };
 
-            await _connection.QueryAsync<string>(query, parameters);
+            await _connection.PutItemAsync(request);
 
             return new OkObjectResult(new ResponseObject("Flight created"));
         }
@@ -67,31 +102,16 @@ namespace ABS_Flights.Service
 
         public async Task<IActionResult> GetAllFlights()
         {
-            var flights = await _connection.QueryAsync<AllFlightModel>($"EXEC usp_AllFlights_Select");
+            int flights = 0;
 
             return new OkObjectResult(new ResponseObject("Flights for all flights", flights));
         }
 
         public async Task<IActionResult> GetFlightById(string id)
         {
-            using (var multi = await _connection.QueryMultipleAsync($"EXEC usp_FlightById_Select {id}"))
-            {
-                var flight = await multi.ReadSingleAsync<FlightInformation>();
+            int flight = 0;
 
-                flight.Sections =
-                    (await multi.ReadAsync<Section>())
-                    .OrderBy(s => s.SeatClass)
-                    .ToList();
-
-                var seats = (await multi.ReadAsync<Seat>()).ToList();
-
-                foreach (var section in flight.Sections)
-                {
-                    section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
-                }
-
-                return new OkObjectResult(new ResponseObject("Flight information", flight));
-            }
+            return new OkObjectResult(new ResponseObject("Flight information", flight));
         }
 
         public async Task<IActionResult> GetMultipleFlights(string flightIds)
@@ -105,43 +125,91 @@ namespace ABS_Flights.Service
                 data.Add(new FlightIdModel { FlightId = id });
             }
 
-            string query = $"EXEC usp_FlightsByMultipleIds_Select @FlightIds";
+            
+            //using (var multi = await _connection.QueryMultipleAsync(query, new { FlightIds = data.ToDataTable().AsTableValuedParameter("FlightIdList") }))
+            //{
 
-            using (var multi = await _connection.QueryMultipleAsync(query, new { FlightIds = data.ToDataTable().AsTableValuedParameter("FlightIdList") }))
-            {
+            //    var flights = (await multi.ReadAsync<FlightWithSectionsModel>()).OrderBy(f => ids.IndexOf(f.Id)).ToList();
 
-                var flights = (await multi.ReadAsync<FlightWithSectionsModel>()).OrderBy(f => ids.IndexOf(f.Id)).ToList();
+            //    if (flights.Count < ids.Count)
+            //    {
+            //        return new BadRequestObjectResult(new ResponseObject("Could not find all selected flights"));
+            //    }
+            //    var sections = (await multi.ReadAsync<Section>()).ToList();
+            //    var seats = (await multi.ReadAsync<Seat>()).ToList();
 
-                if (flights.Count < ids.Count)
-                {
-                    return new BadRequestObjectResult(new ResponseObject("Could not find all selected flights"));
-                }
-                var sections = (await multi.ReadAsync<Section>()).ToList();
-                var seats = (await multi.ReadAsync<Seat>()).ToList();
+            //    foreach (var flight in flights)
+            //    {
+            //        flight.Sections = sections.Where(section => section.FlightId == flight.Id).OrderBy(s => s.SeatClass).ToList();
 
-                foreach (var flight in flights)
-                {
-                    flight.Sections = sections.Where(section => section.FlightId == flight.Id).OrderBy(s => s.SeatClass).ToList();
-
-                    foreach (var section in flight.Sections)
-                    {
-                        section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
-                    }
-                }
+            //        foreach (var section in flight.Sections)
+            //        {
+            //            section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
+            //        }
+            //    }
 
 
-                return new OkObjectResult(new ResponseObject("Flights found", flights));
-            }
+            //    return new OkObjectResult(new ResponseObject("Flights found", flights));
+            //}
+
+            throw new NotImplementedException();
         }
 
         private async Task<IList<FilteredFlightModel>> FilterFlights(string originAirport, string destinationAirport, DateTime departureDate, int membersCount)
         {
             string query = "EXEC dbo.usp_FilterFlights_Select @OriginAirport, @DestinationAirport, @DepartureDate, @MembersCount";
 
-            var flights = (await _connection.QueryAsync<FilteredFlightModel>
-                (query, new { OriginAirport = originAirport, DestinationAirport = destinationAirport, DepartureDate = departureDate, MembersCount = membersCount })).ToList();
+            var flights = new List<FilteredFlightModel>();
 
             return flights;
+        }
+
+        private async Task<string> GetAirlineId(string name)
+        {
+            var airlineRequest = new ScanRequest()
+            {
+                TableName = DbConstants.TableName,
+                FilterExpression = $"{DbConstants.SK} = :name",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
+                {
+                    {":name" , new AttributeValue {S = name } }
+                }
+            };
+
+            var items = (await _connection.ScanAsync(airlineRequest)).Items;
+
+            if (items.Count == 0)
+            {
+                throw new ArgumentException(ErrorMessages.AirlineNotFound);
+            }
+
+            items[0].TryGetValue(DbConstants.PK , out var id);
+
+            return id.S;
+        }
+
+        private async Task<string> GetAirportId(string name)
+        {
+            var airlineRequest = new ScanRequest()
+            {
+                TableName = DbConstants.TableName,
+                FilterExpression = $"{DbConstants.SK} = :name",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
+                {
+                    {":name" , new AttributeValue {S = name } }
+                }
+            };
+
+            var items = (await _connection.ScanAsync(airlineRequest)).Items;
+
+            if (items.Count == 0)
+            {
+                throw new ArgumentException(ErrorMessages.AirportNotFound);
+            }
+
+            items[0].TryGetValue(DbConstants.PK, out var id);
+
+            return id.S;
         }
     }
 }

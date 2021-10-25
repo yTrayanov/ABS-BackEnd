@@ -8,12 +8,32 @@
     ".NETCoreApp,Version=v3.1": {
       "ABS.Data/1.0.0": {
         "dependencies": {
+          "AWSSDK.DynamoDBv2": "3.7.0.83",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
           "Microsoft.EntityFrameworkCore.SqlServer": "5.0.8",
           "Microsoft.EntityFrameworkCore.Tools": "5.0.8"
         },
         "runtime": {
           "ABS.Data.dll": {}
+        }
+      },
+      "AWSSDK.Core/3.7.3.22": {
+        "runtime": {
+          "lib/netcoreapp3.1/AWSSDK.Core.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.3.22"
+          }
+        }
+      },
+      "AWSSDK.DynamoDBv2/3.7.0.83": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.3.22"
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/AWSSDK.DynamoDBv2.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.0.83"
+          }
         }
       },
       "Humanizer.Core/2.8.26": {
@@ -1147,6 +1167,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AWSSDK.Core/3.7.3.22": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6rLAnit68QuCQ/U2GCIZjSQ6XUMSKZ691IJ6Zl9Wnn4Z0lmkfZKTNxCQV4tj2FjooH5bSlxwAIp7dnlx2OvYYw==",
+      "path": "awssdk.core/3.7.3.22",
+      "hashPath": "awssdk.core.3.7.3.22.nupkg.sha512"
+    },
+    "AWSSDK.DynamoDBv2/3.7.0.83": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HA4btv+hSXriTXjobOGgJvlRjoZxzEazTKyHCcg5WIlO8N+rdLXE+yNnGdWJR+F/ophPjBPMwTM/L3mjLyIsNQ==",
+      "path": "awssdk.dynamodbv2/3.7.0.83",
+      "hashPath": "awssdk.dynamodbv2.3.7.0.83.nupkg.sha512"
     },
     "Humanizer.Core/2.8.26": {
       "type": "package",

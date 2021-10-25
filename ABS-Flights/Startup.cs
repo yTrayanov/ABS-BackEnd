@@ -36,7 +36,6 @@ namespace ABS_Flights
             });
 
             services.AddSingleton<ABSContext>();
-            services.AddScoped<ContextService>();
             services.AddTransient<IFlightService, FlightService>();
         }
 

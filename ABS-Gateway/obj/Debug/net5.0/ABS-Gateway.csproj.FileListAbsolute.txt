@@ -124,7 +124,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\bin\Debug\net5.0\Ab
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\bin\Debug\net5.0\ABS.Data.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\bin\Debug\net5.0\ABS.Data.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\bin\Debug\net5.0\Abs.Common.pdb
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.csprojAssemblyReference.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.AssemblyInfoInputs.cache
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.AssemblyInfo.cs
@@ -140,3 +139,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\AB
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ref\ABS-Gateway.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.genruntimeconfig.cache
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\bin\Debug\net5.0\AWSSDK.Core.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\bin\Debug\net5.0\AWSSDK.DynamoDBv2.dll
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.csproj.AssemblyReference.cache

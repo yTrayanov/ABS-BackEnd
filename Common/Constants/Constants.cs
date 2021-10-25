@@ -8,5 +8,6 @@
         public const string AdminUserName = "admin";
         public const string AdminPassword = "admin123";
         public const string AdminEmail = "admin@admin.bg";
+
     }
 }

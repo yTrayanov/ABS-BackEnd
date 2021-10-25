@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "RDfinqh3JQvq9QfwMGRMX2l/A1Iuc9+Dhx00hfeKIrbcYDMuI2knv1ODZw0loQJrvlSVtGQ6tl6RKIGHpGGc4w==",
+  "dgSpecHash": "Vt5QI5nJtFImOMzM1VPcOjcx9okBs+CuHvCuI4L2jE8X3B5xUG+uq+F0ZDxJ+U+ypz4kVx6j8Js3jibOXqM9LQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Yavor Trayanov\\source\\repos\\ABS-BackEnd\\AirlineBookingSystem.Data\\ABS.Data.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\awssdk.core\\3.7.3.22\\awssdk.core.3.7.3.22.nupkg.sha512",
+    "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\awssdk.dynamodbv2\\3.7.0.83\\awssdk.dynamodbv2.3.7.0.83.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\5.0.8\\microsoft.aspnetcore.cryptography.internal.5.0.8.nupkg.sha512",
     "C:\\Users\\Yavor Trayanov\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\5.0.8\\microsoft.aspnetcore.cryptography.keyderivation.5.0.8.nupkg.sha512",
