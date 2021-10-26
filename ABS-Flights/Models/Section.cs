@@ -5,12 +5,12 @@
 
     public class Section
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int Rows { get; set; }
         public int Columns { get; set; }
         public SeatClass SeatClass { get; set; }
 
         public ICollection<Seat> Seats { get; set; }
-        public int FlightId { get; set; }
+        public string FlightId { get; set; }
     }
 }

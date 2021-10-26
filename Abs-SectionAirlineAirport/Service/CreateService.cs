@@ -1,4 +1,5 @@
 ﻿using Abs.Common.Constants;
+using Abs.Common.Constants.DbModels;
 using ABS_Common.Enumerations;
 using ABS_Common.ResponsesModels;
 using ABS_Data.Data;
@@ -33,13 +34,13 @@ namespace Abs_SectionAirlineAirport.Service
                 TableName = DbConstants.TableName,
                 Item = new Dictionary<string, AttributeValue>()
                 {
-                    {DbConstants.PK, new AttributeValue
+                    {AirlineDbModel.Id, new AttributeValue
                         {
-                            S = DbConstants.AirlinePrefix + Guid.NewGuid()
+                            S = AirlineDbModel.Prefix + Guid.NewGuid()
                         }
                     },
 
-                    {DbConstants.SK, new AttributeValue
+                    {AirlineDbModel.Name, new AttributeValue
                         {
                             S = airlineInfo.Name
                         }
@@ -62,21 +63,17 @@ namespace Abs_SectionAirlineAirport.Service
                 TableName = DbConstants.TableName,
                 Item = new Dictionary<string, AttributeValue>()
                 {
-                    {DbConstants.PK, new AttributeValue
+                    {AirportDbModel.Id, new AttributeValue
                         {
-                            S = DbConstants.AirportPrefix + Guid.NewGuid()
+                            S = AirportDbModel.Prefix + Guid.NewGuid()
                         }
                     },
-                    {DbConstants.SK, new AttributeValue
+                    {AirportDbModel.Name, new AttributeValue
                         {
                             S = airportInfo.Name
                         }
                     }
-                },
-                Expected = new Dictionary<string, ExpectedAttributeValue>()
-                {
-                    {DbConstants.SK, new ExpectedAttributeValue(false)}
-                },
+                }
             };
 
             await _connection.PutItemAsync(request);
@@ -87,25 +84,25 @@ namespace Abs_SectionAirlineAirport.Service
         public async Task<IActionResult> CreateSection(SectionBindingModel sectionInfo)
         {
             var seatClass = sectionInfo.SeatClass.ToLower() == "first" ? SeatClass.First : sectionInfo.SeatClass.ToLower() == "bussiness" ? SeatClass.Bussiness : SeatClass.Economy;
-            var flightNumber = DbConstants.FlightPrefix + sectionInfo.FlightNumber;
+            var flightNumber = FlightDbModel.Prefix + sectionInfo.FlightNumber;
 
             await CheckIfFlightExists(flightNumber);
 
             await CheckIfFlightHasSeatClass(seatClass, flightNumber);
 
-            var sectionId = DbConstants.SectionPrefix + Guid.NewGuid();
+            var sectionId = SectionDbModel.Prefix + Guid.NewGuid();
 
             var request = new PutItemRequest()
             {
                 TableName = DbConstants.TableName,
                 Item = new Dictionary<string, AttributeValue>()
                 {
-                    {DbConstants.PK, new AttributeValue() {S = sectionId } },
-                    {DbConstants.SK, new AttributeValue() {S = flightNumber} },
-                    {DbConstants.Data, new AttributeValue() {M = new Dictionary<string, AttributeValue>
+                    {SectionDbModel.Id, new AttributeValue() {S = sectionId } },
+                    {SectionDbModel.FlightId, new AttributeValue() {S = flightNumber} },
+                    {SectionDbModel.Data, new AttributeValue() {M = new Dictionary<string, AttributeValue>
                     {
                         {"Rows" , new AttributeValue {N = sectionInfo.Rows.ToString() } },
-                        {"Cols" , new AttributeValue {N = sectionInfo.Columns.ToString() } },
+                        {"Columns" , new AttributeValue {N = sectionInfo.Columns.ToString() } },
                         {"AvailableSeats" , new AttributeValue {N = (sectionInfo.Rows*sectionInfo.Columns).ToString() } },
                         {"SeatClass" , new AttributeValue {S = seatClass.ToString() } },
                     }}},
@@ -125,13 +122,15 @@ namespace Abs_SectionAirlineAirport.Service
                     {
                         Item = new Dictionary<string, AttributeValue>
                        {
-                           {DbConstants.PK , new AttributeValue {S = DbConstants.SeatPrefix + Guid.NewGuid() } },
-                           {DbConstants.SK , new AttributeValue {S = sectionId } },
-                           {DbConstants.Data , new AttributeValue {M = new Dictionary<string, AttributeValue> 
+                           {SeatDbModel.Id , new AttributeValue {S = SeatDbModel.Prefix+ Guid.NewGuid() } },
+                           {SeatDbModel.SectionId , new AttributeValue {S = sectionId } },
+                            {SeatDbModel.FlightId, new AttributeValue {S = flightNumber } },
+                           {SeatDbModel.Data , new AttributeValue {M = new Dictionary<string, AttributeValue> 
                            {
                                {"Row" , new AttributeValue {N = (row+1).ToString()} },
                                {"Column" , new AttributeValue {N = (col+1).ToString()} },
                                {"IsBooked" , new AttributeValue {BOOL = false} },
+                               {"SeatClass" , new AttributeValue {S = seatClass.ToString()}}
                            }}},
                        }
                     });
@@ -171,11 +170,11 @@ namespace Abs_SectionAirlineAirport.Service
             var request = new ScanRequest()
             {
                 TableName = DbConstants.TableName,
-                FilterExpression = $"{DbConstants.SK} = :airlineName and begins_with({DbConstants.PK} , :airlinePrefix)",
+                FilterExpression = $"{AirlineDbModel.Name} = :airlineName and begins_with({AirlineDbModel.Id} , :airlinePrefix)",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
                 {
                     {":airlineName" , new AttributeValue() {S = name} },
-                    {":airlinePrefix", new AttributeValue() {S = DbConstants.AirlinePrefix } }
+                    {":airlinePrefix", new AttributeValue() {S = AirlineDbModel.Prefix } }
                 }
             };
 
@@ -190,11 +189,11 @@ namespace Abs_SectionAirlineAirport.Service
             var request = new ScanRequest()
             {
                 TableName = DbConstants.TableName,
-                FilterExpression = $"{DbConstants.SK} = :name and begins_with({DbConstants.PK} , :prefix)",
+                FilterExpression = $"{AirportDbModel.Name} = :name and begins_with({AirportDbModel.Id} , :prefix)",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
                 {
                     {":name" , new AttributeValue() {S = name} },
-                    {":prefix", new AttributeValue() {S = DbConstants.AirportPrefix } }
+                    {":prefix", new AttributeValue() {S = AirportDbModel.Prefix } }
                 }
             };
 
@@ -209,7 +208,7 @@ namespace Abs_SectionAirlineAirport.Service
             var request = new ScanRequest()
             {
                 TableName = DbConstants.TableName,
-                FilterExpression = $"{DbConstants.PK} = :flightNumber",
+                FilterExpression = $"{FlightDbModel.Id} = :flightNumber",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
                 {
                     {":flightNumber" , new AttributeValue() {S = flightNumber} },
@@ -227,7 +226,7 @@ namespace Abs_SectionAirlineAirport.Service
             var request = new ScanRequest()
             {
                 TableName = DbConstants.TableName,
-                FilterExpression = $"{DbConstants.SK} = :flightNumber",
+                FilterExpression = $"{FlightDbModel.Id} = :flightNumber",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
                 {
                     {":flightNumber" , new AttributeValue {S = flightNumber } },
@@ -238,10 +237,10 @@ namespace Abs_SectionAirlineAirport.Service
 
             foreach (var section in items)
             {
-                section.TryGetValue(DbConstants.Data, out var data);
+                section.TryGetValue(FlightDbModel.Data, out var data);
                 data.M.TryGetValue("SeatClass", out var sectionSeatClass);
 
-                if (sectionSeatClass.S == seatClass.ToString())
+                if (sectionSeatClass?.S == seatClass.ToString())
                 {
                     throw new ArgumentException(ErrorMessages.SeatClassExists);
                 }

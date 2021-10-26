@@ -5,7 +5,7 @@ namespace ABS_Flights.Models
 {
     public class Seat
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int Row { get; set; }
         public int Column { get; set; }
         public bool IsBooked { get; set; } 
@@ -17,7 +17,9 @@ namespace ABS_Flights.Models
             }
         }
 
-        public int SectionId { get; set; }
+        public string SectionId { get; set; }
+
+        public string FlightId { get; set; }
 
         public string Username { get; set; }
 

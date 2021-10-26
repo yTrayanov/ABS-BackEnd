@@ -1,11 +1,14 @@
 ﻿using Abs.Common.CustomAttributes;
 using ABS_Common.Common.CustomAttributes;
 using System;
+using System.Collections.Generic;
 
 namespace ABS_Flights.Models
 {
     public class FlightBindingModel : FlightBase
     {
+        public string Id { get; set; }
+
         [CustomRequired]
         [NotPastDate("Cannot create flights with past date")]
         public DateTime DepartureDate { get; set; }
@@ -20,5 +23,6 @@ namespace ABS_Flights.Models
         [AirlineName]
         public string Airline { get; set; }
 
+        public ICollection<Section> Sections { get; set; }
     }
 }
