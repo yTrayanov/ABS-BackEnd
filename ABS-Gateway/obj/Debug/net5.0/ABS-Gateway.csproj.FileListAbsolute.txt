@@ -134,7 +134,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\st
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\staticwebassets\ABS-Gateway.StaticWebAssets.xml
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\scopedcss\bundle\ABS-Gateway.styles.css
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.RazorTargetAssemblyInfo.cache
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.csproj.CopyComplete
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ref\ABS-Gateway.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway\obj\Debug\net5.0\ABS-Gateway.pdb

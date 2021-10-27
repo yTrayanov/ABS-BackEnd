@@ -4,10 +4,8 @@ using ABS_Common.Enumerations;
 using ABS_Common.ResponsesModels;
 using ABS_Data.Data;
 using ABS_Flights.Models;
-using AirlineBookingSystem.Common.Extensions;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -104,7 +102,18 @@ namespace ABS_Flights.Service
 
         public async Task<IActionResult> GetAllFlights()
         {
-            int flights = 0;
+            var request = new ScanRequest()
+            {
+                TableName = DbConstants.TableName,
+                FilterExpression = $"begins_with({FlightDbModel.Id} , :prefix)",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
+                {
+                    {":prefix" , new AttributeValue {S = FlightDbModel.Prefix } }
+                }
+            };
+
+            var responseItems = (await _connection.ScanAsync(request)).Items;
+            var flights = await MapFlightsList(responseItems);
 
             return new OkObjectResult(new ResponseObject("Flights for all flights", flights));
         }
@@ -112,16 +121,26 @@ namespace ABS_Flights.Service
         public async Task<IActionResult> GetFlightById(string id)
         {
 
-            var request = new GetItemRequest()
+            var request = new ScanRequest()
             {
                 TableName = DbConstants.TableName,
-                Key = new Dictionary<string, AttributeValue>()
+                FilterExpression = $"({FlightDbModel.Id} = :flightId)" +
+                $"OR(begins_with({SectionDbModel.Id}, :sectionPrefix) AND {SectionDbModel.FlightId} = :flightId )" +
+                $"OR(begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} = :flightId)",
+
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
-                    {FlightDbModel.Id, new AttributeValue {S = FlightDbModel.Prefix + id}}
+                    {":flightId" , new AttributeValue {S = FlightDbModel.Prefix + id } },
+                    {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
+                    {":seatPrefix", new AttributeValue {S = SeatDbModel.Prefix } }
+                },
+
+                ExpressionAttributeNames = new Dictionary<string, string>()
+                {
+                    {"#data" , SeatDbModel.Data }
                 }
             };
 
-            var response = (await _connection.GetItemAsync(request)).Item;
 
             int flight = 0;
 
@@ -160,52 +179,18 @@ namespace ABS_Flights.Service
 
             var responseItems = (await _connection.ScanAsync(request)).Items;
 
-            var mappedFlights = new List<FlightBindingModel>();
-            foreach(var flight in responseItems.Where(item => {
-                                    item.TryGetValue(DbConstants.PK, out var id);
-                                    return (id.S.StartsWith(FlightDbModel.Prefix));}))
+            var mappedFlights = await MapFlightsList(responseItems.Where(item => {
+                item.TryGetValue(DbConstants.PK, out var id);
+                return (id.S.StartsWith(FlightDbModel.Prefix));
+            }).ToList());
+
+
+            var mappedSections = MapSections(responseItems.Where(item =>
             {
-                flight.TryGetValue(FlightDbModel.Id, out var id);
-                flight.TryGetValue(FlightDbModel.AirlineId, out var airlineId);
-                flight.TryGetValue(FlightDbModel.Data, out var data);
-                flight.TryGetValue(FlightDbModel.OriginAirportId, out var originAirportId);
-                flight.TryGetValue(FlightDbModel.DestinationAirportId, out var destinationAirportId);
-
-                string flightId = id.S.Replace(FlightDbModel.Prefix, "");
-                mappedFlights.Add(new FlightBindingModel
-                {
-                    Id = flightId,
-                    Airline = await GetAirlineName(airlineId.S),
-                    OriginAirport = await GetAirportName(originAirportId.S),
-                    DestinationAirport = await GetAirportName(destinationAirportId.S),
-                    FlightNumber = flightId,
-
-                });
-            }
-
-            var mappedSections = new List<Section>();
-            foreach (var section in responseItems.Where(item => {
                 item.TryGetValue(DbConstants.PK, out var id);
                 return (id.S.StartsWith(SectionDbModel.Prefix));
-            }))
-            {
-                section.TryGetValue(SectionDbModel.Id, out var id);
-                section.TryGetValue(SectionDbModel.FlightId, out var flightId);
-                section.TryGetValue(SectionDbModel.Data, out var data);
-
-                data.M.TryGetValue("Rows", out var rows);
-                data.M.TryGetValue("Columns", out var columns);
-                data.M.TryGetValue("SeatClass", out var seatClass);
-
-                mappedSections.Add(new Section
-                {
-                    Id = id.S,
-                    FlightId = flightId.S.Replace(FlightDbModel.Prefix , ""),
-                    Rows = int.Parse(rows.N),
-                    Columns = int.Parse(columns.N),
-                    SeatClass = seatClass.S == SeatClass.First.ToString() ? SeatClass.First : seatClass.S == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
-                }) ;
-            }
+            }).ToList());
+            
 
             var mappedSeats = new List<Seat>();
             foreach (var seat in responseItems.Where(item => {
@@ -436,6 +421,70 @@ namespace ABS_Flights.Service
             items[0].TryGetValue(AirportDbModel.Name, out var name);
 
             return name.S;
+        }
+
+
+        private async Task<List<FlightBindingModel>> MapFlightsList(List<Dictionary<string, AttributeValue>> responseItems)
+        {
+            var mappedFlights = new List<FlightBindingModel>();
+            foreach (var flight in responseItems)
+            {
+                mappedFlights.Add(await MapFlight(flight));
+            }
+
+            return mappedFlights;
+        }
+
+        private async Task<FlightBindingModel> MapFlight(Dictionary<string, AttributeValue> responseItem)
+        {
+            responseItem.TryGetValue(FlightDbModel.Id, out var id);
+            responseItem.TryGetValue(FlightDbModel.AirlineId, out var airlineId);
+            responseItem.TryGetValue(FlightDbModel.Data, out var data);
+            responseItem.TryGetValue(FlightDbModel.OriginAirportId, out var originAirportId);
+            responseItem.TryGetValue(FlightDbModel.DestinationAirportId, out var destinationAirportId);
+
+            data.M.TryGetValue("DepartureDate", out var departureDate);
+            data.M.TryGetValue("LandingDate", out var landingDate);
+
+            string flightId = id.S.Replace(FlightDbModel.Prefix, "");
+
+            return new FlightBindingModel
+            {
+                Id = flightId,
+                Airline = await GetAirlineName(airlineId.S),
+                OriginAirport = await GetAirportName(originAirportId.S),
+                DestinationAirport = await GetAirportName(destinationAirportId.S),
+                FlightNumber = flightId,
+                DepartureDate = DateTime.Parse(departureDate.S),
+                LandingDate = DateTime.Parse(landingDate.S),
+
+            };
+        }
+
+        private List<Section> MapSections(List<Dictionary<string, AttributeValue>> responseItems)
+        {
+            var mappedSections = new List<Section>();
+            foreach (var section in responseItems)
+            {
+                section.TryGetValue(SectionDbModel.Id, out var id);
+                section.TryGetValue(SectionDbModel.FlightId, out var flightId);
+                section.TryGetValue(SectionDbModel.Data, out var data);
+
+                data.M.TryGetValue("Rows", out var rows);
+                data.M.TryGetValue("Columns", out var columns);
+                data.M.TryGetValue("SeatClass", out var seatClass);
+
+                mappedSections.Add(new Section
+                {
+                    Id = id.S,
+                    FlightId = flightId.S.Replace(FlightDbModel.Prefix, ""),
+                    Rows = int.Parse(rows.N),
+                    Columns = int.Parse(columns.N),
+                    SeatClass = seatClass.S == SeatClass.First.ToString() ? SeatClass.First : seatClass.S == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
+                });
+            }
+
+            return mappedSections;
         }
 
     }

@@ -31,7 +31,6 @@ namespace ABS_Auth
             });
 
             services.AddSingleton<ABSContext>();
-            services.AddScoped<ContextService>();
             services.AddTransient<IAuthService, AuthService>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
