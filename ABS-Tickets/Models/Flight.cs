@@ -6,7 +6,7 @@ namespace ABS_Tickets.Models
 {
     public class Flight
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [CustomRequired]
         public string FlightNumber { get; set; }

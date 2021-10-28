@@ -168,7 +168,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\st
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\staticwebassets\ABS-Flights.StaticWebAssets.xml
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\scopedcss\bundle\ABS-Flights.styles.css
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.RazorTargetAssemblyInfo.cache
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.csproj.CopyComplete
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ref\ABS-Flights.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights\obj\Debug\net5.0\ABS-Flights.pdb

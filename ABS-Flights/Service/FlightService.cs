@@ -125,14 +125,17 @@ namespace ABS_Flights.Service
             {
                 TableName = DbConstants.TableName,
                 FilterExpression = $"({FlightDbModel.Id} = :flightId)" +
-                $"OR(begins_with({SectionDbModel.Id}, :sectionPrefix) AND {SectionDbModel.FlightId} = :flightId )" +
-                $"OR(begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} = :flightId)",
+                $"OR (begins_with({SectionDbModel.Id}, :sectionPrefix) AND {SectionDbModel.FlightId} = :flightId )" +
+                $"OR (begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} = :flightId AND #data.IsBooked = :isBooked) " +
+                $"OR (begins_with({TicketDbModel.Id}, :ticketPrefix) AND {TicketDbModel.FlightId} = :flightId)",
 
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
                     {":flightId" , new AttributeValue {S = FlightDbModel.Prefix + id } },
                     {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
-                    {":seatPrefix", new AttributeValue {S = SeatDbModel.Prefix } }
+                    {":seatPrefix", new AttributeValue {S = SeatDbModel.Prefix } },
+                    {":ticketPrefix", new AttributeValue {S = TicketDbModel.Prefix} },
+                    {":isBooked", new AttributeValue {BOOL = true} }
                 },
 
                 ExpressionAttributeNames = new Dictionary<string, string>()
@@ -141,8 +144,73 @@ namespace ABS_Flights.Service
                 }
             };
 
+            var responseItems = (await _connection.ScanAsync(request)).Items;
 
-            int flight = 0;
+            var flight = await MapFlight(responseItems.FirstOrDefault(item => 
+            {
+                item.TryGetValue(FlightDbModel.Id, out var flightId);
+                return flightId.S.StartsWith(FlightDbModel.Prefix);
+            } ));
+
+            var sections =  MapSections(responseItems.Where(item =>
+            {
+                item.TryGetValue(DbConstants.PK, out var id);
+                return (id.S.StartsWith(SectionDbModel.Prefix));
+            }).ToList());
+
+
+            var seats = new List<Seat>();
+            foreach (var seat in responseItems.Where(item => {
+                item.TryGetValue(DbConstants.PK, out var id);
+                return (id.S.StartsWith(SeatDbModel.Prefix));
+            }))
+            {
+                seat.TryGetValue(SeatDbModel.Id, out var seatId);
+                seat.TryGetValue(SeatDbModel.FlightId, out var flightId);
+                seat.TryGetValue(SeatDbModel.SectionId, out var sectionId);
+                seat.TryGetValue(SeatDbModel.Data, out var data);
+
+                data.M.TryGetValue("Row", out var row);
+                data.M.TryGetValue("Column", out var column);
+                data.M.TryGetValue("SeatClass", out var seatClass);
+                data.M.TryGetValue("IsBooked", out var isBooked);
+
+                seats.Add(new Seat
+                {
+                    Id = seatId.S,
+                    FlightId = flightId.S,
+                    Row = int.Parse(row.N),
+                    Column = int.Parse(column.N),
+                    SeatClass = seatClass.S == SeatClass.First.ToString() ? SeatClass.First : seatClass.S == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
+                    SectionId = sectionId.S,
+                });
+            }
+
+            foreach (var item in responseItems.Where(item => {
+                item.TryGetValue(DbConstants.PK, out var id);
+                return (id.S.StartsWith(TicketDbModel.Prefix));
+            }))
+            {
+                item.TryGetValue(TicketDbModel.SeatId, out var seatId);
+                item.TryGetValue(TicketDbModel.UserId, out var username);
+                item.TryGetValue(TicketDbModel.Data, out var data);
+
+                data.M.TryGetValue("PassengerName", out var passangerName);
+
+                var seat = seats.FirstOrDefault(s => s.Id == seatId.S);
+                seat.PassengerName = passangerName.S;
+                seat.Username = username.S;
+
+            }
+
+
+            foreach (var section in sections)
+            {
+                section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
+            }
+
+            flight.Sections = sections;
+
 
             return new OkObjectResult(new ResponseObject("Flight information", flight));
         }
@@ -206,6 +274,7 @@ namespace ABS_Flights.Service
                 data.M.TryGetValue("Row", out var row);
                 data.M.TryGetValue("Column", out var column);
                 data.M.TryGetValue("SeatClass", out var seatClass);
+                data.M.TryGetValue("IsBooked", out var isBooked);
 
                 mappedSeats.Add(new Seat
                 {
@@ -214,7 +283,8 @@ namespace ABS_Flights.Service
                     Row = int.Parse(row.N),
                     Column = int.Parse(column.N),
                     SeatClass = seatClass.S == SeatClass.First.ToString() ? SeatClass.First : seatClass.S == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
-                    SectionId = sectionId.S
+                    SectionId = sectionId.S,
+                    IsBooked = isBooked.BOOL,
                 });
             }
 
@@ -222,12 +292,12 @@ namespace ABS_Flights.Service
 
             foreach (var section in mappedSections)
             {
-                section.Seats = mappedSeats.Where(seat => seat.SectionId == section.Id).ToList();
+                section.Seats = mappedSeats.Where(seat => seat.SectionId == section.Id).OrderBy(seat => seat.Row).ThenBy(seat => seat.Column).ToList();
             }
 
             foreach (var flight in mappedFlights)
             {
-                flight.Sections = mappedSections.Where(section => section.FlightId == flight.Id).ToList();
+                flight.Sections = mappedSections.Where(section => section.FlightId == flight.Id).OrderBy(section => section.SeatClass).ToList();
             }
 
             return new OkObjectResult(new ResponseObject("Flights found", mappedFlights.OrderBy(f => ids.IndexOf(f.Id))));

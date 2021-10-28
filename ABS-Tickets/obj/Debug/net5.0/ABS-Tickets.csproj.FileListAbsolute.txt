@@ -140,7 +140,6 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\st
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\staticwebassets\ABS-Tickets.StaticWebAssets.xml
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\scopedcss\bundle\ABS-Tickets.styles.css
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.RazorTargetAssemblyInfo.cache
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.csproj.CopyComplete
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ref\ABS-Tickets.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.pdb

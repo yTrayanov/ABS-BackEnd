@@ -41,7 +41,6 @@ namespace ABS_Tickets
 
 
             services.AddSingleton<ABSContext>();
-            services.AddScoped<ContextService>();
             services.AddTransient<ITicketService, TicketeService>();
         }
 

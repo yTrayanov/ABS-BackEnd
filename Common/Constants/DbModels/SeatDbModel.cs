@@ -10,8 +10,8 @@ namespace Abs.Common.Constants.DbModels
     {
         public const string Prefix = "SEAT#";
         public const string Id = DbConstants.PK;
-        public const string SectionId = DbConstants.SK;
-        public const string FlightId = DbConstants.GSI1;
+        public const string SectionId = DbConstants.GSI1;
+        public const string FlightId = DbConstants.SK;
         public const string Data = DbConstants.Data;
 
     }
