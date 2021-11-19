@@ -8,6 +8,9 @@ using ABS_Data.Data;
 using Newtonsoft.Json;
 using ABS_Common.Extensions;
 using ABS_Flights.Service;
+using ABS.Data.DynamoDbRepository;
+using ABS_Flights.Repository;
+using ABS_Flights.Models;
 
 namespace ABS_Flights
 {
@@ -36,7 +39,9 @@ namespace ABS_Flights
             });
 
             services.AddSingleton<ABSContext>();
+            services.AddSingleton<IRepository<string , FlightModel>, FlightRepository>();
             services.AddTransient<IFlightService, FlightService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

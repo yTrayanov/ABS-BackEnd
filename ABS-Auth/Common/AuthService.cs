@@ -138,6 +138,7 @@ namespace ABS_Auth.Common
         public async Task<IActionResult> AuthorizeAdmin(string username)
         {
             var responseItem = await GetUser(username);
+
             responseItem.TryGetValue(UserDbModel.Role, out var role);
 
             if (role.S == Constants.AdminRole)
@@ -149,6 +150,10 @@ namespace ABS_Auth.Common
         public async Task<IActionResult> Authorize(string username)
         {
             var responseItem = await GetUser(username);
+
+
+            if (responseItem.Count == 0)
+                throw new ArgumentException(ErrorMessages.UserNotFound);
 
             responseItem.TryGetValue(UserDbModel.Status, out var status);
 

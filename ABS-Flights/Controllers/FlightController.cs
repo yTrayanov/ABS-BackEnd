@@ -29,7 +29,7 @@ namespace ABS_Flights.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateFlight([FromBody] FlightBindingModel flightInfo)
+        public async Task<IActionResult> CreateFlight([FromBody] FlightModel flightInfo)
         {
             return await this._flightService.CreateFlight(flightInfo);
         }
@@ -37,7 +37,7 @@ namespace ABS_Flights.Controllers
         [HttpGet("{multipleIdsAsString}")]
         public async Task<IActionResult> GetFlightsByIds([FromRoute] string multipleIdsAsString)
         {
-            return await _flightService.GetMultipleFlights(multipleIdsAsString);
+            return await _flightService.GetMultipleFlightsAsync(multipleIdsAsString);
         }
 
         [HttpGet("information/all")]
@@ -49,7 +49,7 @@ namespace ABS_Flights.Controllers
         [HttpGet("information/{id}")]
         public async Task<IActionResult> GetFlightInformation([FromRoute] string id)
         {
-            return await _flightService.GetFlightById(id);
+            return await _flightService.GetFlightByIdAsync(id);
         }
     }
 }

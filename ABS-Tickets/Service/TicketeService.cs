@@ -126,18 +126,6 @@ namespace ABS_Tickets.Service
 
         public async Task<IActionResult> GetUserTickets(string username)
         {
-            //var tickets = (await multi.ReadAsync<TicketViewModel>()).ToList();
-            //var flights = (await multi.ReadAsync<Flight>()).ToList();
-            //var seats = (await multi.ReadAsync<SeatModel>()).ToList();
-
-            //foreach (var ticket in tickets)
-            //{
-            //    ticket.Flight = flights.FirstOrDefault(f => f.Id == ticket.FlightId);
-            //    ticket.Seat = seats.FirstOrDefault(s => s.Id == ticket.SeatId);
-            //}
-
-            //return new OkObjectResult(new ResponseObject("User tickets here", tickets));
-
 
             var requestTickets = new ScanRequest()
             {

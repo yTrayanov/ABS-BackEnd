@@ -1,5 +1,6 @@
 ﻿using Abs.Common.Constants;
 using Abs.Common.Constants.DbModels;
+using ABS.Data.DynamoDbRepository;
 using ABS_Common.Enumerations;
 using ABS_Common.ResponsesModels;
 using ABS_Data.Data;
@@ -19,80 +20,84 @@ namespace ABS_Flights.Service
     {
 
         private IAmazonDynamoDB _connection;
+        private IRepository<string, FlightModel> _flightRepository;
 
-        public FlightService(ABSContext contextService)
+        public FlightService(ABSContext contextService, IRepository<string , FlightModel> flightRepository)
         {
             _connection = contextService.CreateConnection();
+            _flightRepository = flightRepository;
         }
 
-        public async Task<IActionResult> CreateFlight(FlightBindingModel flightInfo)
+        public async Task<IActionResult> CreateFlight(FlightModel flightInfo)
         {
-            var airlineId = await GetAirlineId(flightInfo.Airline);
-            var originAirportId = await GetAirportId(flightInfo.OriginAirport);
-            var destinationAirportId = await GetAirportId(flightInfo.DestinationAirport);
+            //var airlineId = await GetAirlineIdAsybc(flightInfo.Airline);
+            //var originAirportId = await GetAirportIdAsync(flightInfo.OriginAirport);
+            //var destinationAirportId = await GetAirportIdAsync(flightInfo.DestinationAirport);
 
-            var request = new PutItemRequest
-            {
-                TableName = DbConstants.TableName,
-                Item = new Dictionary<string, AttributeValue>()
-                {
-                    {FlightDbModel.Id, new AttributeValue
-                        {
-                            S = FlightDbModel.Prefix + flightInfo.FlightNumber
-                        }
-                    },
-                    {FlightDbModel.AirlineId, new AttributeValue()
-                        {
-                            S = airlineId
-                        }
-                    },
-                    {FlightDbModel.Data , new AttributeValue()
-                    {
-                        M = new Dictionary<string, AttributeValue>()
-                        {
-                            {"DepartureDate", new AttributeValue() {S = flightInfo.DepartureDate.ToString() } },
-                            {"LandingDate", new AttributeValue() {S = flightInfo.LandingDate.ToString() }  }
-                        }
-                    }},
-                    {FlightDbModel.OriginAirportId , new AttributeValue {S = originAirportId } },
-                    {FlightDbModel.DestinationAirportId , new AttributeValue {S = destinationAirportId } }
-                },
-                Expected = new Dictionary<string, ExpectedAttributeValue>()
-                {
-                    {FlightDbModel.Id, new ExpectedAttributeValue(false)}
-                },
-            };
+            //var request = new PutItemRequest
+            //{
+            //    TableName = DbConstants.TableName,
+            //    Item = new Dictionary<string, AttributeValue>()
+            //    {
+            //        {FlightDbModel.Id, new AttributeValue
+            //            {
+            //                S = FlightDbModel.Prefix + flightInfo.FlightNumber
+            //            }
+            //        },
+            //        {FlightDbModel.AirlineId, new AttributeValue()
+            //            {
+            //                S = airlineId
+            //            }
+            //        },
+            //        {FlightDbModel.Data , new AttributeValue()
+            //        {
+            //            M = new Dictionary<string, AttributeValue>()
+            //            {
+            //                {"DepartureDate", new AttributeValue() {S = flightInfo.DepartureDate.ToString() } },
+            //                {"LandingDate", new AttributeValue() {S = flightInfo.LandingDate.ToString() }  }
+            //            }
+            //        }},
+            //        {FlightDbModel.OriginAirportId , new AttributeValue {S = originAirportId } },
+            //        {FlightDbModel.DestinationAirportId , new AttributeValue {S = destinationAirportId } }
+            //    },
+            //    Expected = new Dictionary<string, ExpectedAttributeValue>()
+            //    {
+            //        {FlightDbModel.Id, new ExpectedAttributeValue(false)}
+            //    },
+            //};
 
-            await _connection.PutItemAsync(request);
+            //await _connection.PutItemAsync(request);
+
+            await _flightRepository.Add(flightInfo);
 
             return new OkObjectResult(new ResponseObject("Flight created"));
         }
 
         public async Task<IActionResult> FilterOneWayFlights(OneWayFlightModel flightInfo)
         {
-            var flights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
+            var flights = await FilterFlightsAsync(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
-            return new OkObjectResult(new ResponseObject("Flights found", flights.Select(f => new FlightBindingModel[] { f })));
+            return new OkObjectResult(new ResponseObject("Flights found", flights.Select(f => new FlightModel[] { f })));
         }
 
         public async Task<IActionResult> FilterTwoWayFlights(TwoWaySearchModel flightInfo)
         {
-            var toDestinationFlights = await FilterFlights(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
+            var toDestinationFlights = await FilterFlightsAsync(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
             if (toDestinationFlights == null)
                 return new OkObjectResult(new ResponseObject("There are no fligths to destination on this date"));
 
-            var returnFlights = await FilterFlights(flightInfo.DestinationAirport, flightInfo.OriginAirport, flightInfo.ReturnDate, flightInfo.MembersCount);
+            var returnFlights = await FilterFlightsAsync(flightInfo.DestinationAirport, flightInfo.OriginAirport, flightInfo.ReturnDate, flightInfo.MembersCount);
             if (returnFlights == null)
                 return new OkObjectResult(new ResponseObject("There are no return flights"));
 
-            var result = new List<FlightBindingModel[]>();
+            var result = new List<FlightModel[]>();
 
             for (int i = 0; i < toDestinationFlights.Count; i++)
             {
                 for (int j = 0; j < returnFlights.Count; j++)
                 {
-                    var flights = new FlightBindingModel[] { toDestinationFlights[i], returnFlights[j] };
+                    var flights = new FlightModel[] { toDestinationFlights[i], returnFlights[j] };
                     result.Add(flights);
                 }
             }
@@ -113,12 +118,12 @@ namespace ABS_Flights.Service
             };
 
             var responseItems = (await _connection.ScanAsync(request)).Items;
-            var flights = await MapFlightsList(responseItems);
+            var flights = await MapFlightsListAsync(responseItems);
 
             return new OkObjectResult(new ResponseObject("Flights for all flights", flights));
         }
 
-        public async Task<IActionResult> GetFlightById(string id)
+        public async Task<IActionResult> GetFlightByIdAsync(string id)
         {
 
             var request = new ScanRequest()
@@ -146,7 +151,7 @@ namespace ABS_Flights.Service
 
             var responseItems = (await _connection.ScanAsync(request)).Items;
 
-            var flight = await MapFlight(responseItems.FirstOrDefault(item => 
+            var flight = await MapFlightAsync(responseItems.FirstOrDefault(item => 
             {
                 item.TryGetValue(FlightDbModel.Id, out var flightId);
                 return flightId.S.StartsWith(FlightDbModel.Prefix);
@@ -215,7 +220,7 @@ namespace ABS_Flights.Service
             return new OkObjectResult(new ResponseObject("Flight information", flight));
         }
 
-        public async Task<IActionResult> GetMultipleFlights(string flightIds)
+        public async Task<IActionResult> GetMultipleFlightsAsync(string flightIds)
         {
 
             var ids = flightIds.Split(',').ToList();
@@ -247,7 +252,7 @@ namespace ABS_Flights.Service
 
             var responseItems = (await _connection.ScanAsync(request)).Items;
 
-            var mappedFlights = await MapFlightsList(responseItems.Where(item => {
+            var mappedFlights = await MapFlightsListAsync(responseItems.Where(item => {
                 item.TryGetValue(DbConstants.PK, out var id);
                 return (id.S.StartsWith(FlightDbModel.Prefix));
             }).ToList());
@@ -303,11 +308,11 @@ namespace ABS_Flights.Service
             return new OkObjectResult(new ResponseObject("Flights found", mappedFlights.OrderBy(f => ids.IndexOf(f.Id))));
         }
 
-        private async Task<IList<FlightBindingModel>> FilterFlights(string originAirport, string destinationAirport, DateTime date, int membersCount)
+        private async Task<IList<FlightModel>> FilterFlightsAsync(string originAirport, string destinationAirport, DateTime date, int membersCount)
         {
 
-            var originAirportId = await GetAirportId(originAirport);
-            var destinationAirportId =  await GetAirportId(destinationAirport);
+            var originAirportId = await GetAirportIdAsync(originAirport);
+            var destinationAirportId =  await GetAirportIdAsync(destinationAirport);
 
             var request = new ScanRequest()
             {
@@ -333,7 +338,7 @@ namespace ABS_Flights.Service
             };
 
             var flightResponseItems = (await _connection.ScanAsync(request)).Items;
-            var flights = new List<FlightBindingModel>();
+            var flights = new List<FlightModel>();
 
             foreach (var item in flightResponseItems)
             {
@@ -346,10 +351,10 @@ namespace ABS_Flights.Service
 
                 string flightId = id.S.Replace(FlightDbModel.Prefix, "");
 
-                flights.Add(new FlightBindingModel
+                flights.Add(new FlightModel
                 {
                     Id = flightId,
-                    Airline = await GetAirlineName(airlineId.S),
+                    Airline = await GetAirlineNameAsync(airlineId.S),
                     OriginAirport = originAirport,
                     DestinationAirport = destinationAirport,
                     FlightNumber = flightId,
@@ -398,7 +403,7 @@ namespace ABS_Flights.Service
             return flights;
         }
 
-        private async Task<string> GetAirlineId(string name)
+        private async Task<string> GetAirlineIdAsybc(string name)
         {
             var airlineRequest = new ScanRequest()
             {
@@ -422,7 +427,7 @@ namespace ABS_Flights.Service
             return id.S;
         }
 
-        private async Task<string> GetAirportId(string name)
+        private async Task<string> GetAirportIdAsync(string name)
         {
             var airlineRequest = new ScanRequest()
             {
@@ -446,7 +451,7 @@ namespace ABS_Flights.Service
             return id.S;
         }
 
-        private async Task<string> GetAirlineName(string id)
+        private async Task<string> GetAirlineNameAsync(string id)
         {
             var airlineRequest = new ScanRequest()
             {
@@ -469,7 +474,7 @@ namespace ABS_Flights.Service
 
             return name.S;
         }
-        private async Task<string> GetAirportName(string id)
+        private async Task<string> GetAirportNameAsync(string id)
         {
             var airlineRequest = new ScanRequest()
             {
@@ -494,18 +499,18 @@ namespace ABS_Flights.Service
         }
 
 
-        private async Task<List<FlightBindingModel>> MapFlightsList(List<Dictionary<string, AttributeValue>> responseItems)
+        private async Task<List<FlightModel>> MapFlightsListAsync(List<Dictionary<string, AttributeValue>> responseItems)
         {
-            var mappedFlights = new List<FlightBindingModel>();
+            var mappedFlights = new List<FlightModel>();
             foreach (var flight in responseItems)
             {
-                mappedFlights.Add(await MapFlight(flight));
+                mappedFlights.Add(await MapFlightAsync(flight));
             }
 
             return mappedFlights;
         }
 
-        private async Task<FlightBindingModel> MapFlight(Dictionary<string, AttributeValue> responseItem)
+        private async Task<FlightModel> MapFlightAsync(Dictionary<string, AttributeValue> responseItem)
         {
             responseItem.TryGetValue(FlightDbModel.Id, out var id);
             responseItem.TryGetValue(FlightDbModel.AirlineId, out var airlineId);
@@ -518,12 +523,12 @@ namespace ABS_Flights.Service
 
             string flightId = id.S.Replace(FlightDbModel.Prefix, "");
 
-            return new FlightBindingModel
+            return new FlightModel
             {
                 Id = flightId,
-                Airline = await GetAirlineName(airlineId.S),
-                OriginAirport = await GetAirportName(originAirportId.S),
-                DestinationAirport = await GetAirportName(destinationAirportId.S),
+                Airline = await GetAirlineNameAsync(airlineId.S),
+                OriginAirport = await GetAirportNameAsync(originAirportId.S),
+                DestinationAirport = await GetAirportNameAsync(destinationAirportId.S),
                 FlightNumber = flightId,
                 DepartureDate = DateTime.Parse(departureDate.S),
                 LandingDate = DateTime.Parse(landingDate.S),

@@ -27,3 +27,4 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Common\obj\Debug\net5.0\Abs.Com
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Common\obj\Debug\net5.0\ref\Abs.Common.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Common\obj\Debug\net5.0\Abs.Common.pdb
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Common\obj\Debug\net5.0\Abs.Common.csproj.AssemblyReference.cache
+C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Common\obj\Debug\net5.0\Abs.Common.csproj.CopyComplete

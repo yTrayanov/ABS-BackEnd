@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ABS_Flights.Models
 {
-    public class FlightBindingModel : FlightBase
+    public class FlightModel : FlightBase
     {
         public string Id { get; set; }
 

@@ -8,10 +8,10 @@ namespace ABS_Flights.Service
     {
         Task<IActionResult> FilterOneWayFlights(OneWayFlightModel flightInfo);
         Task<IActionResult> FilterTwoWayFlights(TwoWaySearchModel flightInfo);
-        Task<IActionResult> CreateFlight(FlightBindingModel flightInfo);
-        Task<IActionResult> GetMultipleFlights(string ids);
+        Task<IActionResult> CreateFlight(FlightModel flightInfo);
+        Task<IActionResult> GetMultipleFlightsAsync(string ids);
         Task<IActionResult> GetAllFlights();
-        Task<IActionResult> GetFlightById(string id);
+        Task<IActionResult> GetFlightByIdAsync(string id);
 
     }
 }
