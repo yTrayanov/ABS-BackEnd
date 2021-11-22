@@ -45,6 +45,16 @@ namespace ABS.Data.DynamoDb
             return Convert.ToDouble(_data.GetValueOrDefault(key)?.N);
         }
 
+        public DynamoDBItem GetInnerObjectData(string key)
+        {
+            return new DynamoDBItem(_data.GetValueOrDefault(key)?.M); 
+        }
+
+        public bool GetBoolean(string key)
+        {
+            return Convert.ToBoolean(_data.GetValueOrDefault(key)?.BOOL);
+        }
+
         public void AddPK(string value , string prefix = "")
         {
             AddKeyAttributeValue(DynamoDBConstants.PK, new AttributeValue(prefix + value));

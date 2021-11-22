@@ -30,44 +30,6 @@ namespace ABS_Flights.Service
 
         public async Task<IActionResult> CreateFlight(FlightModel flightInfo)
         {
-            //var airlineId = await GetAirlineIdAsybc(flightInfo.Airline);
-            //var originAirportId = await GetAirportIdAsync(flightInfo.OriginAirport);
-            //var destinationAirportId = await GetAirportIdAsync(flightInfo.DestinationAirport);
-
-            //var request = new PutItemRequest
-            //{
-            //    TableName = DbConstants.TableName,
-            //    Item = new Dictionary<string, AttributeValue>()
-            //    {
-            //        {FlightDbModel.Id, new AttributeValue
-            //            {
-            //                S = FlightDbModel.Prefix + flightInfo.FlightNumber
-            //            }
-            //        },
-            //        {FlightDbModel.AirlineId, new AttributeValue()
-            //            {
-            //                S = airlineId
-            //            }
-            //        },
-            //        {FlightDbModel.Data , new AttributeValue()
-            //        {
-            //            M = new Dictionary<string, AttributeValue>()
-            //            {
-            //                {"DepartureDate", new AttributeValue() {S = flightInfo.DepartureDate.ToString() } },
-            //                {"LandingDate", new AttributeValue() {S = flightInfo.LandingDate.ToString() }  }
-            //            }
-            //        }},
-            //        {FlightDbModel.OriginAirportId , new AttributeValue {S = originAirportId } },
-            //        {FlightDbModel.DestinationAirportId , new AttributeValue {S = destinationAirportId } }
-            //    },
-            //    Expected = new Dictionary<string, ExpectedAttributeValue>()
-            //    {
-            //        {FlightDbModel.Id, new ExpectedAttributeValue(false)}
-            //    },
-            //};
-
-            //await _connection.PutItemAsync(request);
-
             await _flightRepository.Add(flightInfo);
 
             return new OkObjectResult(new ResponseObject("Flight created"));
@@ -126,95 +88,97 @@ namespace ABS_Flights.Service
         public async Task<IActionResult> GetFlightByIdAsync(string id)
         {
 
-            var request = new ScanRequest()
-            {
-                TableName = DbConstants.TableName,
-                FilterExpression = $"({FlightDbModel.Id} = :flightId)" +
-                $"OR (begins_with({SectionDbModel.Id}, :sectionPrefix) AND {SectionDbModel.FlightId} = :flightId )" +
-                $"OR (begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} = :flightId AND #data.IsBooked = :isBooked) " +
-                $"OR (begins_with({TicketDbModel.Id}, :ticketPrefix) AND {TicketDbModel.FlightId} = :flightId)",
+            //var request = new ScanRequest()
+            //{
+            //    TableName = DbConstants.TableName,
+            //    FilterExpression = $"({FlightDbModel.Id} = :flightId)" +
+            //    $"OR (begins_with({SectionDbModel.Id}, :sectionPrefix) AND {SectionDbModel.FlightId} = :flightId )" +
+            //    $"OR (begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} = :flightId AND #data.IsBooked = :isBooked) " +
+            //    $"OR (begins_with({TicketDbModel.Id}, :ticketPrefix) AND {TicketDbModel.FlightId} = :flightId)",
 
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                {
-                    {":flightId" , new AttributeValue {S = FlightDbModel.Prefix + id } },
-                    {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
-                    {":seatPrefix", new AttributeValue {S = SeatDbModel.Prefix } },
-                    {":ticketPrefix", new AttributeValue {S = TicketDbModel.Prefix} },
-                    {":isBooked", new AttributeValue {BOOL = true} }
-                },
+            //    ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            //    {
+            //        {":flightId" , new AttributeValue {S = FlightDbModel.Prefix + id } },
+            //        {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
+            //        {":seatPrefix", new AttributeValue {S = SeatDbModel.Prefix } },
+            //        {":ticketPrefix", new AttributeValue {S = TicketDbModel.Prefix} },
+            //        {":isBooked", new AttributeValue {BOOL = true} }
+            //    },
 
-                ExpressionAttributeNames = new Dictionary<string, string>()
-                {
-                    {"#data" , SeatDbModel.Data }
-                }
-            };
+            //    ExpressionAttributeNames = new Dictionary<string, string>()
+            //    {
+            //        {"#data" , SeatDbModel.Data }
+            //    }
+            //};
 
-            var responseItems = (await _connection.ScanAsync(request)).Items;
+            //var responseItems = (await _connection.ScanAsync(request)).Items;
 
-            var flight = await MapFlightAsync(responseItems.FirstOrDefault(item => 
-            {
-                item.TryGetValue(FlightDbModel.Id, out var flightId);
-                return flightId.S.StartsWith(FlightDbModel.Prefix);
-            } ));
+            //var flight = await MapFlightAsync(responseItems.FirstOrDefault(item => 
+            //{
+            //    item.TryGetValue(FlightDbModel.Id, out var flightId);
+            //    return flightId.S.StartsWith(FlightDbModel.Prefix);
+            //} ));
 
-            var sections =  MapSections(responseItems.Where(item =>
-            {
-                item.TryGetValue(DbConstants.PK, out var id);
-                return (id.S.StartsWith(SectionDbModel.Prefix));
-            }).ToList());
-
-
-            var seats = new List<Seat>();
-            foreach (var seat in responseItems.Where(item => {
-                item.TryGetValue(DbConstants.PK, out var id);
-                return (id.S.StartsWith(SeatDbModel.Prefix));
-            }))
-            {
-                seat.TryGetValue(SeatDbModel.Id, out var seatId);
-                seat.TryGetValue(SeatDbModel.FlightId, out var flightId);
-                seat.TryGetValue(SeatDbModel.SectionId, out var sectionId);
-                seat.TryGetValue(SeatDbModel.Data, out var data);
-
-                data.M.TryGetValue("Row", out var row);
-                data.M.TryGetValue("Column", out var column);
-                data.M.TryGetValue("SeatClass", out var seatClass);
-                data.M.TryGetValue("IsBooked", out var isBooked);
-
-                seats.Add(new Seat
-                {
-                    Id = seatId.S,
-                    FlightId = flightId.S,
-                    Row = int.Parse(row.N),
-                    Column = int.Parse(column.N),
-                    SeatClass = seatClass.S == SeatClass.First.ToString() ? SeatClass.First : seatClass.S == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
-                    SectionId = sectionId.S,
-                });
-            }
-
-            foreach (var item in responseItems.Where(item => {
-                item.TryGetValue(DbConstants.PK, out var id);
-                return (id.S.StartsWith(TicketDbModel.Prefix));
-            }))
-            {
-                item.TryGetValue(TicketDbModel.SeatId, out var seatId);
-                item.TryGetValue(TicketDbModel.UserId, out var username);
-                item.TryGetValue(TicketDbModel.Data, out var data);
-
-                data.M.TryGetValue("PassengerName", out var passangerName);
-
-                var seat = seats.FirstOrDefault(s => s.Id == seatId.S);
-                seat.PassengerName = passangerName.S;
-                seat.Username = username.S;
-
-            }
+            //var sections =  MapSections(responseItems.Where(item =>
+            //{
+            //    item.TryGetValue(DbConstants.PK, out var id);
+            //    return (id.S.StartsWith(SectionDbModel.Prefix));
+            //}).ToList());
 
 
-            foreach (var section in sections)
-            {
-                section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
-            }
+            //var seats = new List<Seat>();
+            //foreach (var seat in responseItems.Where(item => {
+            //    item.TryGetValue(DbConstants.PK, out var id);
+            //    return (id.S.StartsWith(SeatDbModel.Prefix));
+            //}))
+            //{
+            //    seat.TryGetValue(SeatDbModel.Id, out var seatId);
+            //    seat.TryGetValue(SeatDbModel.FlightId, out var flightId);
+            //    seat.TryGetValue(SeatDbModel.SectionId, out var sectionId);
+            //    seat.TryGetValue(SeatDbModel.Data, out var data);
 
-            flight.Sections = sections;
+            //    data.M.TryGetValue("Row", out var row);
+            //    data.M.TryGetValue("Column", out var column);
+            //    data.M.TryGetValue("SeatClass", out var seatClass);
+            //    data.M.TryGetValue("IsBooked", out var isBooked);
+
+            //    seats.Add(new Seat
+            //    {
+            //        Id = seatId.S,
+            //        FlightId = flightId.S,
+            //        Row = int.Parse(row.N),
+            //        Column = int.Parse(column.N),
+            //        SeatClass = seatClass.S == SeatClass.First.ToString() ? SeatClass.First : seatClass.S == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
+            //        SectionId = sectionId.S,
+            //    });
+            //}
+
+            //foreach (var item in responseItems.Where(item => {
+            //    item.TryGetValue(DbConstants.PK, out var id);
+            //    return (id.S.StartsWith(TicketDbModel.Prefix));
+            //}))
+            //{
+            //    item.TryGetValue(TicketDbModel.SeatId, out var seatId);
+            //    item.TryGetValue(TicketDbModel.UserId, out var username);
+            //    item.TryGetValue(TicketDbModel.Data, out var data);
+
+            //    data.M.TryGetValue("PassengerName", out var passangerName);
+
+            //    var seat = seats.FirstOrDefault(s => s.Id == seatId.S);
+            //    seat.PassengerName = passangerName.S;
+            //    seat.Username = username.S;
+
+            //}
+
+
+            //foreach (var section in sections)
+            //{
+            //    section.Seats = seats.Where(seat => seat.SectionId == section.Id).ToList();
+            //}
+
+            //flight.Sections = sections;
+
+            var flight = await _flightRepository.Get(id);
 
 
             return new OkObjectResult(new ResponseObject("Flight information", flight));
@@ -311,146 +275,36 @@ namespace ABS_Flights.Service
         private async Task<IList<FlightModel>> FilterFlightsAsync(string originAirport, string destinationAirport, DateTime date, int membersCount)
         {
 
-            var originAirportId = await GetAirportIdAsync(originAirport);
-            var destinationAirportId =  await GetAirportIdAsync(destinationAirport);
+            var flights = await this._flightRepository.GetList(new string[] {"FilterFlights" , originAirport , destinationAirport , date.ToShortDateString()});
 
-            var request = new ScanRequest()
-            {
-                TableName = DbConstants.TableName,
-                FilterExpression = $"begins_with({FlightDbModel.Id} , :prefix) " +
-                                   $"and {FlightDbModel.OriginAirportId} = :originAirport " +
-                                   $"and {FlightDbModel.DestinationAirportId} = :destinationAirport " +
-                                   $"and begins_with( #data.DepartureDate , :departureDate )",
+            
+            //var sectionRequest = new ScanRequest()
+            //{
+            //    TableName = DbConstants.TableName,
+            //    FilterExpression = $"(begins_with(PK, :sectionPrefix) AND SK IN ({string.Join(",", mapAttValues.Keys)}) AND #data.AvailableSeats >= :membersCount)",
+            //    ExpressionAttributeValues = new Dictionary<string, AttributeValue>(mapAttValues) 
+            //    {
+            //        {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
+            //        {":membersCount", new AttributeValue{N = membersCount.ToString()} },
+            //    },
 
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
-                {
-                    {":originAirport" , new AttributeValue {S = originAirportId } },
-                    {":destinationAirport" , new AttributeValue {S = destinationAirportId } },
-                    {":prefix" , new AttributeValue {S = FlightDbModel.Prefix} },
-                    {":departureDate", new AttributeValue {S = date.ToShortDateString()}},
-                },
+            //    ExpressionAttributeNames = new Dictionary<string, string>()
+            //    {
+            //        {"#data" , "Data" }
+            //    }
+            //};
 
-                ExpressionAttributeNames = new Dictionary<string, string>()
-                {
-                    {"#data" , "Data" }
-                }
-                
-            };
+            //var sectionResponseItems = (await _connection.ScanAsync(sectionRequest)).Items;
 
-            var flightResponseItems = (await _connection.ScanAsync(request)).Items;
-            var flights = new List<FlightModel>();
-
-            foreach (var item in flightResponseItems)
-            {
-                item.TryGetValue(FlightDbModel.Id, out var id);
-                item.TryGetValue(FlightDbModel.AirlineId, out var airlineId);
-                item.TryGetValue(FlightDbModel.Data, out var data);
-
-                data.M.TryGetValue("DepartureDate", out var departureDate);
-                data.M.TryGetValue("LandingDate", out var landingDate);
-
-                string flightId = id.S.Replace(FlightDbModel.Prefix, "");
-
-                flights.Add(new FlightModel
-                {
-                    Id = flightId,
-                    Airline = await GetAirlineNameAsync(airlineId.S),
-                    OriginAirport = originAirport,
-                    DestinationAirport = destinationAirport,
-                    FlightNumber = flightId,
-                    DepartureDate = DateTime.Parse(departureDate.S),
-                    LandingDate = DateTime.Parse(landingDate.S),
-                    
-                });
-            }
-
-            var flightIds = flights.Select(f => $"{FlightDbModel.Prefix}" + f.FlightNumber).ToArray();
-
-
-            var mapAttValues = new Dictionary<string, AttributeValue>();
-
-            int index = 0;
-            foreach (var id in flightIds)
-            {
-                index++;
-                mapAttValues.Add($":flightId{index}", new AttributeValue { S = flightIds[index - 1]});
-            }
-
-
-            var sectionRequest = new ScanRequest()
-            {
-                TableName = DbConstants.TableName,
-                FilterExpression = $"(begins_with(PK, :sectionPrefix) AND SK IN ({string.Join(",", mapAttValues.Keys)}) AND #data.AvailableSeats >= :membersCount)",
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>(mapAttValues) 
-                {
-                    {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
-                    {":membersCount", new AttributeValue{N = membersCount.ToString()} },
-                },
-
-                ExpressionAttributeNames = new Dictionary<string, string>()
-                {
-                    {"#data" , "Data" }
-                }
-            };
-
-            var sectionResponseItems = (await _connection.ScanAsync(sectionRequest)).Items;
-
-            if (!sectionResponseItems.Any())
-                return null;
+            //if (!sectionResponseItems.Any())
+            //    return null;
 
 
 
             return flights;
         }
 
-        private async Task<string> GetAirlineIdAsybc(string name)
-        {
-            var airlineRequest = new ScanRequest()
-            {
-                TableName = DbConstants.TableName,
-                FilterExpression = $"{AirlineDbModel.Name} = :name",
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
-                {
-                    {":name" , new AttributeValue {S = name } }
-                }
-            };
-
-            var items = (await _connection.ScanAsync(airlineRequest)).Items;
-
-            if (items.Count == 0)
-            {
-                throw new ArgumentException(ErrorMessages.AirlineNotFound);
-            }
-
-            items[0].TryGetValue(AirlineDbModel.Id , out var id);
-
-            return id.S;
-        }
-
-        private async Task<string> GetAirportIdAsync(string name)
-        {
-            var airlineRequest = new ScanRequest()
-            {
-                TableName = DbConstants.TableName,
-                FilterExpression = $"{AirportDbModel.Name} = :name",
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
-                {
-                    {":name" , new AttributeValue {S = name } }
-                }
-            };
-
-            var items = (await _connection.ScanAsync(airlineRequest)).Items;
-
-            if (items.Count == 0)
-            {
-                throw new ArgumentException(ErrorMessages.AirportNotFound);
-            }
-
-            items[0].TryGetValue(AirportDbModel.Id, out var id);
-
-            return id.S;
-        }
-
+        
         private async Task<string> GetAirlineNameAsync(string id)
         {
             var airlineRequest = new ScanRequest()

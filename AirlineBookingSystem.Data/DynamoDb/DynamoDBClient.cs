@@ -53,7 +53,7 @@ namespace ABS.Data.DynamoDb
                 },
             };
 
-            var result = await _dynamoDbClient.PutItemAsync(putItemRq);
+            await _dynamoDbClient.PutItemAsync(putItemRq);
         }
 
         public async Task<List<DynamoDBItem>> ScanItemsAsync(string filterExpression = null, Dictionary<string, AttributeValue> expressionValues = null , Dictionary<string , string> expressionNames = null)

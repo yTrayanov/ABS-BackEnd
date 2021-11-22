@@ -10,7 +10,7 @@ namespace ABS.Data.DynamoDbRepository
         Task Add(TEntity item);
         Task Delete(TKey key);
         Task<TEntity> Get(TKey key);
-        Task<IList<TEntity>> GetList();
+        Task<IList<TEntity>> GetList(params string[] args);
         Task Update(TEntity item);
     }
 }
