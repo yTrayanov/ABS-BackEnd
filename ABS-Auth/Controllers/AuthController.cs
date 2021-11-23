@@ -1,4 +1,5 @@
 ﻿using ABS_Auth.Common;
+using ABS_Auth.Helpers;
 using ABS_Auth.Models;
 using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -32,7 +33,12 @@ namespace ABS_Auth.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel userInfo)
         {
-            return await _authService.Login(userInfo.Username, userInfo.Password, _secret);
+            var userModel = new UserModel
+            {
+                Username = userInfo.Username,
+                Password = userInfo.Password
+            };
+            return await _authService.Login(userModel, _secret);
         }
 
         [HttpGet("logout")]
@@ -46,7 +52,16 @@ namespace ABS_Auth.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel userInfo)
         {
-            return await this._authService.Register(userInfo.Username, userInfo.Password, userInfo.Email);
+            var userModel = new UserModel()
+            {
+                Username = userInfo.Username,
+                Email = userInfo.Email,
+                Password = userInfo.Password,
+                Status = UserStatus.Registered,
+                Roles = "User"
+            };
+
+            return await this._authService.Register(userModel);
         }
 
         [HttpGet("authorize")]

@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using ABS.Data.DynamoDbRepository;
+using ABS_Auth.Models;
+using ABS_Auth.Repository;
 
 namespace ABS_Auth
 {
@@ -31,6 +34,7 @@ namespace ABS_Auth
             });
 
             services.AddSingleton<ABSContext>();
+            services.AddSingleton<IRepository<string, UserModel>, UserRepository>();
             services.AddTransient<IAuthService, AuthService>();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

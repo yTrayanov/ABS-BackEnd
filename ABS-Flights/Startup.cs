@@ -38,7 +38,6 @@ namespace ABS_Flights
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-            services.AddSingleton<ABSContext>();
             services.AddSingleton<IRepository<string , FlightModel>, FlightRepository>();
             services.AddTransient<IFlightService, FlightService>();
 

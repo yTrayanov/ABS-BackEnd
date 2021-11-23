@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ABS_Auth.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace ABS_Auth.Common
 {
     public interface IAuthService
     {
-        Task<IActionResult> Login(string username, string password, string secret);
+        Task<IActionResult> Login(UserModel user, string secret);
 
-        Task<IActionResult> Register(string username , string password , string email);
+        Task<IActionResult> Register(UserModel userModel);
 
         Task<IActionResult> Logout(string username);
 

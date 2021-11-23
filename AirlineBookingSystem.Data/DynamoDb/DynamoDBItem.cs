@@ -55,13 +55,19 @@ namespace ABS.Data.DynamoDb
             return Convert.ToBoolean(_data.GetValueOrDefault(key)?.BOOL);
         }
 
+        public bool PkStartsWith(string prefix)
+        {
+            return _data.GetValueOrDefault(DynamoDBConstants.PK).S.StartsWith(prefix);
+        }
+
         public void AddPK(string value , string prefix = "")
         {
             AddKeyAttributeValue(DynamoDBConstants.PK, new AttributeValue(prefix + value));
         }
         public void AddSK(string value, string prefix = "")
         {
-            AddKeyAttributeValue(DynamoDBConstants.SK, new AttributeValue(prefix + value));
+            if(value != null)
+                AddKeyAttributeValue(DynamoDBConstants.SK, new AttributeValue(prefix + value));
         }
 
         public void AddGSI1(string value, string prefix = "")

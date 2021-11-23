@@ -1,4 +1,5 @@
-﻿using Amazon.DynamoDBv2;
+﻿using ABS.Data.DynamoDBHelpers;
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -132,16 +133,12 @@ namespace ABS.Data.DynamoDb
             var result = await _dynamoDbClient.BatchWriteItemAsync(batchRq);
         }
 
-
-
-        // TODO: leaky abstraction here !!! QueryRequest
         public async Task<IList<DynamoDBItem>> QueryAsync(QueryRequest queryRequest)
         {
             var queryResponse = await _dynamoDbClient.QueryAsync(queryRequest);
             return queryResponse.Items.Select(x => new DynamoDBItem(x)).ToList();
         }
 
-        // TODO: leaky abstraction here !!! QueryRequest
         public QueryRequest GetGSI1QueryRequest(string gsi1, string skPrefix)
         {
             return new QueryRequest
@@ -157,7 +154,6 @@ namespace ABS.Data.DynamoDb
             };
         }
 
-        // TODO: leaky abstraction here !!! QueryRequest
         public QueryRequest GetTableQueryRequest(string pk, string skPrefix)
         {
             return new QueryRequest
@@ -170,6 +166,33 @@ namespace ABS.Data.DynamoDb
                     { ":sk_prefix", new AttributeValue(skPrefix) }
                 }
             };
+        }
+
+        public async Task<DynamoDBItem> UpdateItemAsync(Dictionary<string , AttributeValue> key, string updateExpression, string conditionalExrpession = null , Dictionary<string , AttributeValue> expressionAttributeValues = null , Dictionary<string ,string> expressionAttributeNames = null, UpdateReturnValues returnValues = UpdateReturnValues.NONE)
+        {
+            var request = new UpdateItemRequest()
+            {
+                TableName = _tableName,
+                Key = key,
+                UpdateExpression = updateExpression,
+                ReturnValues = new ReturnValue(returnValues.ToString())
+            };
+
+            if (conditionalExrpession != null)
+                request.ConditionExpression = conditionalExrpession;
+
+            if (expressionAttributeValues != null)
+                request.ExpressionAttributeValues = expressionAttributeValues;
+
+            if (expressionAttributeNames != null)
+                request.ExpressionAttributeNames = expressionAttributeNames;
+
+
+
+            var responseAttributes = (await _dynamoDbClient.UpdateItemAsync(request)).Attributes;
+            var item = new DynamoDBItem(responseAttributes);
+
+            return item;
         }
     }
 }

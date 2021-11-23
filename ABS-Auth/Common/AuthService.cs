@@ -13,14 +13,18 @@ using Amazon.DynamoDBv2.Model;
 using Abs.Common.Constants;
 using System.Collections.Generic;
 using Abs.Common.Constants.DbModels;
+using ABS_Auth.Models;
+using ABS.Data.DynamoDbRepository;
 
 namespace ABS_Auth.Common
 {
     public class AuthService : IAuthService
     {
+        private readonly IRepository<string, UserModel> _userRepository;
         private readonly IAmazonDynamoDB _connection;
-        public AuthService(ABSContext context)
+        public AuthService(ABSContext context , IRepository<string , UserModel> repository )
         {
+            _userRepository = repository;
             _connection = context.CreateConnection();
         }
 
@@ -49,38 +53,17 @@ namespace ABS_Auth.Common
             return new OkObjectResult(new ResponseObject("Logged out successfully"));
         }
 
-        public async Task<IActionResult> Login(string username, string password, string secret)
+        public async Task<IActionResult> Login(UserModel user, string secret)
         {
-            var request = new UpdateItemRequest()
-            {
-                TableName = DbConstants.UsersTableName,
-                Key = new Dictionary<string, AttributeValue>
-                {
-                    { UserDbModel.Username, new AttributeValue { S = username } },
-                },
-                UpdateExpression = $"SET #status = :status",
-                ConditionExpression = $"#password = :password",
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                {
-                    { ":status", new AttributeValue { S = UserStatus.LoggedIn.ToString() } },
-                    {":password" , new AttributeValue {S = password } },
-                },
-                ExpressionAttributeNames = new Dictionary<string, string>
-                {
-                    {"#status" , UserDbModel.Status },
-                    {"#password", UserDbModel.Password }
-                },
-                ReturnValues = new ReturnValue("ALL_NEW"),
-            };
-
+            
             try
             {
-                var responseAttributes = (await _connection.UpdateItemAsync(request)).Attributes;
+                var responseItem = await _userRepository.Update(user);
 
-                string token = TokenService.GenerateJwtToken(username, secret);
-                responseAttributes.TryGetValue(UserDbModel.Role, out var role);
+                string token = TokenService.GenerateJwtToken(user.Username, secret);
 
-                bool isAdmin = role.S == Constants.AdminRole;
+
+                bool isAdmin = responseItem.Roles == Constants.AdminRole;
                 LoginResponseModel data = new LoginResponseModel(token, isAdmin);
                 return new OkObjectResult(new ResponseObject("Logged in successfully", data));
             }
@@ -102,35 +85,9 @@ namespace ABS_Auth.Common
             return new OkObjectResult(new ResponseObject("User already logged", data));
         }
 
-        public async Task<IActionResult> Register(string username, string password, string email)
+        public async Task<IActionResult> Register(UserModel userModel)
         {
-            var request = new PutItemRequest()
-            {
-                TableName = DbConstants.UsersTableName,
-                Item = new Dictionary<string, AttributeValue>
-                {
-                    {UserDbModel.Username, new AttributeValue {S = username } },
-                    {UserDbModel.Email , new AttributeValue {S = email } },
-                    {UserDbModel.Password , new AttributeValue {S = password} },
-                    {UserDbModel.Status, new AttributeValue {S = UserStatus.Registered.ToString()} },
-                    {UserDbModel.Role , new AttributeValue {S = "User" } }
-                },
-                Expected = new Dictionary<string, ExpectedAttributeValue>
-                {
-                    {UserDbModel.Username , new ExpectedAttributeValue(false) }
-                }
-
-            };
-
-            try
-            {
-                await _connection.PutItemAsync(request);
-            }
-            catch (ConditionalCheckFailedException)
-            {
-                throw new ArgumentException(ErrorMessages.UsernameExists);
-            }
-
+            await _userRepository.Add(userModel);
 
             return new OkObjectResult(new ResponseObject("User registered"));
         }

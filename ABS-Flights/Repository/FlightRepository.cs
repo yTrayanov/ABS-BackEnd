@@ -66,7 +66,10 @@ namespace ABS_Flights.Repository
         {
             throw new NotImplementedException();
         }
-
+        public Task<FlightModel> Update(FlightModel item)
+        {
+            throw new NotImplementedException();
+        }
         public async Task<FlightModel> Get(string key)
         {
 
@@ -89,7 +92,7 @@ namespace ABS_Flights.Repository
                     {"#data" , SeatDbModel.Data }
                 };
 
-            var responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues , expressionAttributeNames);
+            var responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues, expressionAttributeNames);
 
             var flight = await MapFlightAsync(responseItems.FirstOrDefault(item => item.GetString(FlightDbModel.Id).StartsWith(_PREFIX)));
 
@@ -146,7 +149,6 @@ namespace ABS_Flights.Repository
 
         public async Task<IList<FlightModel>> GetList(params string[] args)
         {
-
             var flights = new List<FlightModel>();
             var responseItems = new List<DynamoDBItem>();
             Dictionary<string, AttributeValue> expressionAttributeValues;
@@ -193,7 +195,73 @@ namespace ABS_Flights.Repository
                     responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues);
 
                     flights = await MapFlightsListAsync(responseItems);
+                    break;
 
+                case "MultipleFlights":
+                    var mapAttValues = new Dictionary<string, AttributeValue>();
+
+                    for (int i = 1; i < args.Length; i++)
+                    {
+                        mapAttValues.Add($":flightId{i}", new AttributeValue { S = FlightDbModel.Prefix + args[i] });
+                    }
+
+                    string stringIdentifiers = string.Join(",", mapAttValues.Keys);
+
+                    filterExpression = $"(begins_with({FlightDbModel.Id} , :flightPrefix) AND PK IN ({stringIdentifiers}))" +
+                                        $"OR(begins_with({SectionDbModel.Id}, :sectionPrefix) AND SK IN ({stringIdentifiers}))" +
+                                        $"OR(begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} IN ({stringIdentifiers}))";
+
+                    expressionAttributeValues = new Dictionary<string, AttributeValue>(mapAttValues)
+                            {
+                                {":flightPrefix" , new AttributeValue {S = FlightDbModel.Prefix } },
+                                {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
+                                {":seatPrefix" , new AttributeValue {S = SeatDbModel.Prefix } },
+                            };
+
+                    responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression,expressionAttributeValues);
+
+                    flights = await MapFlightsListAsync(responseItems.Where(item => item.PkStartsWith(FlightDbModel.Prefix)).ToList());
+
+
+                    var mappedSections = MapSections(responseItems.Where(item => item.PkStartsWith(SectionDbModel.Prefix)).ToList());
+
+
+                    var mappedSeats = new List<Seat>();
+                    foreach (var seat in responseItems.Where(item => item.PkStartsWith(SeatDbModel.Prefix)))
+                    {
+                        var id = seat.GetString(SeatDbModel.Id);
+                        var flightId = seat.GetString(SeatDbModel.FlightId);
+                        var sectionId = seat.GetString(SeatDbModel.SectionId);
+                        var data = seat.GetInnerObjectData(SeatDbModel.Data);
+
+                        var row = data.GetInt32("Row");
+                        var column = data.GetInt32("Column");
+                        var seatClass = data.GetString("SeatClass");
+                        var isBooked = data.GetBoolean("IsBooked");
+
+                        mappedSeats.Add(new Seat
+                        {
+                            Id = id,
+                            FlightId = flightId,
+                            Row = row,
+                            Column = column,
+                            SeatClass = seatClass == SeatClass.First.ToString() ? SeatClass.First : seatClass == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
+                            SectionId = sectionId,
+                            IsBooked = isBooked,
+                        });
+                    }
+
+
+
+                    foreach (var section in mappedSections)
+                    {
+                        section.Seats = mappedSeats.Where(seat => seat.SectionId == section.Id).OrderBy(seat => seat.Row).ThenBy(seat => seat.Column).ToList();
+                    }
+
+                    foreach (var flight in flights)
+                    {
+                        flight.Sections = mappedSections.Where(section => section.FlightId == flight.Id).OrderBy(section => section.SeatClass).ToList();
+                    }
                     break;
 
 
@@ -203,12 +271,6 @@ namespace ABS_Flights.Repository
 
 
         }
-
-        public Task Update(FlightModel item)
-        {
-            throw new NotImplementedException();
-        }
-
 
         private string GenerateFlightId(string flightNumber)
         {
