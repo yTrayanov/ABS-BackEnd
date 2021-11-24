@@ -79,16 +79,20 @@ namespace ABS.Data.DynamoDb
             AddKeyAttributeValue(DynamoDBConstants.GSI2, new AttributeValue(prefix + value));
         }
 
-        public void AddData(Dictionary<string , AttributeValue> value)
+        public void AddData(DynamoDBItem value)
         {
             AddKeyAttributeValue(DynamoDBConstants.DATA, BaseObjectValue(value));
+        }
+
+        public void AddBoolean(string key , bool value)
+        {
+            AddKeyAttributeValue(key, BaseBooleanValue(value));
         }
 
         public void AddString(string key, string value)
         {
             AddKeyAttributeValue(key, new AttributeValue(value));
         }
-
         public void AddNumber(string key, int value)
         {
             AddKeyAttributeValue(key, BaseNumberAttributeValue(Convert.ToString(value)));
@@ -118,15 +122,23 @@ namespace ABS.Data.DynamoDb
             return result;
         }
 
-        private AttributeValue BaseObjectValue(Dictionary<string , AttributeValue> values)
+        private AttributeValue BaseObjectValue(DynamoDBItem values)
         {
             var result = new AttributeValue
             {
-                M = values
+                M = values.ToDictionary()
             };
 
             return result;
         }
+        private AttributeValue BaseBooleanValue(bool value)
+        {
+            var result = new AttributeValue()
+            {
+                BOOL = value
+            };
 
+            return result;
+        }
     }
 }

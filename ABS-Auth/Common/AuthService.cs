@@ -1,18 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using System;
-using System.Data;
-using Dapper;
 using ABS_Auth.Helpers;
 using ABS_Common.Constants;
-using System.Linq;
 using ABS_Common.ResponsesModels;
-using ABS_Data.Data;
-using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Abs.Common.Constants;
-using System.Collections.Generic;
-using Abs.Common.Constants.DbModels;
 using ABS_Auth.Models;
 using ABS.Data.DynamoDbRepository;
 
@@ -21,11 +14,9 @@ namespace ABS_Auth.Common
     public class AuthService : IAuthService
     {
         private readonly IRepository<string, UserModel> _userRepository;
-        private readonly IAmazonDynamoDB _connection;
-        public AuthService(ABSContext context , IRepository<string , UserModel> repository )
+        public AuthService(IRepository<string , UserModel> repository )
         {
             _userRepository = repository;
-            _connection = context.CreateConnection();
         }
 
         public async Task<IActionResult> Logout(string username)

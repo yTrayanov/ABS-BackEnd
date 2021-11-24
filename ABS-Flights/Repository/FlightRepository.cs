@@ -24,10 +24,10 @@ namespace ABS_Flights.Repository
         protected override DynamoDBItem ToDynamoDb(FlightModel item)
         {
             var flight = new DynamoDBItem();
-            var data = new Dictionary<string, AttributeValue>();
+            var data = new DynamoDBItem();
 
-            data.Add("LandingDate", new AttributeValue(item.LandingDate.ToString()));
-            data.Add("DepartureDate", new AttributeValue(item.DepartureDate.ToString()));
+            data.AddString("LandingDate", item.LandingDate.ToString());
+            data.AddString("DepartureDate",item.DepartureDate.ToString());
 
             flight.AddData(data);
 

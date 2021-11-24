@@ -7,6 +7,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ABS_Common.Extensions;
 using Abs_SectionAirlineAirport.Service;
+using ABS.Data.DynamoDbRepository;
+using Abs_SectionAirlineAirport.Models;
+using Abs_SectionAirlineAirport.Repositories;
 
 namespace Abs_SectionAirlineAirport
 {
@@ -30,7 +33,9 @@ namespace Abs_SectionAirlineAirport
             });
 
 
-            services.AddSingleton<ABSContext>();
+            services.AddSingleton<IRepository<string, AirlineModel>, AirlineRepository>();
+            services.AddSingleton<IRepository<string, AirportModel>, AirportRepository>();
+            services.AddSingleton<IRepository<string, SectionModel>, SectionRepository>();
             services.AddTransient<ICreateService, CreateService>();
 
         }

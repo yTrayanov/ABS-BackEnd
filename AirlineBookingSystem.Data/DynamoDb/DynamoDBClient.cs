@@ -112,14 +112,27 @@ namespace ABS.Data.DynamoDb
         public async Task BatchAddItemsAsync(IEnumerable<DynamoDBItem> items)
         {
             var requests = new List<WriteRequest>();
+
             foreach (var item in items)
             {
                 var putRq = new PutRequest(item.ToDictionary());
                 requests.Add(new WriteRequest(putRq));
             }
 
-            var batchRq = new Dictionary<string, List<WriteRequest>> { { _tableName, requests } };
-            await _dynamoDbClient.BatchWriteItemAsync(batchRq);
+            var index = 0;
+            var length = Math.Ceiling(items.Count() / 25f);
+            for (int i = 0; i < length ; i++)
+            {
+                var upperLimit = (items.Count() - index * 25 > 25) ? 25 : items.Count() - index * 25;
+                var requestPortion = requests.GetRange(index * 25, upperLimit);
+
+                var batchRq = new Dictionary<string, List<WriteRequest>> { { _tableName, requestPortion } };
+                await _dynamoDbClient.BatchWriteItemAsync(batchRq);
+                index++;
+            }
+
+            //var batchRq = new Dictionary<string, List<WriteRequest>> { { _tableName, requests } };
+            //await _dynamoDbClient.BatchWriteItemAsync(batchRq);
         }
 
         public async Task BatchDeleteItemsAsync(IEnumerable<DynamoDBItem> items)

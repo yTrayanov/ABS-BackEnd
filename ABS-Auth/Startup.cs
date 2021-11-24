@@ -32,8 +32,7 @@ namespace ABS_Auth
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ABS-Auth-Api", Version = "v1" });
             });
-
-            services.AddSingleton<ABSContext>();
+            
             services.AddSingleton<IRepository<string, UserModel>, UserRepository>();
             services.AddTransient<IAuthService, AuthService>();
         }
