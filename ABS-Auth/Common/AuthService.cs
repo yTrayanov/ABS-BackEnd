@@ -30,25 +30,13 @@ namespace ABS_Auth.Common
 
         public async Task<IActionResult> Logout(string username)
         {
-            var request = new UpdateItemRequest()
+            var userModel = new UserModel
             {
-                TableName = DbConstants.UsersTableName,
-                Key = new Dictionary<string, AttributeValue>
-                {
-                    { UserDbModel.Username, new AttributeValue { S = username } },
-                },
-                UpdateExpression = $"SET #status = :status",
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                {
-                    { ":status", new AttributeValue { S = UserStatus.Registered.ToString() } },
-                },
-                ExpressionAttributeNames = new Dictionary<string, string>
-                {
-                    {"#status" , UserDbModel.Status },
-                },
+                Username = username,
+                Status = UserStatus.Registered
             };
 
-            await _connection.UpdateItemAsync(request);
+            await _userRepository.Update(userModel);
 
             return new OkObjectResult(new ResponseObject("Logged out successfully"));
         }
@@ -61,7 +49,6 @@ namespace ABS_Auth.Common
                 var responseItem = await _userRepository.Update(user);
 
                 string token = TokenService.GenerateJwtToken(user.Username, secret);
-
 
                 bool isAdmin = responseItem.Roles == Constants.AdminRole;
                 LoginResponseModel data = new LoginResponseModel(token, isAdmin);

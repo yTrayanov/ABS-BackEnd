@@ -36,7 +36,8 @@ namespace ABS_Auth.Controllers
             var userModel = new UserModel
             {
                 Username = userInfo.Username,
-                Password = userInfo.Password
+                Password = userInfo.Password,
+                Status = UserStatus.LoggedIn
             };
             return await _authService.Login(userModel, _secret);
         }

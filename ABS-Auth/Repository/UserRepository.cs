@@ -46,12 +46,12 @@ namespace ABS_Auth.Repository
         }
         public async Task Add(UserModel item)
         {
-            
+
             var dynamoItem = ToDynamoDb(item);
 
             try
             {
-                await _dynamoDbClient.PutItemAsync(item.Username , null , dynamoItem);
+                await _dynamoDbClient.PutItemAsync(item.Username, null, dynamoItem);
             }
             catch (ConditionalCheckFailedException)
             {
@@ -76,28 +76,58 @@ namespace ABS_Auth.Repository
 
         public async Task<UserModel> Update(UserModel item)
         {
-            var key = new Dictionary<string, AttributeValue>
+            Dictionary<string, AttributeValue> key;
+            string updateExpression;
+            Dictionary<string, AttributeValue> expressionAttributeValues;
+            Dictionary<string, string> expressionAttributeNames;
+            string conditionExpression;
+            DynamoDBItem response;
+
+
+            if (item.Password != null)
+            {
+                key = new Dictionary<string, AttributeValue>
                 {
                     { UserDbModel.Username, new AttributeValue { S = item.Username } },
                 };
-            var updateExpression = $"SET #status = :status";
-            var conditionExpression = $"#password = :password";
-            var expressionAttributeValues = new Dictionary<string, AttributeValue>
+                updateExpression = $"SET #status = :status";
+                conditionExpression = $"#password = :password";
+                expressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
-                    { ":status", new AttributeValue { S = UserStatus.LoggedIn.ToString() } },
+                    { ":status", new AttributeValue { S = item.Status.ToString() } },
                     {":password" , new AttributeValue {S = item.Password } },
                 };
-            var expressionAttributeNames = new Dictionary<string, string>
+                expressionAttributeNames = new Dictionary<string, string>
                 {
                     {"#status" , UserDbModel.Status },
                     {"#password", UserDbModel.Password }
                 };
-            var returnValues = UpdateReturnValues.ALL_NEW;
+                var returnValues = UpdateReturnValues.ALL_NEW;
+                response = await _dynamoDbClient.UpdateItemAsync(key, updateExpression, conditionExpression, expressionAttributeValues, expressionAttributeNames, returnValues);
 
-            var response = await _dynamoDbClient.UpdateItemAsync(key, updateExpression, conditionExpression, expressionAttributeValues, expressionAttributeNames, returnValues);
+                return FromDynamoDb(response);
+            }
+            else
+            {
+                key = new Dictionary<string, AttributeValue>
+                {
+                    { UserDbModel.Username, new AttributeValue { S = item.Username } },
+                };
+                updateExpression = $"SET #status = :status";
+                conditionExpression = $"#status <> :status";
+                expressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    { ":status", new AttributeValue { S = item.Status.ToString() } },
+                };
+                expressionAttributeNames = new Dictionary<string, string>
+                {
+                    {"#status" , UserDbModel.Status },
+                };
 
-            return FromDynamoDb(response);
+                response = await _dynamoDbClient.UpdateItemAsync(key, updateExpression, conditionExpression, expressionAttributeValues, expressionAttributeNames);
 
+                return null;
+            }
         }
 
         private UserStatus ConvertUserStatus(string status)
@@ -105,6 +135,6 @@ namespace ABS_Auth.Repository
             return status == UserStatus.Registered.ToString() ? UserStatus.Registered : UserStatus.LoggedIn;
         }
 
-        
+
     }
 }
