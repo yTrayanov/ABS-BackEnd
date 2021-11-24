@@ -59,7 +59,7 @@ namespace ABS_Auth.Controllers
                 Email = userInfo.Email,
                 Password = userInfo.Password,
                 Status = UserStatus.Registered,
-                Roles = "User"
+                Role = "User"
             };
 
             return await this._authService.Register(userModel);

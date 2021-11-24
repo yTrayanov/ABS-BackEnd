@@ -30,7 +30,9 @@ namespace ABS.Data.DynamoDb
         {
             var dbItem = new DynamoDBItem();
             dbItem.AddPK(pk ,prefix);
-            dbItem.AddSK(sk);
+
+            if(sk != null)
+                dbItem.AddSK(sk);
             return dbItem;
         }
 

@@ -16,6 +16,6 @@ namespace ABS_Auth.Models
 
         public UserStatus Status { get; set; }
 
-        public string Roles { get; set; }
+        public string Role { get; set; }
     }
 }

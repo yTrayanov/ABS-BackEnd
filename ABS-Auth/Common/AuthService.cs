@@ -50,7 +50,7 @@ namespace ABS_Auth.Common
 
                 string token = TokenService.GenerateJwtToken(user.Username, secret);
 
-                bool isAdmin = responseItem.Roles == Constants.AdminRole;
+                bool isAdmin = responseItem.Role == Constants.AdminRole;
                 LoginResponseModel data = new LoginResponseModel(token, isAdmin);
                 return new OkObjectResult(new ResponseObject("Logged in successfully", data));
             }
@@ -62,12 +62,11 @@ namespace ABS_Auth.Common
 
         public async Task<IActionResult> CheckCurrentUserStatAndRole(string username)
         {
-            var responseItem = await GetUser(username);
-            if (responseItem.Count == 0)
+            var user = await GetUser(username);
+            if (user == null)
                 throw new ArgumentException(ErrorMessages.UserNotFound);
 
-            responseItem.TryGetValue(UserDbModel.Role, out var role);
-            bool isAdmin = role.S == Constants.AdminRole;
+            bool isAdmin = user.Role == Constants.AdminRole;
             var data = new LoginResponseModel(null, isAdmin);
             return new OkObjectResult(new ResponseObject("User already logged", data));
         }
@@ -81,11 +80,10 @@ namespace ABS_Auth.Common
 
         public async Task<IActionResult> AuthorizeAdmin(string username)
         {
-            var responseItem = await GetUser(username);
+            var user = await GetUser(username);
 
-            responseItem.TryGetValue(UserDbModel.Role, out var role);
 
-            if (role.S == Constants.AdminRole)
+            if (user.Role == Constants.AdminRole)
                 return new OkResult();
 
             return new UnauthorizedResult();
@@ -93,16 +91,15 @@ namespace ABS_Auth.Common
 
         public async Task<IActionResult> Authorize(string username)
         {
-            var responseItem = await GetUser(username);
+            var user = await GetUser(username);
 
 
-            if (responseItem.Count == 0)
+            if (user == null)
                 throw new ArgumentException(ErrorMessages.UserNotFound);
 
-            responseItem.TryGetValue(UserDbModel.Status, out var status);
 
 
-            if (UserStatus.LoggedIn.ToString() == status.S)
+            if (user.Status == UserStatus.LoggedIn)
             {
                 return new OkResult();
             }
@@ -110,18 +107,11 @@ namespace ABS_Auth.Common
             return new UnauthorizedResult();
         }
 
-        private async Task<Dictionary<string , AttributeValue>> GetUser(string username)
+        private async Task<UserModel> GetUser(string username)
         {
-            var request = new GetItemRequest()
-            {
-                TableName = DbConstants.UsersTableName,
-                Key = new Dictionary<string, AttributeValue>
-                {
-                    {UserDbModel.Username, new AttributeValue {S = username} }
-                }
-            };
+            var user = await _userRepository.Get(username);
 
-           return (await _connection.GetItemAsync(request)).Item;
+           return user;
         }
     }
 }

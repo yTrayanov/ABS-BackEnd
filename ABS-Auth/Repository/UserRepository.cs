@@ -26,7 +26,7 @@ namespace ABS_Auth.Repository
             {
                 Username = item.GetString(UserDbModel.Username),
                 Password = item.GetString(UserDbModel.Password),
-                Roles = item.GetString(UserDbModel.Role),
+                Role = item.GetString(UserDbModel.Role),
                 Email = item.GetString(UserDbModel.Email),
                 Status = ConvertUserStatus(item.GetString(UserDbModel.Status)),
             };
@@ -39,7 +39,7 @@ namespace ABS_Auth.Repository
             var dynamoItem = new DynamoDBItem();
             dynamoItem.AddString(UserDbModel.Password, item.Password);
             dynamoItem.AddString(UserDbModel.Status, item.Status.ToString());
-            dynamoItem.AddString(UserDbModel.Role, item.Roles);
+            dynamoItem.AddString(UserDbModel.Role, item.Role);
             dynamoItem.AddString(UserDbModel.Email, item.Email);
 
             return dynamoItem;
@@ -64,9 +64,11 @@ namespace ABS_Auth.Repository
             throw new NotImplementedException();
         }
 
-        public Task<UserModel> Get(string key)
+        public async Task<UserModel> Get(string key)
         {
-            throw new NotImplementedException();
+            var responseItem = await _dynamoDbClient.GetItemAsync(key, null);
+
+            return FromDynamoDb(responseItem);
         }
 
         public Task<IList<UserModel>> GetList(params string[] args)
@@ -117,7 +119,7 @@ namespace ABS_Auth.Repository
                 conditionExpression = $"#status <> :status";
                 expressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
-                    { ":status", new AttributeValue { S = item.Status.ToString() } },
+                    { ":status", new AttributeValue { S = item.Status.ToString()} },
                 };
                 expressionAttributeNames = new Dictionary<string, string>
                 {
