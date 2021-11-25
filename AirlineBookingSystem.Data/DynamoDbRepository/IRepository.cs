@@ -12,5 +12,6 @@ namespace ABS.Data.DynamoDbRepository
         Task<TEntity> Get(TKey key);
         Task<IList<TEntity>> GetList(params string[] args);
         Task<TEntity> Update(TEntity item);
+        Task AddRange(ICollection<TEntity> items);
     }
 }

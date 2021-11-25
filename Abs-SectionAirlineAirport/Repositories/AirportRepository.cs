@@ -25,6 +25,11 @@ namespace Abs_SectionAirlineAirport.Repositories
             await _dynamoDbClient.PutItemAsync(AirportDbModel.Prefix + Guid.NewGuid(), item.Name, ToDynamoDb(item));
         }
 
+        public Task AddRange(ICollection<AirportModel> items)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task Delete(string key)
         {
             throw new NotImplementedException();

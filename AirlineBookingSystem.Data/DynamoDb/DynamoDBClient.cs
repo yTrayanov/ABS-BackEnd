@@ -131,8 +131,6 @@ namespace ABS.Data.DynamoDb
                 index++;
             }
 
-            //var batchRq = new Dictionary<string, List<WriteRequest>> { { _tableName, requests } };
-            //await _dynamoDbClient.BatchWriteItemAsync(batchRq);
         }
 
         public async Task BatchDeleteItemsAsync(IEnumerable<DynamoDBItem> items)
@@ -208,6 +206,32 @@ namespace ABS.Data.DynamoDb
             var item = new DynamoDBItem(responseAttributes);
 
             return item;
+        }
+
+        public async Task BatchUpdateItemAsync(List<DynamoDBItem> items , string updateExpression,Dictionary<string , AttributeValue> expressionAttributeValues ,Dictionary<string,string> expressionAttributeNames = null)
+        {
+            var transactItems = new List<TransactWriteItem>();
+
+            foreach (var item in items)
+            {
+                var request = new TransactWriteItem()
+                {
+                    Update = new Update()
+                    {
+                        TableName = _tableName,
+                        Key = item.ToDictionary(),
+                        UpdateExpression = updateExpression,
+                    }
+                };
+                if (expressionAttributeValues != null)
+                    request.Update.ExpressionAttributeValues = expressionAttributeValues;
+                if (expressionAttributeNames != null)
+                    request.Update.ExpressionAttributeNames = expressionAttributeNames;
+
+                transactItems.Add(request);
+            }
+
+            await _dynamoDbClient.TransactWriteItemsAsync(new TransactWriteItemsRequest() { TransactItems = transactItems });
         }
     }
 }

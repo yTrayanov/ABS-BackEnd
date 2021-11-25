@@ -1,12 +1,6 @@
-﻿using Abs.Common.Constants;
-using Abs.Common.Constants.DbModels;
-using ABS.Data.DynamoDbRepository;
-using ABS_Common.Enumerations;
+﻿using ABS.Data.DynamoDbRepository;
 using ABS_Common.ResponsesModels;
-using ABS_Data.Data;
 using ABS_Flights.Models;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

@@ -137,6 +137,9 @@ namespace ABS_Auth.Repository
             return status == UserStatus.Registered.ToString() ? UserStatus.Registered : UserStatus.LoggedIn;
         }
 
-
+        public Task AddRange(ICollection<UserModel> items)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

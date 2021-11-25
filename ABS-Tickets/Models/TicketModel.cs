@@ -2,7 +2,7 @@
 
 namespace ABS_Tickets.Models
 {
-    public class TicketViewModel
+    public class TicketModel
     {
         public string Id { get; set; }
         public string FlightId { get; set; }
@@ -11,6 +11,7 @@ namespace ABS_Tickets.Models
         public string SeatId { get; set; }
         public SeatModel Seat { get; set; }
         public string PassengerName { get; set; }
+        public string Username { get; set; }
 
         public SeatClass SeatClass { get; set; }
     }

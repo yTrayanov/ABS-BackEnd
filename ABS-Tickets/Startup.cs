@@ -8,6 +8,9 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using ABS_Common.Extensions;
 using ABS_Tickets.Service;
+using ABS.Data.DynamoDbRepository;
+using ABS_Tickets.Models;
+using ABS_Tickets.Repository;
 
 namespace ABS_Tickets
 {
@@ -39,8 +42,8 @@ namespace ABS_Tickets
             });
 
 
-
             services.AddSingleton<ABSContext>();
+            services.AddSingleton<IRepository<string, TicketModel>, TicketRepository>();
             services.AddTransient<ITicketService, TicketeService>();
         }
 

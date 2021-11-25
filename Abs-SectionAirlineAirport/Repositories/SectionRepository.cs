@@ -49,10 +49,11 @@ namespace Abs_SectionAirlineAirport.Repositories
 
             await CheckIfFlightHasSeatClass(item.SeatClass, flightNumber);
 
-            var sectionId = SectionDbModel.Prefix + Guid.NewGuid();
 
             var itemsToCreate = new List<DynamoDBItem>();
-            itemsToCreate.Add(ToDynamoDb(item));
+            var sectionItem = ToDynamoDb(item);
+            var sectionId = sectionItem.GetString(SectionDbModel.Id);
+            itemsToCreate.Add(sectionItem);
 
 
             for (int row = 0; row < item.Rows; row++)
@@ -77,32 +78,7 @@ namespace Abs_SectionAirlineAirport.Repositories
             }
 
 
-            await _dynamoDbClient.BatchAddItemsAsync(itemsToCreate);
-
-            //int length = putRequests.Count;
-            //int index = 0;
-
-            //for (int i = 1; i <= Math.Ceiling(length / 25f); i++)
-            //{
-            //    var requestItems = new Dictionary<string, List<WriteRequest>>();
-            //    requestItems.Add(DbConstants.TableName, new List<WriteRequest>());
-
-            //    for (int j = 0; j < (length > 25 ? 25 : length); j++)
-            //    {
-            //        requestItems[DbConstants.TableName].Add(new WriteRequest(putRequests[j + index]));
-            //    }
-
-
-            //    index += 25;
-            //    length -= 25;
-
-            //    var batchRequest = new BatchWriteItemRequest()
-            //    {
-            //        RequestItems = requestItems
-            //    };
-
-            //    await _connection.BatchWriteItemAsync(batchRequest);
-            //}
+            await _dynamoDbClient.BatchAddItemsAsync(itemsToCreate);        
         }
 
         public Task Delete(string key)
@@ -161,6 +137,11 @@ namespace Abs_SectionAirlineAirport.Repositories
                     throw new ArgumentException(ErrorMessages.SeatClassExists);
                 }
             }
+        }
+
+        public Task AddRange(ICollection<SectionModel> items)
+        {
+            throw new NotImplementedException();
         }
     }
 }

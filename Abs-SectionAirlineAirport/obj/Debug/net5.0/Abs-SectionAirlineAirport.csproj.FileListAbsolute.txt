@@ -141,4 +141,3 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\D
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\Debug\net5.0\AWSSDK.Core.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\bin\Debug\net5.0\AWSSDK.DynamoDBv2.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.csproj.AssemblyReference.cache
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport\obj\Debug\net5.0\Abs-SectionAirlineAirport.csproj.CopyComplete

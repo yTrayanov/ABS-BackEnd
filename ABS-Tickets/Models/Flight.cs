@@ -1,5 +1,4 @@
 ﻿using Abs.Common.CustomAttributes;
-using ABS_Common.Common.CustomAttributes;
 using System;
 
 namespace ABS_Tickets.Models

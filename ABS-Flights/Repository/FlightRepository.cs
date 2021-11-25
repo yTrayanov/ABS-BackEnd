@@ -255,7 +255,8 @@ namespace ABS_Flights.Repository
 
                     foreach (var section in mappedSections)
                     {
-                        section.Seats = mappedSeats.Where(seat => seat.SectionId == section.Id).OrderBy(seat => seat.Row).ThenBy(seat => seat.Column).ToList();
+                        var sectionSeats = mappedSeats.Where(seat => seat.SectionId == section.Id).OrderBy(seat => seat.Row).ThenBy(seat => seat.Column).ToList();
+                        section.Seats = sectionSeats;
                     }
 
                     foreach (var flight in flights)
@@ -403,6 +404,11 @@ namespace ABS_Flights.Repository
             }
 
             return mappedSections;
+        }
+
+        public Task AddRange(ICollection<FlightModel> items)
+        {
+            throw new NotImplementedException();
         }
     }
 }

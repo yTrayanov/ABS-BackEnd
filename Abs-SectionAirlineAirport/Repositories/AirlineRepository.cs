@@ -71,5 +71,10 @@ namespace Abs_SectionAirlineAirport.Repositories
                 throw new ArgumentException(ErrorMessages.AirlineExists);
         }
 
+        public Task AddRange(ICollection<AirlineModel> items)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

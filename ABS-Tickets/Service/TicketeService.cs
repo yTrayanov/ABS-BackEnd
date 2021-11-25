@@ -1,18 +1,17 @@
 ﻿using Abs.Common.Constants;
 using Abs.Common.Constants.DbModels;
+using ABS.Data.DynamoDbRepository;
 using ABS_Common.Enumerations;
 using ABS_Common.ResponsesModels;
 using ABS_Data.Data;
 using ABS_Tickets.Models;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ABS_Tickets.Service
@@ -20,106 +19,37 @@ namespace ABS_Tickets.Service
     public class TicketeService : ITicketService
     {
         private IAmazonDynamoDB _connection;
+        private IRepository<string, TicketModel> _ticketRepository;
 
-        public TicketeService(ABSContext context)
+        public TicketeService(ABSContext context , IRepository<string , TicketModel> ticketRepository)
         {
             _connection = context.CreateConnection();
+            this._ticketRepository = ticketRepository;
         }
+
         public async Task<IActionResult> CreateTicket(TicketCreateModel model, string username)
         {
             var flightIds = model.FlightIds;
             var seats = model.Seats;
 
-
-            var seatIds = new List<string>();
-
-            for (int row = 0; row < seats.Length; row++)
-                for (int col = 0; col < seats[row].Length; col++)
-                    seatIds.Add(seats[row][col].Id);
-
-            var transactItems = new List<TransactWriteItem>();
-
-            foreach (var seatId in seatIds)
-            {
-                transactItems.Add(new TransactWriteItem
-                {
-                    Update = new Update
-                    {
-                        TableName = DbConstants.TableName,
-                        Key = new Dictionary<string, AttributeValue>
-                        {
-                            {SeatDbModel.Id , new AttributeValue {S = seatId } },
-                            {SeatDbModel.FlightId, new AttributeValue {S = seats[0].Select(s=>s.Id).Contains(seatId) ? FlightDbModel.Prefix + flightIds[0] :FlightDbModel.Prefix + flightIds[1]} }
-                        },
-                        UpdateExpression = $"SET #data.IsBooked = :isBooked",
-                        ExpressionAttributeNames = new Dictionary<string, string>
-                        {
-                            {"#data" , SeatDbModel.Data }
-                        },
-                        ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                        {
-                            {":isBooked", new AttributeValue {BOOL = true} },
-                        },
-                    }
-                });
-            }
-
-
-            var bookRequest = new TransactWriteItemsRequest()
-            {
-                TransactItems = transactItems,
-            };
-
-            var response = await _connection.TransactWriteItemsAsync(bookRequest);
-
-            var putRequests = new List<PutRequest>();
+            var tickets = new List<TicketModel>();
 
             for (int flightIndex = 0; flightIndex < flightIds.Length; flightIndex++)
             {
                 for (int seatIndex = 0; seatIndex < seats[flightIndex].Length; seatIndex++)
                 {
-                    putRequests.Add(new PutRequest()
+                    var currentSeat = seats[flightIndex][seatIndex];
+                    tickets.Add(new TicketModel()
                     {
-                        Item = new Dictionary<string, AttributeValue>
-                        {
-                            {TicketDbModel.Id , new AttributeValue {S = TicketDbModel.Prefix + Guid.NewGuid() } },
-                            {TicketDbModel.UserId , new AttributeValue {S = username } },
-                            {TicketDbModel.FlightId, new AttributeValue {S = FlightDbModel.Prefix + flightIds[flightIndex].ToString() } },
-                            {TicketDbModel.SeatId, new AttributeValue {S = seats[flightIndex][seatIndex].Id} },
-                            {TicketDbModel.Data, new AttributeValue {M = new Dictionary<string, AttributeValue>
-                            {
-                                {"PassengerName", new AttributeValue {S = seats[flightIndex][seatIndex].PassengerName } }
-                            }
-                            }}
-                        }
+                        FlightId = flightIds[flightIndex],
+                        SeatId = currentSeat.Id,
+                        Username = username,
+                        PassengerName = currentSeat.PassengerName,
                     });
                 }
             }
 
-            int length = putRequests.Count;
-            int index = 0;
-
-            for (int i = 1; i <= Math.Ceiling(length / 25f); i++)
-            {
-                var requestItems = new Dictionary<string, List<WriteRequest>>();
-                requestItems.Add(DbConstants.TableName, new List<WriteRequest>());
-
-                for (int j = 0; j < (length > 25 ? 25 : length); j++)
-                {
-                    requestItems[DbConstants.TableName].Add(new WriteRequest(putRequests[j + index]));
-                }
-
-
-                index += 25;
-                length -= 25;
-
-                var batchRequest = new BatchWriteItemRequest()
-                {
-                    RequestItems = requestItems
-                };
-
-                await _connection.BatchWriteItemAsync(batchRequest);
-            }
+            await _ticketRepository.AddRange(tickets);
 
             return new OkObjectResult(new ResponseObject("Seats booked successfully"));
         }
@@ -143,7 +73,7 @@ namespace ABS_Tickets.Service
             if (ticketResponseItems.Count == 0)
                 return new OkObjectResult(new ResponseObject("User has no tickets"));
 
-            var tickets = new List<TicketViewModel>();
+            var tickets = new List<TicketModel>();
             var ids = new List<string>();
 
             foreach (var item in ticketResponseItems)
@@ -158,7 +88,7 @@ namespace ABS_Tickets.Service
 
                 data.M.TryGetValue("PassengerName", out var passangerName);
 
-                tickets.Add(new TicketViewModel
+                tickets.Add(new TicketModel
                 {
                     FlightId = flightId.S,
                     Id = ticketId.S,
@@ -215,7 +145,7 @@ namespace ABS_Tickets.Service
                     Airline = await GetAirlineName(airlineId.S),
                     OriginAirport = await GetAirportName(originAirportId.S),
                     DestinationAirport = await GetAirportName(originAirportId.S),
-                    FlightNumber = flightId.S.Replace(FlightDbModel.Prefix , ""),
+                    FlightNumber = flightId.S.Replace(FlightDbModel.Prefix, ""),
                     DepartureDate = DateTime.Parse(departureDate.S),
                     LandingDate = DateTime.Parse(landingDate.S),
                 };
