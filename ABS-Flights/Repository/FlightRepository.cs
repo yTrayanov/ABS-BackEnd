@@ -273,6 +273,11 @@ namespace ABS_Flights.Repository
 
         }
 
+        public Task AddRange(ICollection<FlightModel> items)
+        {
+            throw new NotImplementedException();
+        }
+
         private string GenerateFlightId(string flightNumber)
         {
             return _PREFIX + flightNumber;
@@ -406,9 +411,6 @@ namespace ABS_Flights.Repository
             return mappedSections;
         }
 
-        public Task AddRange(ICollection<FlightModel> items)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

@@ -1,6 +1,8 @@
-﻿using Abs.Common.Constants.DbModels;
+﻿using Abs.Common.Constants;
+using Abs.Common.Constants.DbModels;
 using ABS.Data.DynamoDb;
 using ABS.Data.DynamoDbRepository;
+using ABS_Common.Enumerations;
 using ABS_Tickets.Models;
 using Amazon.DynamoDBv2.Model;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +21,20 @@ namespace ABS_Tickets.Repository
 
         protected override TicketModel FromDynamoDb(DynamoDBItem item)
         {
-            throw new System.NotImplementedException();
+            var ticketId =  item.GetString(TicketDbModel.Id);
+            var flightId = item.GetString(TicketDbModel.FlightId);
+            var data = item.GetInnerObjectData(TicketDbModel.Data);
+            var seatId = item.GetString(TicketDbModel.SeatId);
+            var passangerName = data.GetString("PassengerName");
+            
+
+            return new TicketModel
+            {
+                FlightId = flightId,
+                Id = ticketId,
+                PassengerName = passangerName,
+                SeatId = seatId,
+            };
         }
 
         protected override DynamoDBItem ToDynamoDb(TicketModel item)
@@ -69,9 +84,29 @@ namespace ABS_Tickets.Repository
             throw new System.NotImplementedException();
         }
 
-        public Task<IList<TicketModel>> GetList(params string[] args)
+        public async Task<IList<TicketModel>> GetList(params string[] args)
         {
-            throw new System.NotImplementedException();
+            var username = args[0];
+            var filterExpression = $"begins_with({TicketDbModel.Id},:ticketPrefix) AND {TicketDbModel.UserId} = :userId ";
+            var expressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    {":ticketPrefix", new AttributeValue {S = TicketDbModel.Prefix } },
+                    {":userId", new AttributeValue {S = username} },
+                };
+
+            var ticketItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues);
+
+            var tickets = new List<TicketModel>();
+            foreach (var item in ticketItems)
+            {
+                var ticket = FromDynamoDb(item);
+                ticket.Username = username;
+                tickets.Add(FromDynamoDb(item));
+            }
+
+            await MapTicketFlights(tickets);
+
+            return tickets;
         }
 
         public Task<TicketModel> Update(TicketModel item)
@@ -104,5 +139,134 @@ namespace ABS_Tickets.Repository
 
             await _dynamoDbClient.BatchUpdateItemAsync(dynamoItems, updateEpression, expressionAttributeValues, expressionAttributeNames);
         }
+
+        private async Task MapTicketFlights(IList<TicketModel> tickets)
+        {
+            var flightIds = tickets.Select(t => t.FlightId).ToList();
+
+            var mapAttValues = new Dictionary<string, AttributeValue>();
+
+            int index = 0;
+            foreach (var id in flightIds)
+            {
+                mapAttValues.Add($":flightId{index}", new AttributeValue { S = flightIds[index] });
+
+                index++;
+            }
+
+            index = 0;
+            var seatIds = tickets.Select(t => t.SeatId).ToList();
+            foreach (var item in seatIds)
+            {
+                mapAttValues.Add($":seatId{index}", new AttributeValue { S = seatIds[index] });
+                index++;
+            }
+
+            string stringIdentifiers = string.Join(",", mapAttValues.Keys);
+
+            var filterExpression = $"(begins_with({FlightDbModel.Id} , :flightPrefix) AND {FlightDbModel.Id} IN ({stringIdentifiers}))" +
+                            $"OR(begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.Id} IN ({stringIdentifiers}))";
+
+                var expressionAttributeValues = new Dictionary<string, AttributeValue>(mapAttValues)
+                {
+                    {":flightPrefix" , new AttributeValue {S = FlightDbModel.Prefix } },
+                    {":seatPrefix" , new AttributeValue {S = SeatDbModel.Prefix } },
+                };
+
+            var responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression , expressionAttributeValues);
+
+            foreach (var item in responseItems.Where(item => item.GetString(DynamoDBConstants.PK).StartsWith(FlightDbModel.Prefix)))
+            {
+                var flightId = item.GetString(FlightDbModel.Id);
+                var airlineId = item.GetString(FlightDbModel.AirlineId);
+                var data = item.GetInnerObjectData(FlightDbModel.Data);
+                var originAirportId = item.GetString(FlightDbModel.OriginAirportId);
+                var destinationAirportId = item.GetString(FlightDbModel.DestinationAirportId);
+
+                var departureDate = data.GetString("DepartureDate");
+                var landingDate = data.GetString("LandingDate");
+
+                var flight = new Flight()
+                {
+                    Id = flightId,
+                    Airline = await GetAirlineNameAsync(airlineId),
+                    OriginAirport = await GetAirportNameAsync(originAirportId),
+                    DestinationAirport = await GetAirportNameAsync(originAirportId),
+                    FlightNumber = flightId.Replace(FlightDbModel.Prefix, ""),
+                    DepartureDate = DateTime.Parse(departureDate),
+                    LandingDate = DateTime.Parse(landingDate),
+                };
+
+                tickets.FirstOrDefault(t => t.FlightId == flightId).Flight = flight;
+
+            }
+
+            foreach (var item in responseItems.Where(item => item.GetString(DynamoDBConstants.PK).StartsWith(SeatDbModel.Prefix)))
+            {
+
+                var seatId  = item.GetString(SeatDbModel.Id);
+                var flightId = item.GetString(SeatDbModel.FlightId);
+                var data = item.GetInnerObjectData(SeatDbModel.Data);
+
+                var row = data.GetInt32("Row");
+                var column = data.GetInt32("Column");
+                var seatClass = data.GetString("SeatClass");
+                bool isBooked = data.GetBoolean("IsBooked");
+
+                var seat = new SeatModel()
+                {
+                    Id = seatId,
+                    FlightId = flightId,
+                    Row = row,
+                    Column = column,
+                    SeatClass = seatClass == SeatClass.First.ToString() ? SeatClass.First : seatClass == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
+                    IsBooked = isBooked,
+                };
+
+                tickets.FirstOrDefault(t => t.SeatId == seatId).Seat = seat;
+
+            }
+        }
+
+
+        private async Task<string> GetAirlineNameAsync(string id)
+        {
+            var filterExpression = $"{AirlineDbModel.Id} = :id";
+            var expressionAttributeValues = new Dictionary<string, AttributeValue>()
+                {
+                    {":id" , new AttributeValue {S = id } }
+                };
+
+
+            var items = (await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues));
+
+            if (items.Count == 0)
+            {
+                throw new ArgumentException(ErrorMessages.AirlineNotFound);
+            }
+
+            return items[0].GetString(AirlineDbModel.Name);
+        }
+        private async Task<string> GetAirportNameAsync(string id)
+        {
+            string filterExpression = $"{AirportDbModel.Id} = :id";
+            var expressionAttributeValues = new Dictionary<string, AttributeValue>()
+                {
+                    {":id" , new AttributeValue {S = id } }
+                };
+
+
+            var items = (await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues));
+
+            if (items.Count == 0)
+            {
+                throw new ArgumentException(ErrorMessages.AirlineNotFound);
+            }
+
+            return items[0].GetString(AirportDbModel.Name);
+
+        }
+
+
     }
 }

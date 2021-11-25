@@ -147,4 +147,3 @@ C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\AB
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\AWSSDK.Core.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\bin\Debug\net5.0\AWSSDK.DynamoDBv2.dll
 C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.csproj.AssemblyReference.cache
-C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets\obj\Debug\net5.0\ABS-Tickets.csproj.CopyComplete
