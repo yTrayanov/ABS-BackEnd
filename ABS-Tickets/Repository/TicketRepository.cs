@@ -162,7 +162,7 @@ namespace ABS_Tickets.Repository
 
         private async Task MapTicketFlights(IList<TicketModel> tickets)
         {
-            var flightIds = tickets.Select(t => t.FlightId).ToList();
+            var flightIds = tickets.Select(t => t.FlightId).Distinct().ToList();
 
             var mapAttValues = new Dictionary<string, AttributeValue>();
 
@@ -194,7 +194,7 @@ namespace ABS_Tickets.Repository
                 };
 
             var responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression , expressionAttributeValues);
-
+            var flights = new List<Flight>();
             foreach (var item in responseItems.Where(item => item.GetString(DynamoDBConstants.PK).StartsWith(FlightDbModel.Prefix)))
             {
                 var flightId = item.GetString(FlightDbModel.Id);
@@ -217,9 +217,14 @@ namespace ABS_Tickets.Repository
                     LandingDate = DateTime.Parse(landingDate),
                 };
 
-                tickets.FirstOrDefault(t => t.FlightId == flightId).Flight = flight;
-
+                flights.Add(flight);
             }
+
+            foreach (var ticket in tickets)
+            {
+                ticket.Flight = flights.FirstOrDefault(f => f.Id == ticket.FlightId);
+            }
+
 
             foreach (var item in responseItems.Where(item => item.GetString(DynamoDBConstants.PK).StartsWith(SeatDbModel.Prefix)))
             {

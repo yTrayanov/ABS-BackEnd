@@ -221,15 +221,17 @@ namespace ABS_Flights.Repository
             
             var sections = MapSections(sectionsItems);
 
+            var availableFlights = new List<FlightModel>();
+
             foreach (var flight in flights)
             {
-                if (!sections.Any(s => s.FlightId == flight.Id))
+                if (sections.Any(s => s.FlightId == flight.Id))
                 {
-                    flights.Remove(flight);
+                    availableFlights.Add(flight);
                 }
             }
 
-            return flights;
+            return availableFlights;
         }
 
         private async Task<List<FlightModel>> GetMulbtipleFlights(string[] args)

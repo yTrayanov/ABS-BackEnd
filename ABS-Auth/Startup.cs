@@ -1,5 +1,4 @@
 using ABS_Auth.Common;
-using ABS_Data.Data;
 using ABS_Common.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

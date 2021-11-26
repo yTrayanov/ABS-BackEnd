@@ -37,11 +37,11 @@ namespace ABS_Flights.Service
         {
             var toDestinationFlights = await FilterFlightsAsync(flightInfo.OriginAirport, flightInfo.DestinationAirport, flightInfo.DepartureDate, flightInfo.MembersCount);
 
-            if (toDestinationFlights == null)
+            if (toDestinationFlights.Count == 0)
                 return new OkObjectResult(new ResponseObject("There are no fligths to destination on this date"));
 
             var returnFlights = await FilterFlightsAsync(flightInfo.DestinationAirport, flightInfo.OriginAirport, flightInfo.ReturnDate, flightInfo.MembersCount);
-            if (returnFlights == null)
+            if (returnFlights.Count == 0)
                 return new OkObjectResult(new ResponseObject("There are no return flights"));
 
             var result = new List<FlightModel[]>();
