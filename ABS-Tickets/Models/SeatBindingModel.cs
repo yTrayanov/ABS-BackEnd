@@ -8,5 +8,8 @@ namespace ABS_Tickets.Models
 
         [CustomRequired]
         public string PassengerName { get; set; }
+
+        [CustomRequired]
+        public string SectionId { get; set; }
     }
 }

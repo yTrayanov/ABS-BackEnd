@@ -41,8 +41,6 @@ namespace ABS_Tickets
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-
-            services.AddSingleton<ABSContext>();
             services.AddSingleton<IRepository<string, TicketModel>, TicketRepository>();
             services.AddTransient<ITicketService, TicketeService>();
         }

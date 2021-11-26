@@ -21,5 +21,7 @@ namespace ABS_Tickets.Models
 
         public string FlightId { get; set; }
 
+        public string SectionId { get; set; }
+
     }
 }

@@ -12,5 +12,7 @@
 
         public ICollection<Seat> Seats { get; set; }
         public string FlightId { get; set; }
+
+        public int AvailableSeats { get; set; }
     }
 }

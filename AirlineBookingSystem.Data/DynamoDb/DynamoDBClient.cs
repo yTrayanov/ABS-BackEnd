@@ -188,7 +188,7 @@ namespace ABS.Data.DynamoDb
                 TableName = _tableName,
                 Key = key,
                 UpdateExpression = updateExpression,
-                ReturnValues = new ReturnValue(returnValues.ToString())
+                ReturnValues = new ReturnValue(returnValues.ToString()),
             };
 
             if (conditionalExrpession != null)

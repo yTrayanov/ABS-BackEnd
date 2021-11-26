@@ -60,7 +60,7 @@ namespace ABS_Tickets.Repository
 
         public async Task AddRange(ICollection<TicketModel> items)
         {
-            var seatsForBooking = items.Select(i => new SeatModel() { Id = i.SeatId, FlightId = i.FlightId }).ToList();
+            var seatsForBooking = items.Select(i => new SeatModel() { Id = i.SeatId, FlightId = i.FlightId, SectionId = i.SectionId}).ToList();
 
             await BookSeats(seatsForBooking);
 
@@ -116,7 +116,7 @@ namespace ABS_Tickets.Repository
 
         private async Task BookSeats(ICollection<SeatModel> seats)
         {
-            var dynamoItems = new List<DynamoDBItem>();
+            var seatItems = new List<DynamoDBItem>();
 
             foreach (var seat in seats)
             {
@@ -124,10 +124,10 @@ namespace ABS_Tickets.Repository
                 item.AddPK(seat.Id);
                 item.AddSK(FlightDbModel.Prefix + seat.FlightId);
 
-                dynamoItems.Add(item);
+                seatItems.Add(item);
             }
 
-            var updateEpression = $"SET #data.IsBooked = :isBooked";
+            var updateExpression = $"SET #data.IsBooked = :isBooked";
             var expressionAttributeNames = new Dictionary<string, string>
             {
                 {"#data" , SeatDbModel.Data }
@@ -137,7 +137,27 @@ namespace ABS_Tickets.Repository
                 {":isBooked", new AttributeValue {BOOL = true} },
             };
 
-            await _dynamoDbClient.BatchUpdateItemAsync(dynamoItems, updateEpression, expressionAttributeValues, expressionAttributeNames);
+            await _dynamoDbClient.BatchUpdateItemAsync(seatItems, updateExpression, expressionAttributeValues, expressionAttributeNames);
+
+            var objects = seats.Select(s => new { s.SectionId , s.FlightId } ).Distinct().ToList();
+
+            foreach (var obj in objects)
+            {
+                var key = new Dictionary<string, AttributeValue>()
+                {
+                    {SectionDbModel.Id , new AttributeValue(obj.SectionId)},
+                    {SectionDbModel.FlightId , new AttributeValue(FlightDbModel.Prefix + obj.FlightId) }
+                };
+                updateExpression = $"ADD #data.AvailableSeats :bookedSeatCount";
+                expressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    {":bookedSeatCount", new AttributeValue {N = (-seats.Where(s => s.SectionId == obj.SectionId).Count()).ToString() } }
+                };
+
+                await _dynamoDbClient.UpdateItemAsync(key, updateExpression, null, expressionAttributeValues, expressionAttributeNames);
+            }
+
+
         }
 
         private async Task MapTicketFlights(IList<TicketModel> tickets)
@@ -266,7 +286,6 @@ namespace ABS_Tickets.Repository
             return items[0].GetString(AirportDbModel.Name);
 
         }
-
 
     }
 }

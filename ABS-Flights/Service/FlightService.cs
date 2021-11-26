@@ -87,32 +87,7 @@ namespace ABS_Flights.Service
 
         private async Task<IList<FlightModel>> FilterFlightsAsync(string originAirport, string destinationAirport, DateTime date, int membersCount)
         {
-
-            var flights = await this._flightRepository.GetList(new string[] {"FilterFlights" , originAirport , destinationAirport , date.ToShortDateString()});
-
-            
-            //var sectionRequest = new ScanRequest()
-            //{
-            //    TableName = DbConstants.TableName,
-            //    FilterExpression = $"(begins_with(PK, :sectionPrefix) AND SK IN ({string.Join(",", mapAttValues.Keys)}) AND #data.AvailableSeats >= :membersCount)",
-            //    ExpressionAttributeValues = new Dictionary<string, AttributeValue>(mapAttValues) 
-            //    {
-            //        {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
-            //        {":membersCount", new AttributeValue{N = membersCount.ToString()} },
-            //    },
-
-            //    ExpressionAttributeNames = new Dictionary<string, string>()
-            //    {
-            //        {"#data" , "Data" }
-            //    }
-            //};
-
-            //var sectionResponseItems = (await _connection.ScanAsync(sectionRequest)).Items;
-
-            //if (!sectionResponseItems.Any())
-            //    return null;
-
-
+            var flights = await this._flightRepository.GetList(new string[] {"FilterFlights" , originAirport , destinationAirport , date.ToShortDateString(), membersCount.ToString()});
 
             return flights;
         }

@@ -150,133 +150,168 @@ namespace ABS_Flights.Repository
         public async Task<IList<FlightModel>> GetList(params string[] args)
         {
             var flights = new List<FlightModel>();
-            var responseItems = new List<DynamoDBItem>();
-            Dictionary<string, AttributeValue> expressionAttributeValues;
-            string filterExpression;
+            var command = args[0];
+            args = args.Skip(1).ToArray();
 
-            switch (args[0])
+            switch (command)
             {
                 case "FilterFlights":
-                    var originAirportId = await GetAirportIdAsync(args[1]);
-                    var destinationAirportId = await GetAirportIdAsync(args[2]);
-                    var date = args[3];
-
-
-                    filterExpression = $"begins_with({FlightDbModel.Id} , :prefix) " +
-                                       $"and {FlightDbModel.OriginAirportId} = :originAirport " +
-                                       $"and {FlightDbModel.DestinationAirportId} = :destinationAirport " +
-                                       $"and begins_with( #data.DepartureDate , :departureDate )";
-
-                    expressionAttributeValues = new Dictionary<string, AttributeValue>()
-                {
-                    {":originAirport" , new AttributeValue {S = originAirportId } },
-                    {":destinationAirport" , new AttributeValue {S = destinationAirportId } },
-                    {":prefix" , new AttributeValue {S = FlightDbModel.Prefix} },
-                    {":departureDate", new AttributeValue {S = date}},
-                };
-
-                    var expressionAttributeNames = new Dictionary<string, string>()
-                {
-                    {"#data" , "Data" }
-                };
-
-                    responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues, expressionAttributeNames);
-
-                    flights = await MapFlightsListAsync(responseItems);
-
+                    flights = await GetFilteredFlights(args);
                     break;
-
-                case "AllFlights":
-                    filterExpression = $"begins_with({FlightDbModel.Id} , :prefix)";
-                    expressionAttributeValues = new Dictionary<string, AttributeValue>()
-                        {
-                            {":prefix" , new AttributeValue {S = _PREFIX} }
-                        };
-                    responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues);
-
-                    flights = await MapFlightsListAsync(responseItems);
-                    break;
-
                 case "MultipleFlights":
-                    var mapAttValues = new Dictionary<string, AttributeValue>();
-
-                    for (int i = 1; i < args.Length; i++)
-                    {
-                        mapAttValues.Add($":flightId{i}", new AttributeValue { S = FlightDbModel.Prefix + args[i] });
-                    }
-
-                    string stringIdentifiers = string.Join(",", mapAttValues.Keys);
-
-                    filterExpression = $"(begins_with({FlightDbModel.Id} , :flightPrefix) AND PK IN ({stringIdentifiers}))" +
-                                        $"OR(begins_with({SectionDbModel.Id}, :sectionPrefix) AND SK IN ({stringIdentifiers}))" +
-                                        $"OR(begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} IN ({stringIdentifiers}))";
-
-                    expressionAttributeValues = new Dictionary<string, AttributeValue>(mapAttValues)
-                            {
-                                {":flightPrefix" , new AttributeValue {S = FlightDbModel.Prefix } },
-                                {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
-                                {":seatPrefix" , new AttributeValue {S = SeatDbModel.Prefix } },
-                            };
-
-                    responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression,expressionAttributeValues);
-
-                    flights = await MapFlightsListAsync(responseItems.Where(item => item.PkStartsWith(FlightDbModel.Prefix)).ToList());
-
-
-                    var mappedSections = MapSections(responseItems.Where(item => item.PkStartsWith(SectionDbModel.Prefix)).ToList());
-
-
-                    var mappedSeats = new List<Seat>();
-                    foreach (var seat in responseItems.Where(item => item.PkStartsWith(SeatDbModel.Prefix)))
-                    {
-                        var id = seat.GetString(SeatDbModel.Id);
-                        var flightId = seat.GetString(SeatDbModel.FlightId);
-                        var sectionId = seat.GetString(SeatDbModel.SectionId);
-                        var data = seat.GetInnerObjectData(SeatDbModel.Data);
-
-                        var row = data.GetInt32("Row");
-                        var column = data.GetInt32("Column");
-                        var seatClass = data.GetString("SeatClass");
-                        var isBooked = data.GetBoolean("IsBooked");
-
-                        mappedSeats.Add(new Seat
-                        {
-                            Id = id,
-                            FlightId = flightId,
-                            Row = row,
-                            Column = column,
-                            SeatClass = seatClass == SeatClass.First.ToString() ? SeatClass.First : seatClass == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
-                            SectionId = sectionId,
-                            IsBooked = isBooked,
-                        });
-                    }
-
-
-
-                    foreach (var section in mappedSections)
-                    {
-                        var sectionSeats = mappedSeats.Where(seat => seat.SectionId == section.Id).OrderBy(seat => seat.Row).ThenBy(seat => seat.Column).ToList();
-                        section.Seats = sectionSeats;
-                    }
-
-                    foreach (var flight in flights)
-                    {
-                        flight.Sections = mappedSections.Where(section => section.FlightId == flight.Id).OrderBy(section => section.SeatClass).ToList();
-                    }
+                    flights = await GetMulbtipleFlights(args);
                     break;
-
-
+                case "AllFlights":
+                    flights = await GetAllFlights();
+                    break;
             }
 
             return flights;
-
-
         }
 
         public Task AddRange(ICollection<FlightModel> items)
         {
             throw new NotImplementedException();
         }
+
+
+        private async Task<List<FlightModel>> GetFilteredFlights(string[] args)
+        {
+            var originAirportId = await GetAirportIdAsync(args[0]);
+            var destinationAirportId = await GetAirportIdAsync(args[1]);
+            var date = args[2];
+            var membersCount = args[3];
+
+
+            var flightFilterExpression = $"(begins_with({FlightDbModel.Id} , :flightPrefix) " +
+                               $"and {FlightDbModel.OriginAirportId} = :originAirport " +
+                               $"and {FlightDbModel.DestinationAirportId} = :destinationAirport " +
+                               $"and begins_with( #data.DepartureDate , :departureDate ))";
+
+            var flightExpressionAttributeValues = new Dictionary<string, AttributeValue>()
+                {
+                    {":originAirport" , new AttributeValue {S = originAirportId } },
+                    {":destinationAirport" , new AttributeValue {S = destinationAirportId } },
+                    {":flightPrefix" , new AttributeValue {S = FlightDbModel.Prefix} },
+                    {":departureDate", new AttributeValue {S = date}},
+                };
+
+            var expressionAttributeNames = new Dictionary<string, string>()
+                {
+                    {"#data" , "Data" }
+                };
+
+            var responseFlightItems = await _dynamoDbClient.ScanItemsAsync(flightFilterExpression, flightExpressionAttributeValues, expressionAttributeNames);
+
+            var flights = await MapFlightsListAsync(responseFlightItems);
+
+            var flightIdsDictionary = GetStringIdentifiersDictionary(flights.Select(f => f.Id).ToList(), FlightDbModel.Prefix);
+
+            var sectionFilterExpression = $"(begins_with({ SectionDbModel.Id}, :sectionPrefix) " +
+                                         $" AND {SectionDbModel.FlightId} IN ({string.Join(",", flightIdsDictionary.Keys)})) " +
+                                         $" AND #data.AvailableSeats >= :membersCount ";
+
+            var sectionExpressionAttributeValues = new Dictionary<string, AttributeValue>(flightIdsDictionary)
+            {
+                    {":membersCount" , new AttributeValue {N = membersCount } },
+                    {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix} },
+            };
+
+            var sectionsItems = await _dynamoDbClient.ScanItemsAsync(sectionFilterExpression, sectionExpressionAttributeValues, expressionAttributeNames);
+            
+            var sections = MapSections(sectionsItems);
+
+            foreach (var flight in flights)
+            {
+                if (!sections.Any(s => s.FlightId == flight.Id))
+                {
+                    flights.Remove(flight);
+                }
+            }
+
+            return flights;
+        }
+
+        private async Task<List<FlightModel>> GetMulbtipleFlights(string[] args)
+        {
+            var mapAttValues = GetStringIdentifiersDictionary(args, FlightDbModel.Prefix);
+
+            string stringIdentifiers = string.Join(",", mapAttValues.Keys);
+
+            var filterExpression = $"(begins_with({FlightDbModel.Id} , :flightPrefix) AND PK IN ({stringIdentifiers}))" +
+                                $"OR(begins_with({SectionDbModel.Id}, :sectionPrefix) AND SK IN ({stringIdentifiers}))" +
+                                $"OR(begins_with({SeatDbModel.Id}, :seatPrefix) AND {SeatDbModel.FlightId} IN ({stringIdentifiers}))";
+
+            var expressionAttributeValues = new Dictionary<string, AttributeValue>(mapAttValues)
+                            {
+                                {":flightPrefix" , new AttributeValue {S = FlightDbModel.Prefix } },
+                                {":sectionPrefix" , new AttributeValue {S = SectionDbModel.Prefix } },
+                                {":seatPrefix" , new AttributeValue {S = SeatDbModel.Prefix } },
+                            };
+
+            var responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues);
+
+            var flights = await MapFlightsListAsync(responseItems.Where(item => item.PkStartsWith(FlightDbModel.Prefix)).ToList());
+
+
+            var mappedSections = MapSections(responseItems.Where(item => item.PkStartsWith(SectionDbModel.Prefix)).ToList());
+
+
+            var mappedSeats = new List<Seat>();
+            foreach (var seat in responseItems.Where(item => item.PkStartsWith(SeatDbModel.Prefix)))
+            {
+                var id = seat.GetString(SeatDbModel.Id);
+                var flightId = seat.GetString(SeatDbModel.FlightId);
+                var sectionId = seat.GetString(SeatDbModel.SectionId);
+                var data = seat.GetInnerObjectData(SeatDbModel.Data);
+
+                var row = data.GetInt32("Row");
+                var column = data.GetInt32("Column");
+                var seatClass = data.GetString("SeatClass");
+                var isBooked = data.GetBoolean("IsBooked");
+
+                mappedSeats.Add(new Seat
+                {
+                    Id = id,
+                    FlightId = flightId,
+                    Row = row,
+                    Column = column,
+                    SeatClass = seatClass == SeatClass.First.ToString() ? SeatClass.First : seatClass == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
+                    SectionId = sectionId,
+                    IsBooked = isBooked,
+                });
+            }
+
+
+
+            foreach (var section in mappedSections)
+            {
+                var sectionSeats = mappedSeats.Where(seat => seat.SectionId == section.Id).OrderBy(seat => seat.Row).ThenBy(seat => seat.Column).ToList();
+                section.Seats = sectionSeats;
+            }
+
+            foreach (var flight in flights)
+            {
+                flight.Sections = mappedSections.Where(section => section.FlightId == flight.Id).OrderBy(section => section.SeatClass).ToList();
+            }
+
+            return flights;
+        }
+
+        private async Task<List<FlightModel>> GetAllFlights()
+        {
+            var filterExpression = $"begins_with({FlightDbModel.Id} , :prefix)";
+            var expressionAttributeValues = new Dictionary<string, AttributeValue>()
+                        {
+                            {":prefix" , new AttributeValue {S = _PREFIX} }
+                        };
+            var responseItems = await _dynamoDbClient.ScanItemsAsync(filterExpression, expressionAttributeValues);
+
+            var flights = await MapFlightsListAsync(responseItems);
+
+            return flights;
+        }
+
 
         private string GenerateFlightId(string flightNumber)
         {
@@ -397,6 +432,7 @@ namespace ABS_Flights.Repository
                 var rows = data.GetInt32("Rows");
                 var columns = data.GetInt32("Columns");
                 var seatClass = data.GetString("SeatClass");
+                var availableSeats = data.GetInt32("AvailableSeats");
 
                 mappedSections.Add(new Section
                 {
@@ -405,10 +441,22 @@ namespace ABS_Flights.Repository
                     Rows = rows,
                     Columns = columns,
                     SeatClass = seatClass == SeatClass.First.ToString() ? SeatClass.First : seatClass == SeatClass.Bussiness.ToString() ? SeatClass.Bussiness : SeatClass.Economy,
+                    AvailableSeats = availableSeats
                 });
             }
 
             return mappedSections;
+        }
+        private Dictionary<string , AttributeValue> GetStringIdentifiersDictionary(IList<string> identifiers , string prefix = "")
+        {
+            var mapAttValues = new Dictionary<string, AttributeValue>();
+
+            for (int i = 0; i < identifiers.Count; i++)
+            {
+                mapAttValues.Add($":item{i}", new AttributeValue(prefix + identifiers[i]));
+            }
+
+            return mapAttValues;
         }
 
         

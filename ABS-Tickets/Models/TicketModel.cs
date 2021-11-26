@@ -14,5 +14,7 @@ namespace ABS_Tickets.Models
         public string Username { get; set; }
 
         public SeatClass SeatClass { get; set; }
+
+        public string SectionId { get; set; }
     }
 }
