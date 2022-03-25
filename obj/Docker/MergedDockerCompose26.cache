@@ -1,0 +1,184 @@
+services:
+  abs-auth:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Auth/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: ABS-Auth
+      target: base
+    container_name: ABS-Auth
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: ''
+    image: auth:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Auth.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - target: 80
+    - published: 5001
+      target: 5001
+    tty: true
+    volumes:
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Auth:/app:rw
+    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
+    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+  abs-flights:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Flights/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: ABS-Flights
+      target: base
+    container_name: ABS-Flights
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: ''
+    image: flights:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Flights.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - target: 80
+    - published: 5002
+      target: 5002
+    tty: true
+    volumes:
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights:/app:rw
+    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
+    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+  abs-gateway:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Gateway/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: ABS-Gateway
+      target: base
+    container_name: ABS-Gateway
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: ''
+    image: gateway:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Gateway.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - target: 80
+    - published: 5000
+      target: 5000
+    tty: true
+    volumes:
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway:/app:rw
+    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
+    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+  abs-sectionairlineairport:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: Abs-SectionAirlineAirport/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: Abs-SectionAirlineAirport
+      target: base
+    container_name: Abs-SectionAirlineAirport
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: ''
+    image: create:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/Abs-SectionAirlineAirport.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - target: 80
+    - published: 5004
+      target: 5004
+    tty: true
+    volumes:
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport:/app:rw
+    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
+    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+  abs-tickets:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Tickets/Dockerfile
+      labels:
+        com.microsoft.created-by: visual-studio
+        com.microsoft.visual-studio.project-name: ABS-Tickets
+      target: base
+    container_name: ABS-Tickets
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: ''
+    image: tickets:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Tickets.dll"'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
+        dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - target: 80
+    - published: 5003
+      target: 5003
+    tty: true
+    volumes:
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets:/app:rw
+    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
+    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+  dynamodb:
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
+    container_name: my-dynamodb
+    hostname: dynamodb
+    image: amazon/dynamodb-local
+    ports:
+    - published: 8000
+      target: 8000
+    - target: 8000
+    restart: always
+    volumes:
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\my-dynamodb-data:/home/dynamodblocal/data:rw
+version: '3.4'

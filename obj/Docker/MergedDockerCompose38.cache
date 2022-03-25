@@ -1,0 +1,69 @@
+services:
+  abs-auth:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Auth/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: auth
+    ports:
+    - published: 5001
+      target: 5001
+    - target: 5001
+  abs-flights:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Flights/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: flights
+    ports:
+    - published: 5002
+      target: 5002
+    - target: 5002
+  abs-gateway:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Gateway/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: gateway
+    ports:
+    - published: 5000
+      target: 5000
+    - target: 5000
+  abs-sectionairlineairport:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: Abs-SectionAirlineAirport/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: create
+    ports:
+    - published: 5004
+      target: 5004
+    - target: 5004
+  abs-tickets:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Tickets/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: tickets
+    ports:
+    - published: 5003
+      target: 5003
+    - target: 5003
+  dynamodb:
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
+    container_name: my-dynamodb
+    hostname: dynamodb
+    image: amazon/dynamodb-local
+    ports:
+    - published: 8000
+      target: 8000
+    - target: 8000
+    restart: always
+    volumes:
+    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\my-dynamodb-data:/home/dynamodblocal/data:rw
+version: '3.4'

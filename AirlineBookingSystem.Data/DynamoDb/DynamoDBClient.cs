@@ -24,6 +24,8 @@ namespace ABS.Data.DynamoDb
             this._tableName = section.GetSection("TableName").Value;
 
             this._dynamoDbClient = new AmazonDynamoDBClient(accessKey, secretAccessKey, new AmazonDynamoDBConfig { ServiceURL = connectionUrl });
+
+
         }
 
         private DynamoDBItem DynamoDBKey(string pk, string sk,string prefix = "")
@@ -61,6 +63,7 @@ namespace ABS.Data.DynamoDb
 
         public async Task<List<DynamoDBItem>> ScanItemsAsync(string filterExpression = null, Dictionary<string, AttributeValue> expressionValues = null , Dictionary<string , string> expressionNames = null)
         {
+
             var scanItemsRequest = new ScanRequest()
             {
                 TableName = _tableName,

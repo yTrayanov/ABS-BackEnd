@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+  abs-auth:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5001"
+
+  abs-sectionairlineairport:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5004"
+
+
+  abs-gateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5000"
+
+
+  abs-flights:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5002"
+
+
+  abs-tickets:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5003"
+
+  dynamodb-local:
+    ports:
+      - "8000"

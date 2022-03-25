@@ -177,6 +177,7 @@ namespace ABS_Flights.Repository
 
         private async Task<List<FlightModel>> GetFilteredFlights(string[] args)
         {
+
             var originAirportId = await GetAirportIdAsync(args[0]);
             var destinationAirportId = await GetAirportIdAsync(args[1]);
             var date = args[2];
