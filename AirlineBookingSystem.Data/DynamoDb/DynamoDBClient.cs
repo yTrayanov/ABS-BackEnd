@@ -19,11 +19,14 @@ namespace ABS.Data.DynamoDb
         {
             var section = configuration.GetSection("DynamoDb");
             var connectionUrl = section.GetSection("Url").Value;
-            var accessKey = section.GetSection("AccessKey").Value;
-            var secretAccessKey = section.GetSection("SecretAccessKey").Value;
             this._tableName = section.GetSection("TableName").Value;
 
+            var accessKey = Environment.GetEnvironmentVariable("DYNAMODB_ACCESSKEY");
+            var secretAccessKey = Environment.GetEnvironmentVariable("DYNAMODB_SECRETKEY");
+
+
             this._dynamoDbClient = new AmazonDynamoDBClient(accessKey, secretAccessKey, new AmazonDynamoDBConfig { ServiceURL = connectionUrl });
+
 
 
         }
@@ -63,7 +66,6 @@ namespace ABS.Data.DynamoDb
 
         public async Task<List<DynamoDBItem>> ScanItemsAsync(string filterExpression = null, Dictionary<string, AttributeValue> expressionValues = null , Dictionary<string , string> expressionNames = null)
         {
-
             var scanItemsRequest = new ScanRequest()
             {
                 TableName = _tableName,

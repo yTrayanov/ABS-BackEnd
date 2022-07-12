@@ -1,3 +1,4 @@
+name: dockercompose8779497479196075186
 services:
   abs-auth:
     build:
@@ -8,31 +9,74 @@ services:
         com.microsoft.visual-studio.project-name: ABS-Auth
       target: base
     container_name: ABS-Auth
-    entrypoint: tail -f /dev/null
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
-      DOTNET_USE_POLLING_FILE_WATCHER: '1'
-      NUGET_FALLBACK_PACKAGES: ''
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
     image: auth:dev
     labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Auth.dll"'
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net6.0/ABS-Auth.dll"'
       com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
         dotnet); then kill $$PID; fi"
       com.microsoft.visualstudio.debuggee.program: dotnet
       com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
     ports:
-    - published: 5001
+    - mode: ingress
       target: 5001
-    - target: 5001
+      protocol: tcp
+    - mode: ingress
+      target: 5001
+      published: "5001"
+      protocol: tcp
     tty: true
     volumes:
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Auth:/app:rw
-    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
-    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
-    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
-    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Auth
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      target: /src
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
   abs-flights:
     build:
       context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
@@ -42,31 +86,74 @@ services:
         com.microsoft.visual-studio.project-name: ABS-Flights
       target: base
     container_name: ABS-Flights
-    entrypoint: tail -f /dev/null
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
-      DOTNET_USE_POLLING_FILE_WATCHER: '1'
-      NUGET_FALLBACK_PACKAGES: ''
-    image: flights:dev
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
+    image: absflights:dev
     labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Flights.dll"'
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net6.0/ABS-Flights.dll"'
       com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
         dotnet); then kill $$PID; fi"
       com.microsoft.visualstudio.debuggee.program: dotnet
       com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
     ports:
-    - published: 5002
+    - mode: ingress
       target: 5002
-    - target: 5002
+      protocol: tcp
+    - mode: ingress
+      target: 5002
+      published: "5002"
+      protocol: tcp
     tty: true
     volumes:
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights:/app:rw
-    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
-    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
-    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
-    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Flights
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      target: /src
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
   abs-gateway:
     build:
       context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
@@ -76,31 +163,74 @@ services:
         com.microsoft.visual-studio.project-name: ABS-Gateway
       target: base
     container_name: ABS-Gateway
-    entrypoint: tail -f /dev/null
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
-      DOTNET_USE_POLLING_FILE_WATCHER: '1'
-      NUGET_FALLBACK_PACKAGES: ''
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
     image: gateway:dev
     labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Gateway.dll"'
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net6.0/ABS-Gateway.dll"'
       com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
         dotnet); then kill $$PID; fi"
       com.microsoft.visualstudio.debuggee.program: dotnet
       com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      my-network: null
     ports:
-    - published: 5000
+    - mode: ingress
       target: 5000
-    - target: 5000
+      protocol: tcp
+    - mode: ingress
+      target: 5000
+      published: "5000"
+      protocol: tcp
     tty: true
     volumes:
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway:/app:rw
-    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
-    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
-    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
-    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Gateway
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      target: /src
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
   abs-sectionairlineairport:
     build:
       context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
@@ -110,31 +240,74 @@ services:
         com.microsoft.visual-studio.project-name: Abs-SectionAirlineAirport
       target: base
     container_name: Abs-SectionAirlineAirport
-    entrypoint: tail -f /dev/null
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
-      DOTNET_USE_POLLING_FILE_WATCHER: '1'
-      NUGET_FALLBACK_PACKAGES: ''
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
     image: create:dev
     labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/Abs-SectionAirlineAirport.dll"'
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net6.0/Abs-SectionAirlineAirport.dll"'
       com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
         dotnet); then kill $$PID; fi"
       com.microsoft.visualstudio.debuggee.program: dotnet
       com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
     ports:
-    - published: 5004
+    - mode: ingress
       target: 5004
-    - target: 5004
+      protocol: tcp
+    - mode: ingress
+      target: 5004
+      published: "5004"
+      protocol: tcp
     tty: true
     volumes:
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport:/app:rw
-    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
-    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
-    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
-    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\Abs-SectionAirlineAirport
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      target: /src
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
   abs-tickets:
     build:
       context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
@@ -144,41 +317,103 @@ services:
         com.microsoft.visual-studio.project-name: ABS-Tickets
       target: base
     container_name: ABS-Tickets
-    entrypoint: tail -f /dev/null
+    entrypoint:
+    - tail
+    - -f
+    - /dev/null
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_LOGGING__CONSOLE__DISABLECOLORS: "true"
-      DOTNET_USE_POLLING_FILE_WATCHER: '1'
-      NUGET_FALLBACK_PACKAGES: ''
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
     image: tickets:dev
     labels:
-      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages  "/app/bin/Debug/net5.0/ABS-Tickets.dll"'
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  "/app/bin/Debug/net6.0/ABS-Tickets.dll"'
       com.microsoft.visualstudio.debuggee.killprogram: /bin/sh -c "if PID=$$(pidof
         dotnet); then kill $$PID; fi"
       com.microsoft.visualstudio.debuggee.program: dotnet
       com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    networks:
+      default: null
     ports:
-    - published: 5003
+    - mode: ingress
       target: 5003
-    - target: 5003
+      protocol: tcp
+    - mode: ingress
+      target: 5003
+      published: "5003"
+      protocol: tcp
     tty: true
     volumes:
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets:/app:rw
-    - C:\Users\Yavor Trayanov\vsdbg\vs2017u5:/remote_debugger:rw
-    - C:\Users\Yavor Trayanov\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
-    - C:\Users\Yavor Trayanov\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
-    - C:\Users\Yavor Trayanov\.nuget\packages:/root/.nuget/packages:ro
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd:/src:rw
-  dynamodb:
-    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
-    container_name: my-dynamodb
-    hostname: dynamodb
-    image: amazon/dynamodb-local
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\ABS-Tickets
+      target: /app
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      target: /src
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\vsdbg\vs2017u5
+      target: /remote_debugger
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\.nuget\packages\
+      target: /root/.nuget/packages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
+      target: /root/.nuget/fallbackpackages
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\Yavor Trayanov\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+  dynamodb-local:
+    command:
+    - -jar
+    - DynamoDBLocal.jar
+    - -sharedDb
+    - -dbPath
+    - ./data
+    container_name: dynamodb-local
+    image: amazon/dynamodb-local:latest
+    networks:
+      default: null
     ports:
-    - published: 8000
+    - mode: ingress
       target: 8000
-    - target: 8000
-    restart: always
+      protocol: tcp
+    - mode: ingress
+      target: 8000
+      published: "8000"
+      protocol: tcp
     volumes:
-    - C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\my-dynamodb-data:/home/dynamodblocal/data:rw
-version: '3.4'
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\docker\dynamodb
+      target: /home/dynamodblocal/data
+      bind:
+        create_host_path: true
+    working_dir: /home/dynamodblocal
+networks:
+  default:
+    name: dockercompose8779497479196075186_default
+  my-network:
+    name: dockercompose8779497479196075186_my-network
+    driver: bridge

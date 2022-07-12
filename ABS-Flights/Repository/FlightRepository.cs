@@ -149,6 +149,7 @@ namespace ABS_Flights.Repository
 
         public async Task<IList<FlightModel>> GetList(params string[] args)
         {
+
             var flights = new List<FlightModel>();
             var command = args[0];
             args = args.Skip(1).ToArray();
@@ -203,6 +204,9 @@ namespace ABS_Flights.Repository
                 };
 
             var responseFlightItems = await _dynamoDbClient.ScanItemsAsync(flightFilterExpression, flightExpressionAttributeValues, expressionAttributeNames);
+
+            if (responseFlightItems.Count == 0)
+                throw new ArgumentException(ErrorMessages.FlightsNotFound);
 
             var flights = await MapFlightsListAsync(responseFlightItems);
 

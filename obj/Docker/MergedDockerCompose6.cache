@@ -1,3 +1,4 @@
+name: dockercompose8779497479196075186
 services:
   abs-auth:
     build:
@@ -5,25 +6,114 @@ services:
       dockerfile: ABS-Auth/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-    image: absauth
+    image: auth
+    networks:
+      default: null
     ports:
-    - target: 80
+    - mode: ingress
+      target: 5001
+      protocol: tcp
+    - mode: ingress
+      target: 5001
+      published: "5001"
+      protocol: tcp
+  abs-flights:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Flights/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: flights
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 5002
+      protocol: tcp
+    - mode: ingress
+      target: 5002
+      published: "5002"
+      protocol: tcp
   abs-gateway:
     build:
       context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
       dockerfile: ABS-Gateway/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-    image: absgateway
+    image: gateway
+    networks:
+      my-network: null
     ports:
-    - target: 80
+    - mode: ingress
+      target: 5000
+      protocol: tcp
+    - mode: ingress
+      target: 5000
+      published: "5000"
+      protocol: tcp
   abs-sectionairlineairport:
     build:
       context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
       dockerfile: Abs-SectionAirlineAirport/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-    image: abssectionairlineairport
+    image: create
+    networks:
+      default: null
     ports:
-    - target: 80
-version: '3.4'
+    - mode: ingress
+      target: 5004
+      protocol: tcp
+    - mode: ingress
+      target: 5004
+      published: "5004"
+      protocol: tcp
+  abs-tickets:
+    build:
+      context: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd
+      dockerfile: ABS-Tickets/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: tickets
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 5003
+      protocol: tcp
+    - mode: ingress
+      target: 5003
+      published: "5003"
+      protocol: tcp
+  dynamodb-local:
+    command:
+    - -jar
+    - DynamoDBLocal.jar
+    - -sharedDb
+    - -dbPath
+    - ./data
+    container_name: dynamodb-local
+    image: amazon/dynamodb-local:latest
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 8000
+      protocol: tcp
+    - mode: ingress
+      target: 8000
+      published: "8000"
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\Yavor Trayanov\source\repos\ABS-BackEnd\docker\dynamodb
+      target: /home/dynamodblocal/data
+      bind:
+        create_host_path: true
+    working_dir: /home/dynamodblocal
+networks:
+  default:
+    name: dockercompose8779497479196075186_default
+  my-network:
+    name: dockercompose8779497479196075186_my-network
+    driver: bridge

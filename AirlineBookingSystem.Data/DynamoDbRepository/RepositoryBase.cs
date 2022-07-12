@@ -1,8 +1,6 @@
 ﻿using ABS.Data.DynamoDb;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ABS.Data.DynamoDbRepository
 {
@@ -47,5 +45,6 @@ namespace ABS.Data.DynamoDbRepository
         {
             return string.Format(GSI2Pattern, Convert.ToString(id));
         }
+
     }
 }

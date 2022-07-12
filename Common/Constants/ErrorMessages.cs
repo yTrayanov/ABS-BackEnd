@@ -14,6 +14,7 @@
         public const string AirportNotFound = "Airport not found";
         public const string AirlineNotFound = "Airline not found";
         public const string InvalidCredentials = "Invalid username or password";
+        public const string FlightsNotFound = "There are no such flights";
 
 
     }
