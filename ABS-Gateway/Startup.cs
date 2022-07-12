@@ -85,6 +85,8 @@ namespace ABS_Gateway
 
             app.UseAuthorization();
 
+            app.CreateDatabaseTables(this.Configuration);
+
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TBSGatewayAPI v1"));
 

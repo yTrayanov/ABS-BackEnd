@@ -181,7 +181,7 @@ services:
       com.microsoft.visualstudio.debuggee.program: dotnet
       com.microsoft.visualstudio.debuggee.workingdirectory: /app
     networks:
-      default: null
+      my-network: null
     ports:
     - mode: ingress
       target: 5000
@@ -414,3 +414,6 @@ services:
 networks:
   default:
     name: dockercompose8779497479196075186_default
+  my-network:
+    name: dockercompose8779497479196075186_my-network
+    driver: bridge

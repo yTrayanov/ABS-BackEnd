@@ -9,7 +9,7 @@
       "Abs-SectionAirlineAirport/1.0.0": {
         "dependencies": {
           "ABS.Data": "1.0.0",
-          "AWSSDK.DynamoDBv2": "3.7.0.83",
+          "AWSSDK.DynamoDBv2": "3.7.3.54",
           "Abs.Common": "1.0.0",
           "AutoMapper": "10.1.1",
           "Dapper": "2.0.90",
@@ -32,22 +32,22 @@
           }
         }
       },
-      "AWSSDK.Core/3.7.3.22": {
+      "AWSSDK.Core/3.7.12.6": {
         "runtime": {
           "lib/netcoreapp3.1/AWSSDK.Core.dll": {
             "assemblyVersion": "3.3.0.0",
-            "fileVersion": "3.7.3.22"
+            "fileVersion": "3.7.12.6"
           }
         }
       },
-      "AWSSDK.DynamoDBv2/3.7.0.83": {
+      "AWSSDK.DynamoDBv2/3.7.3.54": {
         "dependencies": {
-          "AWSSDK.Core": "3.7.3.22"
+          "AWSSDK.Core": "3.7.12.6"
         },
         "runtime": {
           "lib/netcoreapp3.1/AWSSDK.DynamoDBv2.dll": {
             "assemblyVersion": "3.3.0.0",
-            "fileVersion": "3.7.0.83"
+            "fileVersion": "3.7.3.54"
           }
         }
       },
@@ -1158,6 +1158,7 @@
       "Abs.Common/1.0.0": {
         "dependencies": {
           "ABS.Data": "1.0.0",
+          "AWSSDK.DynamoDBv2": "3.7.3.54",
           "AutoMapper": "10.1.1",
           "Dapper": "2.0.90",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "5.0.8",
@@ -1172,7 +1173,7 @@
       },
       "ABS.Data/1.0.0": {
         "dependencies": {
-          "AWSSDK.DynamoDBv2": "3.7.0.83",
+          "AWSSDK.DynamoDBv2": "3.7.3.54",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "5.0.8",
           "Microsoft.EntityFrameworkCore.SqlServer": "5.0.8"
         },
@@ -1195,19 +1196,19 @@
       "path": "automapper/10.1.1",
       "hashPath": "automapper.10.1.1.nupkg.sha512"
     },
-    "AWSSDK.Core/3.7.3.22": {
+    "AWSSDK.Core/3.7.12.6": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-6rLAnit68QuCQ/U2GCIZjSQ6XUMSKZ691IJ6Zl9Wnn4Z0lmkfZKTNxCQV4tj2FjooH5bSlxwAIp7dnlx2OvYYw==",
-      "path": "awssdk.core/3.7.3.22",
-      "hashPath": "awssdk.core.3.7.3.22.nupkg.sha512"
+      "sha512": "sha512-uwXtdOQoLtWGo59Eg9SI1BclXg+42gk1gTizz2QOlOgBvsfNuXejyIvzolrfcQxU2bQOgH81sB9PvPaDz3EcuA==",
+      "path": "awssdk.core/3.7.12.6",
+      "hashPath": "awssdk.core.3.7.12.6.nupkg.sha512"
     },
-    "AWSSDK.DynamoDBv2/3.7.0.83": {
+    "AWSSDK.DynamoDBv2/3.7.3.54": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HA4btv+hSXriTXjobOGgJvlRjoZxzEazTKyHCcg5WIlO8N+rdLXE+yNnGdWJR+F/ophPjBPMwTM/L3mjLyIsNQ==",
-      "path": "awssdk.dynamodbv2/3.7.0.83",
-      "hashPath": "awssdk.dynamodbv2.3.7.0.83.nupkg.sha512"
+      "sha512": "sha512-vTE82NZ8AbvXH5c+2GvOdN8VeZoGiT3YSXg0uV0g+wryMK/k4BSbf1Iy7wxJlgLfJfvX8ileYHUpSZtsMP+7RA==",
+      "path": "awssdk.dynamodbv2/3.7.3.54",
+      "hashPath": "awssdk.dynamodbv2.3.7.3.54.nupkg.sha512"
     },
     "Dapper/2.0.90": {
       "type": "package",
