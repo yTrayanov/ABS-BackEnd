@@ -152,10 +152,6 @@ namespace ABS_Common.Extensions
             string absTable = "ABS-Table";
             string userTable = "ABS-UsersTable";
 
-            await dynamoDb.DeleteTableAsync(absTable);
-            await dynamoDb.DeleteTableAsync(userTable);
-
-
             var tables = await dynamoDb.ListTablesAsync();
 
             if (!tables.TableNames.Contains(absTable))

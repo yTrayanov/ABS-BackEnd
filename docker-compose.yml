@@ -3,7 +3,6 @@ version: '3.4'
 name: AirlineBookingSystem
 services:
   abs-auth:
-    image: ${DOCKER_REGISTRY-}auth
     build:
       context: .
       dockerfile: ABS-Auth/Dockerfile
@@ -11,7 +10,6 @@ services:
       - 5001:5001
 
   abs-sectionairlineairport:
-    image: ${DOCKER_REGISTRY-}create
     build:
       context: .
       dockerfile: Abs-SectionAirlineAirport/Dockerfile
@@ -20,7 +18,6 @@ services:
 
 
   abs-gateway:
-    image: ${DOCKER_REGISTRY-}gateway
     build:
       context: .
       dockerfile: ABS-Gateway/Dockerfile
@@ -31,7 +28,6 @@ services:
 
 
   abs-flights:
-    image: ${DOCKER_REGISTRY-}flights
     build:
       context: .
       dockerfile: ABS-Flights/Dockerfile
@@ -39,7 +35,6 @@ services:
       - 5002:5002
       
   abs-tickets:
-    image: ${DOCKER_REGISTRY-}tickets
     build:
       context: .
       dockerfile: ABS-Tickets/Dockerfile
