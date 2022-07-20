@@ -1,26 +1,45 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ABS.Data.DynamoDbRepository;
+using ABS_Common.Extensions;
+using Abs_SectionAirlineAirport.Models;
+using Abs_SectionAirlineAirport.Repositories;
+using Abs_SectionAirlineAirport.Service;
+using Microsoft.OpenApi.Models;
 
-namespace Abs_SectionAirlineAirport
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+builder.Services.AddSwaggerGen(c =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Abs_SectionAirlineAirport", Version = "v1" });
+});
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+builder.Services.AddSingleton<IRepository<string, AirlineModel>, AirlineRepository>();
+builder.Services.AddSingleton<IRepository<string, AirportModel>, AirportRepository>();
+builder.Services.AddSingleton<IRepository<string, SectionModel>, SectionRepository>();
+builder.Services.AddTransient<ICreateService, CreateService>();
+
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Abs_SectionAirlineAirport v1"));
 }
+
+app.ConfigureExceptionHandler();
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+

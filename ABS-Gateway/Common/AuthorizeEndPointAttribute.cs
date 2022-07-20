@@ -19,7 +19,6 @@ namespace ABS_Gateway.Common
                 await next();
             else
             {
-                var response =
                 context.Result = new UnauthorizedObjectResult(new ResponseObject( "User is not logged"));
             }
         }

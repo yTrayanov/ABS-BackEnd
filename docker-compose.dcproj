@@ -5,6 +5,10 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>e4c3223b-397a-4241-8304-26956698daf3</ProjectGuid>
   </PropertyGroup>
+  <PropertyGroup>
+    <DockerServiceName>
+    </DockerServiceName>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>

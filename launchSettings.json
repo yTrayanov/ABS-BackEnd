@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "abs-auth": "StartDebugging",
+        "abs-flights": "StartDebugging",
+        "abs-gateway": "StartDebugging",
+        "abs-sectionairlineairport": "StartDebugging",
+        "abs-tickets": "StartDebugging",
+        "dynamodb-local": "StartWithoutDebugging"
+      }
+    }
+  }
+}

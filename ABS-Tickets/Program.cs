@@ -1,26 +1,51 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ABS.Data.DynamoDbRepository;
+using ABS_Common.Extensions;
+using ABS_Tickets.Models;
+using ABS_Tickets.Repository;
+using ABS_Tickets.Service;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
-namespace ABS_Tickets
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+builder.Services.AddMvc().AddNewtonsoftJson(options =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ABS_Tickets", Version = "v1" });
+});
+
+builder.Services.AddSingleton<IRepository<string, TicketModel>, TicketRepository>();
+builder.Services.AddTransient<ITicketService, TicketeService>();
+
+builder.Services.ConfigureJwt(builder.Configuration);
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ABS_Tickets v1"));
 }
+
+app.ConfigureExceptionHandler();
+
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+
